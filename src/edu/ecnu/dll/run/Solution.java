@@ -39,8 +39,18 @@ public class Solution {
 
 
         List<Task> taskListA = new ArrayList<>();
-
         List<Task> taskListB = new ArrayList<>();
+        double[][] taskTempWinner = new double[1][2];
+        //初始化距离为最大距离值
+        taskTempWinner[0][0] = Double.MAX_VALUE;
+        //初始化对应距离的隐私预算为最大隐私预算
+        taskTempWinner[0][1] = Double.MAX_VALUE;
+
+        List<Integer>[] candidateWorkerID = new ArrayList[1];
+        List<double[]>[] candidateWorkerDistanceAndBudget = new ArrayList[1];
+        candidateWorkerID[0] = new ArrayList<>();
+        candidateWorkerDistanceAndBudget[0] = new ArrayList<>();
+
         boolean stateValue = true;
         while (stateValue) {
 //            double tempUtilityA = getUlitityValue(taskListA, workerA.getMaxRange(), budgetMatrixA);
