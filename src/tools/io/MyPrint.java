@@ -127,4 +127,16 @@ public class MyPrint {
         System.out.println(data[i]);
     }
 
+    public static void showStringArray(String[] data, String split){
+        int i;
+        for (i = 0; i < data.length - 1; i++) {
+            System.out.printf(data[i] + split + " ");
+        }
+        System.out.println(data[i]);
+    }
+
+    public static void showStringArray(String[] data) {
+        showStringArray(data, ",");
+    }
+
 }
