@@ -1,6 +1,8 @@
 package tools.differential_privacy.compare;
 
-public abstract class ProbabilityCompareFunction {
-    public abstract double probabilityDensityFunction(double x);
+public class ProbabilityCompareFunction {
+    public static double probabilityDensityFunction(double distanceA, double distanceB, double epsilonA, double epsilonB){
+        return 0;
+    }
 
 }

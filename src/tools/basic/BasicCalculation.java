@@ -12,4 +12,21 @@ public class BasicCalculation {
         }
         return Math.sqrt(result);
     }
+
+    public static double getSum(double ... values) {
+        double sum = 0;
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+        }
+        return sum;
+    }
+
+    public static double getAverage(double everageBefore, double newValue, int count) {
+        return (everageBefore*(count-1)+newValue)/count;
+    }
+
+    public static double getAverage(double ... values) {
+        return getSum(values)/ values.length;
+    }
+
 }
