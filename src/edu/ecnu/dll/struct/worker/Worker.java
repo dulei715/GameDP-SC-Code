@@ -1,8 +1,8 @@
 package edu.ecnu.dll.struct.worker;
 
 public abstract class Worker {
-    protected double[] location = null;
-    protected Double maxRange = null;
+    public double[] location = null;
+    public Double maxRange = null;
 
     public double[] getLocation() {
         return location;
