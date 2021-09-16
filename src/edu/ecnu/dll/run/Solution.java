@@ -54,36 +54,8 @@ public class Solution {
     public void complete() {
 
 
-        // 针对该task，记录所有worker到其距离
-//        double[] toTaskDistanceArray = new double[workerArray.length];
-        // 针对该task，记录之前发布的噪声平均距离和隐私预算
-//        double[][] lastTimeNoiseDistanceAndBudget = new double[workerArray.length][2];
-        // 记录worker当前的效用函数值
-//        double[] utilityArray = new double[workerArray.length];
         // 记录worker竞争时临时效用函数值
         double[] tempUtilityArray = new double[this.workers.length];
-        // 记录竞争中worker对于该task用到第几个budget了(从0开始)
-//        int[] workerBudgetIndex = new int[workerArray.length];
-        // 记录worker对于该task的一组budget值
-//        double[][] budgetMatrix = new double[workerArray.length][budgetSize];
-        // 针对该task，记录当前worker是否要竞争
-//        boolean[] competeState = new boolean[this.workers.length];
-
-//        for (int i = 0; i < this.workers.length; i++) {
-//
-////            toTaskDistanceArray[i] = BasicCalculation.get2Norm(task.getLocation(), workerArray[i].getLocation());
-////            lastTimeNoiseDistanceAndBudget[i][0] = lastTimeNoiseDistanceAndBudget[i][1] = 0.0;
-////            utilityArray[i] = 0.0;
-////            workerBudgetIndex[i] = 0;
-//            competeState[i] = true;
-//        }
-
-//        double utilityA = 0.0;
-//        double utilityB = 0.0;
-
-//        budgetMatrix[0] = new double[]{0.2, 0.3, 0.5};
-//        budgetMatrix[1] = new double[]{0.3, 0.4, 0.3};
-
 
         // 记录每个worker的申请到的task列表
 //        todo: whether to add:  List<Integer>[] allocatedTaskIDListArray = new ArrayList[this.workers.length];
@@ -99,19 +71,12 @@ public class Solution {
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
         List<Integer> candidateWorkerID;
-        // 针对该task，本轮提出竞争的worker的距离和隐私预算（每轮需要清空）
-        List<double[]> candidateWorkerDistanceAndBudget;
 
         candidateWorkerID = new ArrayList<>();
-//        candidateWorkerDistanceAndBudget = new ArrayList<>();
-//        initializeCandidate()
 
-        boolean stateValue = true;
-        int taskIndex = 0;
         Integer[] candidateWorkerIDArray;
+        double competeTemp;
         while (!candidateWorkerID.isEmpty()) {
-//            double tempUtilityA = getUlitityValue(taskListA, workerA.getMaxRange(), budgetMatrixA);
-//            double tempUtilityB = getUlitityValue(taskListA, workerA.getMaxRange(), budgetMatrixA);
             candidateWorkerIDArray = candidateWorkerID.toArray(new Integer[0]);
             candidateWorkerID.clear();
             for (Integer i : candidateWorkerIDArray) {
@@ -156,8 +121,10 @@ public class Solution {
 
                 // 否则（竞争成功），发布当前扰动距离长度和隐私预算(这里只添加进候选列表供server进一步选择)，并将隐私自己的预算索引值加1
                 candidateWorkerID.add(i);
-                this.workers[i].toCompetePublishEverageNoiseDistance = competeDistance;
-                this.workers[i].toCompetePublishTotalPrivacyBudget = totalBudget;
+//                this.workers[i].toCompetePublishEverageNoiseDistance = competeDistance;
+//                this.workers[i].toCompetePublishTotalPrivacyBudget = totalBudget;
+                this.workers[i].alreadyPublishedEverageNoiseDistance = competeDistance;
+                this.workers[i].alreadyPublishedTotalPrivacyBudget = totalBudget;
                 this.workers[i].budgetIndex ++;
 //                candidateWorkerDistanceAndBudget.add(new double[]{competeDistance, totalBudget});
 
@@ -166,7 +133,21 @@ public class Solution {
             // 服务器遍历每个worker，找出竞争成功的worker，修改他的competeState为false，将其他竞争状态为true的workerBudgetIndex值加1
             // todo: 设置 taskTempWinnerID 和 taskTempWinnerInfo
             //继续一轮竞争，直到除了胜利者其他的竞争者的competeState都为false.
+            for (Integer i : candidateWorkerIDArray) {
+//                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].toCompetePublishEverageNoiseDistance, taskTempWinnerInfo[0], this.workers[i].toCompetePublishTotalPrivacyBudget, taskTempWinnerInfo[1]);
+                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].alreadyPublishedEverageNoiseDistance, taskTempWinnerInfo[0], this.workers[i].alreadyPublishedTotalPrivacyBudget, taskTempWinnerInfo[1]);
 
+                if (competeTemp > 0.5) {
+                    taskTempWinnerID = i;
+//                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishEverageNoiseDistance;
+//                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishTotalPrivacyBudget;
+                    taskTempWinnerInfo[i] = this.workers[i].alreadyPublishedEverageNoiseDistance;
+                    taskTempWinnerInfo[i] = this.workers[i].alreadyPublishedTotalPrivacyBudget;
+                }
+            }
         }
+        System.out.println("The winner worker's id is " + taskTempWinnerID);
+        System.out.println("The winner worker's noise distance is " + taskTempWinnerInfo[0]);
+        System.out.println("The winner worker's budget is " + taskTempWinnerInfo[1]);
     }
 }

@@ -14,8 +14,8 @@ public class BasicWorker extends Worker {
     public Double alreadyPublishedEverageNoiseDistance = null;
     public Double alreadyPublishedTotalPrivacyBudget = null;
 
-    public Double toCompetePublishEverageNoiseDistance = null;
-    public Double toCompetePublishTotalPrivacyBudget = null;
+//    public Double toCompetePublishEverageNoiseDistance = null;
+//    public Double toCompetePublishTotalPrivacyBudget = null;
 
     public BasicWorker() {
     }
