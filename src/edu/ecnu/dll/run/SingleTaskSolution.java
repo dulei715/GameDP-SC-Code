@@ -10,7 +10,7 @@ import tools.differential_privacy.noise.LaplaceUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Solution {
+public class SingleTaskSolution {
 
     public Task task = null;
     public BasicWorker[] workers = null;
@@ -71,7 +71,6 @@ public class Solution {
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
         List<Integer> candidateWorkerID;
-
         candidateWorkerID = new ArrayList<>();
 
         Integer[] candidateWorkerIDArray;
