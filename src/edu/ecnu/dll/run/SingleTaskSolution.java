@@ -140,8 +140,8 @@ public class SingleTaskSolution {
                     taskTempWinnerID = i;
 //                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishEverageNoiseDistance;
 //                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishTotalPrivacyBudget;
-                    taskTempWinnerInfo[i] = this.workers[i].alreadyPublishedEverageNoiseDistance;
-                    taskTempWinnerInfo[i] = this.workers[i].alreadyPublishedTotalPrivacyBudget;
+                    taskTempWinnerInfo[0] = this.workers[i].alreadyPublishedEverageNoiseDistance;
+                    taskTempWinnerInfo[1] = this.workers[i].alreadyPublishedTotalPrivacyBudget;
                 }
             }
         }
