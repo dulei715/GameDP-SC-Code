@@ -21,4 +21,10 @@ public class BasicTest {
         MyPrint.showList(list);
     }
 
+    @Test
+    public void fun3() {
+        double value = -1e30;
+        System.out.println(value);
+    }
+
 }

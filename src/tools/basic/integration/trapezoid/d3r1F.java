@@ -1,15 +1,15 @@
-package tools.basic;
+package tools.basic.integration.trapezoid;
 
 import java.text.DecimalFormat;
 
 public class d3r1F {
     double trapzd_s;
 
-    public double func(double a) {
+    public static double func(double a) {
         return a * a * (a * a - 2) * Math.sin(a);
     }
 
-    void trapzd(double a, double b, double s, int n) {
+    public void trapzd(double a, double b, double s, int n) {
         double del, x, sum;
         int j, it, tnm;
         if (n == 1) {
@@ -28,6 +28,27 @@ public class d3r1F {
             s = 0.5 * (s + (b - a) * sum / tnm);
         }
         trapzd_s = s;
+    }
+
+    public static double trapzd_static(double a, double b, double s, int n) {
+        double del, x, sum;
+        int j, it, tnm;
+        if (n == 1) {
+            s = 0.5 * (b - a) * (func(a) + func(b));
+            it = 1;
+        } else {
+            it = (int)Math.pow(2, n - 2);
+            tnm = it;
+            del = (b - a) / tnm;
+            x = a + 0.5 * del;
+            sum = 0.0;
+            for (j = 1; j <= it; j++) {
+                sum += func(x);
+                x += del;
+            }
+            s = 0.5 * (s + (b - a) * sum / tnm);
+        }
+        return s;
     }
 
     double fint(double x) {
