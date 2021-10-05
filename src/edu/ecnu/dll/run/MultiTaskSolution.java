@@ -1,13 +1,12 @@
 package edu.ecnu.dll.run;
 
-import edu.ecnu.dll.struct.pack.TaskIDDIstanceBugetPair;
+import edu.ecnu.dll.struct.pack.TaskIDDistanceBugetPair;
 import edu.ecnu.dll.struct.task.BasicTask;
 import edu.ecnu.dll.struct.task.Task;
 import edu.ecnu.dll.struct.worker.NormalWorker;
 import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
-import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.MyPrint;
 
 import java.util.ArrayList;
@@ -141,7 +140,7 @@ public class MultiTaskSolution {
 
                     //todo: 好好设计一下：
                     // 进行是否竞争判断3： 遍历所有的可选task, 选出最大使得自身Utility增加最大的task, 如果为空，则不作为。
-                    TaskIDDIstanceBugetPair maxIncrementUtilityInfo;
+                    TaskIDDistanceBugetPair maxIncrementUtilityInfo;
                     maxIncrementUtilityInfo = getMaxIncrementUtilityTask(tempCandidateTaskList, this.workers[i], candidateWorkerIDListArray, taskTempWinnerID, taskTempWinnerInfo);
                     if (maxIncrementUtilityInfo == null) {
                         continue;
@@ -179,7 +178,16 @@ public class MultiTaskSolution {
         MyPrint.showDoubleArray(taskTempWinnerInfo[1]);
     }
 
-    private TaskIDDIstanceBugetPair getMaxIncrementUtilityTask(List<Integer> taskIDList, NormalWorker worker, List<Integer>[] candidateWorkerIDListArray, int[] lastTermTaskWinnerID, double[][] lastTermTaskWinnerInfo) {
+    /**
+     *
+     * @param taskIDList 候选的要去竞争的所有task(已经排除budget不足的task)
+     * @param worker 要竞争的worker
+     * @param candidateWorkerIDListArray 记录上轮竞争中竞争每个task的worker的集合
+     * @param lastTermTaskWinnerID 记录上轮竞争中成功竞争每个task的workerID
+     * @param lastTermTaskWinnerInfo 记录上轮竞争中成功竞争每个task的worker其他信息
+     * @return
+     */
+    private TaskIDDistanceBugetPair getMaxIncrementUtilityTask(List<Integer> taskIDList, NormalWorker worker, List<Integer>[] candidateWorkerIDListArray, int[] lastTermTaskWinnerID, double[][] lastTermTaskWinnerInfo) {
         // 遍历taskIDList中的所有task，找出能使当前worker的utility增加最大的task，返回（该task的ID, 申请即将泄露的平均distance[此处可返回扰动], 申请泄露的budget总和[此处可返回当前budget]）
         return null;
     }

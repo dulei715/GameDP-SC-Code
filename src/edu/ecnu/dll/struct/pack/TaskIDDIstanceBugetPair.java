@@ -1,14 +1,14 @@
 package edu.ecnu.dll.struct.pack;
 
-public class TaskIDDIstanceBugetPair {
+public class TaskIDDistanceBugetPair {
     public Integer taskID = null;
     public Double noiseEverageDistance = null;
     public Double totalPrivacyBudget = null;
 
-    public TaskIDDIstanceBugetPair() {
+    public TaskIDDistanceBugetPair() {
     }
 
-    public TaskIDDIstanceBugetPair(Integer taskID, Double noiseEverageDistance, Double totalPrivacyBudget) {
+    public TaskIDDistanceBugetPair(Integer taskID, Double noiseEverageDistance, Double totalPrivacyBudget) {
         this.taskID = taskID;
         this.noiseEverageDistance = noiseEverageDistance;
         this.totalPrivacyBudget = totalPrivacyBudget;
