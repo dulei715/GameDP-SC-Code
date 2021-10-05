@@ -13,6 +13,9 @@ public class NormalWorker extends Worker {
     public Double[] alreadyPublishedEverageNoiseDistance = null;
     public Double[] alreadyPublishedTotalPrivacyBudget = null;
 
+    // 用于记录该worker对所有task的竞争次数 // todo: 竞争次数怎么定义有待考究，他会影响任务熵的定义
+    public Integer[] taskCompletingTimes = null;
+
 //    public Double toCompetePublishEverageNoiseDistance = null;
 //    public Double toCompetePublishTotalPrivacyBudget = null;
 

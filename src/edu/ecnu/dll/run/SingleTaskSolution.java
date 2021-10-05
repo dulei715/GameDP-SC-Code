@@ -12,6 +12,10 @@ import java.util.List;
 
 public class SingleTaskSolution {
 
+    public static final int DISTANCE_TAG = 0;
+    public static final int BUDGET_TAG = 1;
+
+
     public Task task = null;
     public BasicWorker[] workers = null;
 
@@ -65,9 +69,9 @@ public class SingleTaskSolution {
         // 针对该task，记录当前竞争成功的worker的budget以及扰动距离
         double[] taskTempWinnerInfo = new double[2];
         // 针对该task，初始化距离为最大距离值
-        taskTempWinnerInfo[0] = Double.MAX_VALUE;
+        taskTempWinnerInfo[DISTANCE_TAG] = Double.MAX_VALUE;
         // 针对该task，初始化对应距离的隐私预算为最大隐私预算
-        taskTempWinnerInfo[1] = Double.MAX_VALUE;
+        taskTempWinnerInfo[BUDGET_TAG] = Double.MAX_VALUE;
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
         List<Integer> candidateWorkerID;
@@ -111,7 +115,7 @@ public class SingleTaskSolution {
                 double newNoiseDistance = this.workers[i].toTaskDistance + LaplaceUtils.getLaplaceNoise(1, this.workers[i].privacyBudgetArray[this.workers[i].budgetIndex]);
                 double competeDistance = BasicCalculation.getAverage(this.workers[i].alreadyPublishedEverageNoiseDistance, newNoiseDistance, this.workers[i].budgetIndex + 1);
                 double totalBudget = this.workers[i].alreadyPublishedTotalPrivacyBudget + this.workers[i].privacyBudgetArray[this.workers[i].budgetIndex];
-                double competeValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(competeDistance, taskTempWinnerInfo[0], totalBudget, taskTempWinnerInfo[1]);
+                double competeValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(competeDistance, taskTempWinnerInfo[DISTANCE_TAG], totalBudget, taskTempWinnerInfo[BUDGET_TAG]);
                 if (competeValue <= 0.5) {
 //                    competeState[i] = false;
                     continue;
@@ -134,19 +138,19 @@ public class SingleTaskSolution {
             //继续一轮竞争，直到除了胜利者其他的竞争者的competeState都为false.
             for (Integer i : candidateWorkerIDArray) {
 //                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].toCompetePublishEverageNoiseDistance, taskTempWinnerInfo[0], this.workers[i].toCompetePublishTotalPrivacyBudget, taskTempWinnerInfo[1]);
-                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].alreadyPublishedEverageNoiseDistance, taskTempWinnerInfo[0], this.workers[i].alreadyPublishedTotalPrivacyBudget, taskTempWinnerInfo[1]);
+                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].alreadyPublishedEverageNoiseDistance, taskTempWinnerInfo[DISTANCE_TAG], this.workers[i].alreadyPublishedTotalPrivacyBudget, taskTempWinnerInfo[BUDGET_TAG]);
 
                 if (competeTemp > 0.5) {
                     taskTempWinnerID = i;
 //                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishEverageNoiseDistance;
 //                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishTotalPrivacyBudget;
-                    taskTempWinnerInfo[0] = this.workers[i].alreadyPublishedEverageNoiseDistance;
-                    taskTempWinnerInfo[1] = this.workers[i].alreadyPublishedTotalPrivacyBudget;
+                    taskTempWinnerInfo[DISTANCE_TAG] = this.workers[i].alreadyPublishedEverageNoiseDistance;
+                    taskTempWinnerInfo[BUDGET_TAG] = this.workers[i].alreadyPublishedTotalPrivacyBudget;
                 }
             }
         }
         System.out.println("The winner worker's id is " + taskTempWinnerID);
-        System.out.println("The winner worker's noise distance is " + taskTempWinnerInfo[0]);
-        System.out.println("The winner worker's budget is " + taskTempWinnerInfo[1]);
+        System.out.println("The winner worker's noise distance is " + taskTempWinnerInfo[DISTANCE_TAG]);
+        System.out.println("The winner worker's budget is " + taskTempWinnerInfo[BUDGET_TAG]);
     }
 }
