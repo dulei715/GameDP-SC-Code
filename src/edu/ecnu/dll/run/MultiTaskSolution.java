@@ -250,4 +250,36 @@ public class MultiTaskSolution {
         }
         return taskEntropy;
     }
+
+    private double chooseByProposingValue(List<Integer> taskIDList, NormalWorker worker, Integer[] totalCompetingTimesList, int[] lastTermTaskWinnerIDArray, double[][] lastTermTaskWinnerInfoArray, HashSet<Integer>[] competingWorkerIDSet) {
+        Integer taskID = null;
+        Double noiseAverageDistance = null;
+        Double totalPrivacyBudget = null;
+        double candidateTaskEntropy = Double.MAX_VALUE;
+        for (Integer i : taskIDList) {
+            if (worker.toTaskDistance[i] >= lastTermTaskWinnerInfoArray[i][DISTANCE_TAG]) {
+                continue;
+            }
+            double newNoiseDistance = worker.toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, worker.privacyBudgetArray[i][worker.budgetIndex[i]]);
+            double competeDistance = BasicCalculation.getAverage(worker.alreadyPublishedEverageNoiseDistance[i], newNoiseDistance, worker.budgetIndex[i] + 1);
+            double completeTotalBudget = worker.alreadyPublishedTotalPrivacyBudget[i] + worker.privacyBudgetArray[i][worker.budgetIndex[i]];
+            double pcfValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(competeDistance, lastTermTaskWinnerInfoArray[i][DISTANCE_TAG], completeTotalBudget, lastTermTaskWinnerInfoArray[i][BUDGET_TAG]);
+            if (pcfValue <= 0.5) {
+                continue;
+            }
+            double taskEntropy = getTaskEntropy(i, totalCompetingTimesList[i], competingWorkerIDSet[i]);
+            if (taskEntropy < candidateTaskEntropy) {
+                candidateTaskEntropy = taskEntropy;
+                taskID = i;
+                noiseAverageDistance = competeDistance;
+                totalPrivacyBudget = completeTotalBudget;
+            }
+
+        }
+        if (taskID == null) {
+            return null;
+        }
+        return new TaskIDDistanceBudgetPairTaskEntropy(taskID, noiseAverageDistance, totalPrivacyBudget, candidateTaskEntropy);
+    }
+
 }
