@@ -1,6 +1,7 @@
 package edu.ecnu.dll.run;
 
 import edu.ecnu.dll.struct.pack.TaskIDDistanceBudgetPair;
+import edu.ecnu.dll.struct.pack.TaskIDDistanceBudgetPairProposingValue;
 import edu.ecnu.dll.struct.pack.TaskIDDistanceBudgetPairTaskEntropy;
 import edu.ecnu.dll.struct.task.BasicTask;
 import edu.ecnu.dll.struct.task.Task;
@@ -251,11 +252,11 @@ public class MultiTaskSolution {
         return taskEntropy;
     }
 
-    private double chooseByProposingValue(List<Integer> taskIDList, NormalWorker worker, Integer[] totalCompetingTimesList, int[] lastTermTaskWinnerIDArray, double[][] lastTermTaskWinnerInfoArray, HashSet<Integer>[] competingWorkerIDSet) {
+    private TaskIDDistanceBudgetPairProposingValue chooseByProposingValue(List<Integer> taskIDList, NormalWorker worker, Integer[] totalCompetingTimesList, int[] lastTermTaskWinnerIDArray, double[][] lastTermTaskWinnerInfoArray, HashSet<Integer>[] competingWorkerIDSet) {
         Integer taskID = null;
         Double noiseAverageDistance = null;
         Double totalPrivacyBudget = null;
-        double candidateTaskEntropy = Double.MAX_VALUE;
+        double candidateProposingValue = Double.MIN_VALUE;
         for (Integer i : taskIDList) {
             if (worker.toTaskDistance[i] >= lastTermTaskWinnerInfoArray[i][DISTANCE_TAG]) {
                 continue;
@@ -267,9 +268,14 @@ public class MultiTaskSolution {
             if (pcfValue <= 0.5) {
                 continue;
             }
-            double taskEntropy = getTaskEntropy(i, totalCompetingTimesList[i], competingWorkerIDSet[i]);
-            if (taskEntropy < candidateTaskEntropy) {
-                candidateTaskEntropy = taskEntropy;
+            /**
+             * 获取Proposing Value
+             */
+            double proposingValue = pcfValue / worker.toTaskDistance[i];
+
+
+            if (proposingValue > candidateProposingValue) {
+                candidateProposingValue = proposingValue;
                 taskID = i;
                 noiseAverageDistance = competeDistance;
                 totalPrivacyBudget = completeTotalBudget;
@@ -279,7 +285,8 @@ public class MultiTaskSolution {
         if (taskID == null) {
             return null;
         }
-        return new TaskIDDistanceBudgetPairTaskEntropy(taskID, noiseAverageDistance, totalPrivacyBudget, candidateTaskEntropy);
+        return new TaskIDDistanceBudgetPairProposingValue(taskID, noiseAverageDistance, totalPrivacyBudget, candidateProposingValue);
     }
+
 
 }
