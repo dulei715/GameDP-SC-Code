@@ -2,7 +2,7 @@ package edu.ecnu.dll.struct.solution;
 
 import edu.ecnu.dll.struct.task.BasicTask;
 import edu.ecnu.dll.struct.task.Task;
-import edu.ecnu.dll.struct.worker.BasicWorker;
+import edu.ecnu.dll.struct.worker.SingleTaskBasicWorker;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
@@ -17,7 +17,7 @@ public class SingleTaskSolution {
 
 
     public Task task = null;
-    public BasicWorker[] workers = null;
+    public SingleTaskBasicWorker[] workers = null;
 
     public static final int budgetSize = 3;
 
@@ -33,7 +33,7 @@ public class SingleTaskSolution {
         // todo: 初始化 task 位置，以及 workers 的位置
         this.task = new BasicTask(new double[]{0.0, 0.0});
         // todo: 初始化 workers 针对 task 的 privacy budget
-        this.workers = new BasicWorker[2];
+        this.workers = new SingleTaskBasicWorker[2];
         this.workers[0].location = new double[]{2.0, 2.0};
         this.workers[0].maxRange = 4.0;
         this.workers[0].privacyBudgetArray = new Double[]{0.2, 0.3, 0.5};
@@ -153,4 +153,6 @@ public class SingleTaskSolution {
         System.out.println("The winner worker's noise distance is " + taskTempWinnerInfo[DISTANCE_TAG]);
         System.out.println("The winner worker's budget is " + taskTempWinnerInfo[BUDGET_TAG]);
     }
+
+
 }

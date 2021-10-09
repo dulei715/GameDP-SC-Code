@@ -3,7 +3,7 @@ package edu.ecnu.dll.struct.worker;
 
 import java.util.ArrayList;
 
-public class BasicWorker extends Worker {
+public class SingleTaskBasicWorker extends Worker {
     public Double toTaskDistance = null;
     public Double[] privacyBudgetArray = null;
 
@@ -17,7 +17,7 @@ public class BasicWorker extends Worker {
 //    public Double toCompetePublishEverageNoiseDistance = null;
 //    public Double toCompetePublishTotalPrivacyBudget = null;
 
-    public BasicWorker() {
+    public SingleTaskBasicWorker() {
     }
 
 
