@@ -27,7 +27,7 @@ public class MultiTaskSolutionNonPrivacy {
 
     public static final int budgetSize = 3;
 
-    private double getUlitityValue(List<Integer> taskList, Double workerMaxRange, int taskIndex, int workerIndex) {
+    private double getUtilityValue(List<Integer> taskList, Double workerMaxRange, int taskIndex, int workerIndex) {
         return 0;
     }
 
