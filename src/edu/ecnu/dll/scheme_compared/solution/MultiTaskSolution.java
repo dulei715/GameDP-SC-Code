@@ -49,7 +49,11 @@ public class MultiTaskSolution {
         }
 
         // 2. 计算解决当前冲突的所有可能的调整后的距离值，并比较选出最小的
+        
         // 3. 设置当前冲突该worker的所有task的候选worker值(后移指标变量)
+
+
+
     }
 
 
