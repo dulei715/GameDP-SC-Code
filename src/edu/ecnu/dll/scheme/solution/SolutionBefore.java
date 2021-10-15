@@ -1,8 +1,8 @@
-package edu.ecnu.dll.struct.solution;
+package edu.ecnu.dll.scheme.solution;
 
-import edu.ecnu.dll.struct.pack.Candidate;
-import edu.ecnu.dll.struct.task.Task;
-import edu.ecnu.dll.struct.worker.Worker;
+import edu.ecnu.dll.basic_struct.pack.Candidate;
+import edu.ecnu.dll.basic_struct.agent.Task;
+import edu.ecnu.dll.basic_struct.agent.Worker;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;

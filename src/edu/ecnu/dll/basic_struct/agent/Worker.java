@@ -1,4 +1,4 @@
-package edu.ecnu.dll.struct.worker;
+package edu.ecnu.dll.basic_struct.agent;
 
 public abstract class Worker {
     public double[] location = null;

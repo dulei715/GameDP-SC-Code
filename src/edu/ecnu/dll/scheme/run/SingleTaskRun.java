@@ -1,6 +1,5 @@
-package edu.ecnu.dll.run;
+package edu.ecnu.dll.scheme.run;
 
-import edu.ecnu.dll.struct.solution.SingleTaskSolution;
 import tools.io.PointRead;
 
 public class SingleTaskRun {

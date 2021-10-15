@@ -1,4 +1,4 @@
-package edu.ecnu.dll.struct.pack;
+package edu.ecnu.dll.basic_struct.pack;
 
 public class DistanceIDPair implements Comparable<DistanceIDPair> {
     public Double distance = null;
@@ -20,6 +20,6 @@ public class DistanceIDPair implements Comparable<DistanceIDPair> {
         if (this.distance > distanceIDPair.distance) {
             return 1;
         }
-        return 0;
+        return this.id - distanceIDPair.id;
     }
 }

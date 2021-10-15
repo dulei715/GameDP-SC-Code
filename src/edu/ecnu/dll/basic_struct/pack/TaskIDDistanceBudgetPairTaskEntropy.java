@@ -1,4 +1,4 @@
-package edu.ecnu.dll.struct.pack;
+package edu.ecnu.dll.basic_struct.pack;
 
 public class TaskIDDistanceBudgetPairTaskEntropy extends TaskIDDistanceBudgetPair {
     public Double taskEntropy;

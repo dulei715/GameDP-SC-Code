@@ -1,4 +1,4 @@
-package edu.ecnu.dll.struct.task;
+package edu.ecnu.dll.basic_struct.agent;
 
 public abstract class Task {
     public double[] location;

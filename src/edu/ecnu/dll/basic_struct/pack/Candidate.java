@@ -1,7 +1,6 @@
-package edu.ecnu.dll.struct.pack;
+package edu.ecnu.dll.basic_struct.pack;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Candidate {
     public DistanceIDPair[] toTaskDistance = null;

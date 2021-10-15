@@ -1,7 +1,7 @@
-package edu.ecnu.dll.struct.worker;
+package edu.ecnu.dll.scheme.struct.worker;
 
 
-import java.util.ArrayList;
+import edu.ecnu.dll.basic_struct.agent.Worker;
 
 public class SingleTaskBasicWorker extends Worker {
     public Double toTaskDistance = null;
