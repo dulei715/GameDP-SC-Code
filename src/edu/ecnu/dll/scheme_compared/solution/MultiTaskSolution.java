@@ -3,7 +3,6 @@ package edu.ecnu.dll.scheme_compared.solution;
 
 import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.DistanceIDPair;
-import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPair;
 import edu.ecnu.dll.scheme_compared.struct.task.PPPTask;
 import edu.ecnu.dll.scheme_compared.struct.worker.PPPWorker;
 import tools.basic.BasicCalculation;
