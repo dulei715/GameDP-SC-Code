@@ -1,9 +1,9 @@
 package edu.ecnu.dll.scheme.struct.worker;
 
 
-import edu.ecnu.dll.basic_struct.agent.Worker;
+import edu.ecnu.dll.basic_struct.agent.PrivacyWorker;
 
-public class MultiTaskBasicWorker extends Worker {
+public class MultiTaskBasicWorker extends PrivacyWorker {
     public Double[] toTaskDistance = null;
     //task number * budget number
     public Double[][] privacyBudgetArray = null;
@@ -12,8 +12,8 @@ public class MultiTaskBasicWorker extends Worker {
 
     public Double currentUtilityFunctionValue = null;
 
-    public Double[] alreadyPublishedEverageNoiseDistance = null;
-    public Double[] alreadyPublishedTotalPrivacyBudget = null;
+    public Double[] effectiveNoiseDistance = null;
+    public Double[] effectivePrivacyBudget = null;
 
     // 用于记录该worker对所有task的竞争次数 // todo: 竞争次数怎么定义有待考究，他会影响任务熵的定义
     public Integer[] taskCompletingTimes = null;
@@ -25,5 +25,8 @@ public class MultiTaskBasicWorker extends Worker {
     }
 
 
-
+    @Override
+    public Double getPrivacyBudget(Integer taskID) {
+        return null;
+    }
 }

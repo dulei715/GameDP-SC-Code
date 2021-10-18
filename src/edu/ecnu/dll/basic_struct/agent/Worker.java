@@ -1,6 +1,6 @@
 package edu.ecnu.dll.basic_struct.agent;
 
-public abstract class Worker {
+public abstract class Worker extends Agent {
     public double[] location = null;
     public Double maxRange = null;
 

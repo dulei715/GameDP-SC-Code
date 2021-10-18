@@ -7,6 +7,10 @@ public class BasicTask extends Task {
     }
 
     public BasicTask(double[] location) {
-        super(location);
+        super(location, 0);
+    }
+
+    public BasicTask(double[] location, double valuation) {
+        super(location, valuation);
     }
 }

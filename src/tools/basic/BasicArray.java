@@ -1,6 +1,10 @@
 package tools.basic;
 
+import tools.basic.comparator.TwoDimensionDouComparator;
+import tools.basic.comparator.TwoDimensionDoubleComparator;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BasicArray {
@@ -71,6 +75,13 @@ public class BasicArray {
         return result;
     }
 
+    public static void twoDimensionalDoubleArraySort(double[][] arr) {
+        Arrays.sort(arr, new TwoDimensionDouComparator());
+    }
+
+    public static void twoDimensionalDoubleArraySort(Double[][] arr) {
+        Arrays.sort(arr, new TwoDimensionDoubleComparator());
+    }
 
 
 
