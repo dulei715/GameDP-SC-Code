@@ -3,9 +3,7 @@ package tools;
 import org.junit.Test;
 import tools.basic.BasicArray;
 import tools.differential_privacy.noise.LaplaceUtils;
-import tools.io.MyPrint;
-
-import java.util.Arrays;
+import tools.io.print.MyPrint;
 
 public class LaplaceUtilsTest {
     @Test

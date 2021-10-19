@@ -11,7 +11,7 @@ import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
-import tools.io.MyPrint;
+import tools.io.print.MyPrint;
 
 import java.util.ArrayList;
 import java.util.HashSet;

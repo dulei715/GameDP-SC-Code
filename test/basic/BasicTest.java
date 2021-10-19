@@ -1,7 +1,7 @@
 package basic;
 
 import org.junit.Test;
-import tools.io.MyPrint;
+import tools.io.print.MyPrint;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package edu.ecnu.dll.scheme.run;
 
-import tools.io.PointRead;
+import tools.io.read.PointRead;
 
 public class SingleTaskRun {
     public static void main(String[] args) {

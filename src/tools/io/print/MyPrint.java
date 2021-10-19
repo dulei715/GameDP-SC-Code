@@ -1,5 +1,6 @@
-package tools.io;
+package tools.io.print;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -26,6 +27,32 @@ public class MyPrint {
         }
     }
     public static void showDoubleArray(double[] data) {
+        showDoubleArray(data, ",", -1);
+    }
+
+    public static void showDoubleArray(Double[] data, String split, int precision) {
+        int i;
+        if (precision >= 0) {
+            StringBuilder pattern = null;
+            pattern = new StringBuilder("0.");
+            for (int j = 0; j < precision; j++) {
+                pattern.append("0");
+            }
+//            System.out.println(pattern.toString());
+            DecimalFormat df = new DecimalFormat(pattern.toString());
+            for (i = 0; i < data.length - 1; i++) {
+                System.out.print(df.format(data[i]) + split + " ");
+            }
+            System.out.println(df.format(data[i]));
+        } else {
+            for (i = 0; i < data.length - 1; i++) {
+                System.out.printf(data[i] + split + " ");
+            }
+            System.out.println(data[i]);
+        }
+    }
+
+    public static void showDoubleArray(Double[] data) {
         showDoubleArray(data, ",", -1);
     }
 
@@ -139,4 +166,12 @@ public class MyPrint {
         showStringArray(data, ",");
     }
 
+    public static void showListArray(List[] data) {
+        for (int i = 0; i < data.length; i++) {
+            for (Object o : data[i]) {
+                System.out.print(o + " ");
+            }
+            System.out.println();
+        }
+    }
 }

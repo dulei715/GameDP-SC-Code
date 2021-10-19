@@ -7,6 +7,10 @@ import edu.ecnu.dll.scheme.struct.worker.SingleTaskBasicWorker;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
+import tools.io.print.MyPrint;
+import tools.io.read.DoubleRead;
+import tools.io.read.PointRead;
+import tools.struct.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +48,11 @@ public class SingleTaskSolution {
         // todo: 初始化 workers 针对 task 的 privacy budget
         this.workers = new SingleTaskBasicWorker[2];
         this.workers[0].location = new double[]{2.0, 2.0};
-        this.workers[0].maxRange = 4.0;
+//        this.workers[0].maxRange = 4.0;
         this.workers[0].privacyBudgetArray = new Double[]{0.2, 0.3, 0.5};
 
         this.workers[1].location = new double[]{-1.5, -1.5};
-        this.workers[1].maxRange = 3.0;
+//        this.workers[1].maxRange = 3.0;
         this.workers[1].privacyBudgetArray = new Double[]{0.3, 0.4, 0.3};
 
 
@@ -185,6 +189,27 @@ public class SingleTaskSolution {
         tempTreeSet.add(new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
         double[] distanceBudget = LaplaceUtils.getMaximumLikelihoodEstimationInGivenPoint(tempTreeSet);
         return new DistanceBudgetPair(distanceBudget[0], distanceBudget[1]);
+    }
+
+    public static void main(String[] args) {
+        String basicPath = System.getProperty("user.dir") + "\\dataset\\test_dataset\\_1_single_task_dataset\\test1\\";
+        String taskPointPath = basicPath + "task_point.txt";
+        String taskValuePath = basicPath + "task_value.txt";
+        String workerPointPath = basicPath + "worker_point.txt";
+        String workerPrivacyBudgetPath = basicPath + "worker_privacy_budget.txt";
+
+        List<Point> taskPointList = PointRead.readPoint(taskPointPath);
+        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        List<Point> workerPointList = PointRead.readPoint(workerPointPath);
+        List[] workerPrivacyBudgetList = DoubleRead.readDoubleList(workerPrivacyBudgetPath);
+
+
+        MyPrint.showList(taskPointList);
+        MyPrint.showDoubleArray(taskValueArray);
+        MyPrint.showList(workerPointList);
+        MyPrint.showListArray(workerPrivacyBudgetList);
+
+
     }
 
 

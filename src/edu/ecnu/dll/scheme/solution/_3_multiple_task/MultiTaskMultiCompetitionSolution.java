@@ -6,7 +6,7 @@ import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskBasicWorker;
 import tools.basic.BasicArray;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
-import tools.io.MyPrint;
+import tools.io.print.MyPrint;
 
 import java.util.ArrayList;
 import java.util.HashSet;

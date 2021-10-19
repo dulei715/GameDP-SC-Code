@@ -1,5 +1,6 @@
-package tools.io;
+package tools.io.read;
 
+import tools.io.print.MyPrint;
 import tools.struct.Point;
 
 import java.io.*;
@@ -9,9 +10,9 @@ import java.util.List;
 import java.util.Set;
 
 public class PointRead {
-    private List<Point> pointSet = null;
-    private String filePath;
-    private Integer dataSize = null;
+    protected List<Point> pointList = null;
+    protected String filePath;
+    protected Integer dataSize = null;
 
     public PointRead(String filePath) {
         this.filePath = filePath;
@@ -28,18 +29,18 @@ public class PointRead {
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.filePath)));
             this.dataSize = Integer.valueOf(bufferedReader.readLine());
-            this.pointSet = new ArrayList<>(this.dataSize);
+            this.pointList = new ArrayList<>(this.dataSize);
             while ((line = bufferedReader.readLine()) != null) {
                 ++i;
                 if (i % scale != 0) {
                     continue;
                 }
                 dataElement = line.split(" ");
-                this.pointSet.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
+                this.pointList.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
             }
-            if (this.dataSize.equals(this.pointSet.size())) {
-                throw new RuntimeException("The size of dataset is not inconsistent!");
-            }
+//            if (!this.dataSize.equals(this.pointList.size())) {
+//                throw new RuntimeException("The size of dataset is not inconsistent!");
+//            }
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -58,21 +59,21 @@ public class PointRead {
         this.readPoint(1);
     }
 
-    public static Set<Point> readPoint(String filePath) {
+    public static List<Point> readPoint(String filePath) {
         BufferedReader bufferedReader = null;
         String line = null;
         String[] dataElement;
         int dataSize;
-        Set<Point> pointSet = null;
+        List<Point> pointList = null;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
             dataSize = Integer.valueOf(bufferedReader.readLine());
-            pointSet = new HashSet<>(dataSize);
+            pointList = new ArrayList<>(dataSize);
             while ((line = bufferedReader.readLine()) != null) {
                 dataElement = line.split(" ");
-                pointSet.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
+                pointList.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
             }
-            if (dataSize != pointSet.size()) {
+            if (dataSize != pointList.size()) {
                 throw new RuntimeException("The size of dataset is not inconsistent!");
             }
 
@@ -87,11 +88,11 @@ public class PointRead {
                 e.printStackTrace();
             }
         }
-        return pointSet;
+        return pointList;
     }
 
     public List<Point> getPointList() {
-        return pointSet;
+        return pointList;
     }
 
     public String getFilePath() {
@@ -103,7 +104,7 @@ public class PointRead {
     }
 
     public Integer getRealDataSize() {
-        return this.pointSet.size();
+        return this.pointList.size();
     }
 
     public static void main(String[] args) {
