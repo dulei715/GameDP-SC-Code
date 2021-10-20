@@ -19,4 +19,11 @@ public abstract class Worker extends Agent {
     public void setMaxRange(Double maxRange) {
         this.maxRange = maxRange;
     }
+
+    public Worker() {
+    }
+
+    public Worker(double[] location) {
+        this.location = location;
+    }
 }

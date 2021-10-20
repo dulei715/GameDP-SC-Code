@@ -4,12 +4,12 @@ package edu.ecnu.dll.scheme.struct.worker;
 import edu.ecnu.dll.basic_struct.agent.Worker;
 import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
 
-import java.util.List;
 import java.util.TreeSet;
 
 public class SingleTaskBasicWorker extends Worker {
     public Double toTaskDistance = null;
     public Double[] privacyBudgetArray = null;
+//    public Double[] noiseToTaskDistance
 
     public int budgetIndex = 0;
 
@@ -21,6 +21,7 @@ public class SingleTaskBasicWorker extends Worker {
     public Double effectiveNoiseDistance = null;
 //    public Double alreadyPublishedTotalPrivacyBudget = null;
     public Double effectivePrivacyBudget = null;
+    public Double privacyBudgetCost = null;
 
 //    public Double toCompetePublishEverageNoiseDistance = null;
 //    public Double toCompetePublishTotalPrivacyBudget = null;
@@ -28,6 +29,9 @@ public class SingleTaskBasicWorker extends Worker {
     public SingleTaskBasicWorker() {
     }
 
+    public SingleTaskBasicWorker(double[] location) {
+        super(location);
+    }
 
 
 }

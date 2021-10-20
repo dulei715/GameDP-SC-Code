@@ -2,6 +2,7 @@ package tools.differential_privacy.noise;
 
 import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
 import org.apache.commons.math3.distribution.LaplaceDistribution;
+import sun.reflect.generics.tree.Tree;
 import tools.basic.BasicCalculation;
 import tools.basic.comparator.TwoDimensionDouComparator;
 
@@ -78,6 +79,9 @@ public class LaplaceUtils {
     }
 
     public static int[] getMaximumLikelihoodEstimation(TreeSet<DistanceBudgetPair> sortedDistanceBudgetPairSet) {
+        if (sortedDistanceBudgetPairSet.size() == 1) {
+            return new int[]{0, 0};
+        }
         int[] result = new int[2];
         int length = sortedDistanceBudgetPairSet.size();
 //        double[][] tempDistanceBudgetArray = new double[length][2];
@@ -103,7 +107,9 @@ public class LaplaceUtils {
             budgetSum -= tempDistanceBudgetPair.budget*2;
         }
 
-        if (Math.abs(budgetSum) < 1e-6) {
+        if (resultLeftIndex < 0) {
+            result[0] = result[1] = 0;
+        } else if (Math.abs(budgetSum) < 1e-6) {
             result[0] = result[1] = resultLeftIndex;
         } else {
             result[0] = resultLeftIndex;
@@ -117,20 +123,29 @@ public class LaplaceUtils {
      * @param sortedDistanceBudgetArray
      * @return
      */
-    public static double[] getMaximumLikelihoodEstimationInGivenPoint(double[][] sortedDistanceBudgetArray) {
+    public static double[] getMaximumLikelihoodEstimationInGivenPoint(final double[][] sortedDistanceBudgetArray) {
         int[] index = getMaximumLikelihoodEstimation(sortedDistanceBudgetArray);
         double leftResult = BasicCalculation.getWeightedFirstVectorNormOfDifference(sortedDistanceBudgetArray, sortedDistanceBudgetArray[index[0]][DISTANCE_TAG]);
         double rightResult = BasicCalculation.getWeightedFirstVectorNormOfDifference(sortedDistanceBudgetArray, sortedDistanceBudgetArray[index[1]][DISTANCE_TAG]);
         return leftResult <= rightResult ? new double[]{sortedDistanceBudgetArray[index[0]][DISTANCE_TAG],sortedDistanceBudgetArray[index[0]][BUDGET_TAG]} : new double[]{sortedDistanceBudgetArray[index[1]][DISTANCE_TAG],sortedDistanceBudgetArray[index[1]][BUDGET_TAG]};
     }
 
-    public static double[] getMaximumLikelihoodEstimationInGivenPoint(TreeSet<DistanceBudgetPair> sortedDistanceBudgetPairSet) {
+    public static double[] getMaximumLikelihoodEstimationInGivenPoint(final TreeSet<DistanceBudgetPair> sortedDistanceBudgetPairSet) {
         int[] index = getMaximumLikelihoodEstimation(sortedDistanceBudgetPairSet);
 //        double leftResult = BasicCalculation.getWeightedFirstVectorNormOfDifference(sortedDistanceBudgetPairSet, sortedDistanceBudgetPairSet[index[0]][DISTANCE_TAG]);
         DistanceBudgetPair[] distanceBudgetPairArray = sortedDistanceBudgetPairSet.toArray(new DistanceBudgetPair[0]);
         double leftResult = BasicCalculation.getWeightedFirstVectorNormOfDifference(distanceBudgetPairArray, distanceBudgetPairArray[index[0]].distance);
         double rightResult = BasicCalculation.getWeightedFirstVectorNormOfDifference(distanceBudgetPairArray, distanceBudgetPairArray[index[1]].distance);
         return leftResult <= rightResult ? new double[]{distanceBudgetPairArray[index[0]].distance, distanceBudgetPairArray[index[0]].budget} : new double[]{distanceBudgetPairArray[index[1]].distance, distanceBudgetPairArray[index[1]].budget};
+    }
+
+    public static double[] getMaximumLikelihoodEstimationInGivenPoint(final TreeSet<DistanceBudgetPair> sortedDistanceBudgetPairSet, final DistanceBudgetPair newDistanceBudget) {
+        // todo: 想想怎么优化
+        TreeSet<DistanceBudgetPair> newSortedDistanceBudgetPairSet = new TreeSet<>();
+        newSortedDistanceBudgetPairSet.addAll(sortedDistanceBudgetPairSet);
+        newSortedDistanceBudgetPairSet.add(newDistanceBudget);
+        return getMaximumLikelihoodEstimationInGivenPoint(newSortedDistanceBudgetPairSet);
+
     }
 
 }
