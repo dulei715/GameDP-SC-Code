@@ -6,4 +6,11 @@ public abstract class PrivacyWorker extends Worker {
     public Double[] toTaskNoiseDistance = null;
 
     public abstract Double getPrivacyBudget(Integer taskID);
+
+    public PrivacyWorker() {
+    }
+
+    public PrivacyWorker(double[] location) {
+        super(location);
+    }
 }

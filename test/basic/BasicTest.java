@@ -1,6 +1,7 @@
 package basic;
 
 import org.junit.Test;
+import tools.basic.BasicArray;
 import tools.io.print.MyPrint;
 
 import java.util.ArrayList;
@@ -25,6 +26,12 @@ public class BasicTest {
     public void fun3() {
         double value = -1e30;
         System.out.println(value);
+    }
+
+    @Test
+    public void fun4() {
+        String[] initializedArray = BasicArray.getInitializedArray("abcd", 10);
+        MyPrint.showStringArray(initializedArray);
     }
 
 }

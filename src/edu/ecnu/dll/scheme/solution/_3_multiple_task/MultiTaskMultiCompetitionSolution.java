@@ -18,30 +18,30 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
 
 
 
-    @Override
-    public void initializeBasicInformation() {
-        // todo: 初始化 task 位置，以及 workers 的位置
-        this.tasks = new Task[]{new BasicTask(new double[]{0.0, 0.0}), new BasicTask(new double[]{1.0, 1.0})};
-        // todo: 初始化 workers 针对 task 的 privacy budget
-        this.workers = new MultiTaskBasicWorker[4];
-        this.workers[0].location = new double[]{2.0, 2.0};
-        this.workers[0].maxRange = 4.0;
-        this.workers[0].privacyBudgetArray = new Double[][]{new Double[]{0.2, 0.3, 0.5}, new Double[]{0.3, 0.4, 0.6}};
-
-        this.workers[1].location = new double[]{-1.5, -1.5};
-        this.workers[1].maxRange = 3.0;
-        this.workers[1].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.3, 0.4}};
-
-        this.workers[2].location = new double[]{0.5, 0.5};
-        this.workers[2].maxRange = 2.0;
-        this.workers[2].privacyBudgetArray = new Double[][]{new Double[]{0.4, 0.6, 0.2}, new Double[]{0.5, 0.2, 0.3}};
-
-        this.workers[3].location = new double[]{2.5, 2.5};
-        this.workers[3].maxRange = 3.5;
-        this.workers[3].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.5, 0.3}};
-
-
-    }
+//    @Override
+//    public void initializeBasicInformation() {
+//        // todo: 初始化 task 位置，以及 workers 的位置
+//        this.tasks = new Task[]{new BasicTask(new double[]{0.0, 0.0}), new BasicTask(new double[]{1.0, 1.0})};
+//        // todo: 初始化 workers 针对 task 的 privacy budget
+//        this.workers = new MultiTaskBasicWorker[4];
+//        this.workers[0].location = new double[]{2.0, 2.0};
+//        this.workers[0].maxRange = 4.0;
+//        this.workers[0].privacyBudgetArray = new Double[][]{new Double[]{0.2, 0.3, 0.5}, new Double[]{0.3, 0.4, 0.6}};
+//
+//        this.workers[1].location = new double[]{-1.5, -1.5};
+//        this.workers[1].maxRange = 3.0;
+//        this.workers[1].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.3, 0.4}};
+//
+//        this.workers[2].location = new double[]{0.5, 0.5};
+//        this.workers[2].maxRange = 2.0;
+//        this.workers[2].privacyBudgetArray = new Double[][]{new Double[]{0.4, 0.6, 0.2}, new Double[]{0.5, 0.2, 0.3}};
+//
+//        this.workers[3].location = new double[]{2.5, 2.5};
+//        this.workers[3].maxRange = 3.5;
+//        this.workers[3].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.5, 0.3}};
+//
+//
+//    }
 
     public void complete() {
 

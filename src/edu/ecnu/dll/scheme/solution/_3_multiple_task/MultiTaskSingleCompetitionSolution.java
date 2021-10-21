@@ -1,16 +1,19 @@
 package edu.ecnu.dll.scheme.solution._3_multiple_task;
 
+import com.sun.deploy.util.ArrayUtil;
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPairProposingValue;
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPairTaskEntropy;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskBasicWorker;
+import edu.ecnu.dll.scheme.struct.worker.SingleTaskBasicWorker;
 import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
+import tools.struct.Point;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,40 +24,63 @@ public class MultiTaskSingleCompetitionSolution {
     public static final int DISTANCE_TAG = 0;
     public static final int BUDGET_TAG = 1;
 
+    public static final double alpha = 1;
+    public static final double beta = 1;
+
     public Task[] tasks = null;
     public MultiTaskBasicWorker[] workers = null;
 
     public static final int budgetSize = 3;
 
-    private double getUlitityValue(List<Integer> taskList, Double workerMaxRange, double[][] workerBudgetMatrix, int taskIndex, int workerIndex, int bugetIndex) {
-        return 0;
+    private double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
+        return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
     }
 
-    protected double getIncrementUtility(double distance, double maximumRange, double addingPrivacyBudget) {
-        return 1 + distance - addingPrivacyBudget;
-    }
+//    protected double getIncrementUtility(double distance, double maximumRange, double addingPrivacyBudget) {
+//        return 1 + distance - addingPrivacyBudget;
+//    }
 
-    public void initializeBasicInformation() {
-        // todo: 初始化 task 位置，以及 workers 的位置
-        this.tasks = new Task[]{new BasicTask(new double[]{0.0, 0.0}), new BasicTask(new double[]{1.0, 1.0})};
-        // todo: 初始化 workers 针对 task 的 privacy budget
-        this.workers = new MultiTaskBasicWorker[4];
-        this.workers[0].location = new double[]{2.0, 2.0};
-        this.workers[0].maxRange = 4.0;
-        this.workers[0].privacyBudgetArray = new Double[][]{new Double[]{0.2, 0.3, 0.5}, new Double[]{0.3, 0.4, 0.6}};
+//    public void initializeBasicInformation() {
+//        // todo: 初始化 task 位置，以及 workers 的位置
+//        this.tasks = new Task[]{new BasicTask(new double[]{0.0, 0.0}), new BasicTask(new double[]{1.0, 1.0})};
+//        // todo: 初始化 workers 针对 task 的 privacy budget
+//        this.workers = new MultiTaskBasicWorker[4];
+//        this.workers[0].location = new double[]{2.0, 2.0};
+//        this.workers[0].maxRange = 4.0;
+//        this.workers[0].privacyBudgetArray = new Double[][]{new Double[]{0.2, 0.3, 0.5}, new Double[]{0.3, 0.4, 0.6}};
+//
+//        this.workers[1].location = new double[]{-1.5, -1.5};
+//        this.workers[1].maxRange = 3.0;
+//        this.workers[1].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.3, 0.4}};
+//
+//        this.workers[2].location = new double[]{0.5, 0.5};
+//        this.workers[2].maxRange = 2.0;
+//        this.workers[2].privacyBudgetArray = new Double[][]{new Double[]{0.4, 0.6, 0.2}, new Double[]{0.5, 0.2, 0.3}};
+//
+//        this.workers[3].location = new double[]{2.5, 2.5};
+//        this.workers[3].maxRange = 3.5;
+//        this.workers[3].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.5, 0.3}};
+//
+//
+//    }
 
-        this.workers[1].location = new double[]{-1.5, -1.5};
-        this.workers[1].maxRange = 3.0;
-        this.workers[1].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.3, 0.4}};
-
-        this.workers[2].location = new double[]{0.5, 0.5};
-        this.workers[2].maxRange = 2.0;
-        this.workers[2].privacyBudgetArray = new Double[][]{new Double[]{0.4, 0.6, 0.2}, new Double[]{0.5, 0.2, 0.3}};
-
-        this.workers[3].location = new double[]{2.5, 2.5};
-        this.workers[3].maxRange = 3.5;
-        this.workers[3].privacyBudgetArray = new Double[][]{new Double[]{0.3, 0.4, 0.3}, new Double[]{0.2, 0.5, 0.3}};
-
+    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double[]>[] privacyBudgetListArray) {
+        Point taskPosition, workerPosition;
+        this.tasks = new BasicTask[taskPositionList.size()];
+        for (int i = 0; i < taskPositionList.size(); i++) {
+            taskPosition = taskPositionList.get(i);
+            this.tasks[i] = new BasicTask(taskPosition.getIndex());
+            this.tasks[i].valuation = taskValueArray[i];
+        }
+        this.workers = new MultiTaskBasicWorker[workerPositionList.size()];
+        for (int j = 0; j < workers.length; j++) {
+            workerPosition = workerPositionList.get(j);
+            this.workers[j] = new MultiTaskBasicWorker(workerPosition.getIndex());
+            this.workers[j].privacyBudgetArray = privacyBudgetListArray[j].toArray(new Double[0][0]);
+//            for (int i = 0; i < this.tasks.length; i++) {
+//                this.workers[j].privacyBudgetArray[i] = privacyBudgetListArray
+//            }
+        }
 
     }
 
@@ -64,7 +90,7 @@ public class MultiTaskSingleCompetitionSolution {
                 this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[i].location);
                 this.workers[j].effectiveNoiseDistance[i] = 0.0;
                 this.workers[j].effectivePrivacyBudget[i] = 0.0;
-                this.workers[j].currentUtilityFunctionValue = 0.0;
+                this.workers[j].currentUtilityFunctionValue = BasicArray.getInitializedArray(0.0, this.tasks.length);
                 this.workers[j].budgetIndex[i] = 0;
             }
         }

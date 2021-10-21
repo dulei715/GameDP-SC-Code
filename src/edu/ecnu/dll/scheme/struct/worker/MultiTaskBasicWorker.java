@@ -10,7 +10,7 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
 
     public int[] budgetIndex = null;
 
-    public Double currentUtilityFunctionValue = null;
+    public Double[] currentUtilityFunctionValue = null;
 
     public Double[] effectiveNoiseDistance = null;
     public Double[] effectivePrivacyBudget = null;
@@ -24,6 +24,9 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
     public MultiTaskBasicWorker() {
     }
 
+    public MultiTaskBasicWorker(double[] location) {
+        super(location);
+    }
 
     @Override
     public Double getPrivacyBudget(Integer taskID) {

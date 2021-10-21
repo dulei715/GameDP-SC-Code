@@ -59,7 +59,7 @@ public class SingleTaskSolution {
 //
 //    }
 
-        public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double[]>[] privacyBudgetListArray) {
+    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double>[] privacyBudgetListArray) {
 //        // todo: 初始化 task 位置，以及 workers 的位置
 //        this.task = new BasicTask(new double[]{0.0, 0.0});
 //        // todo: 初始化 workers 针对 task 的 privacy budget
@@ -68,16 +68,16 @@ public class SingleTaskSolution {
 //        this.workers[0].privacyBudgetArray = new Double[]{0.2, 0.3, 0.5};
 //        this.workers[1].location = new double[]{-1.5, -1.5};
 //        this.workers[1].privacyBudgetArray = new Double[]{0.3, 0.4, 0.3};
-            Point taskPosition = taskPositionList.get(0);
-            Point workerPosition;
-            this.task = new BasicTask(new double[]{taskPosition.getxIndex(), taskPosition.getyIndex()});
-            this.task.valuation = taskValueArray[0];
-            this.workers = new SingleTaskBasicWorker[workerPositionList.size()];
-            for (int i = 0; i < workers.length; i++) {
-                workerPosition = workerPositionList.get(i);
-                this.workers[i] = new SingleTaskBasicWorker(new double[]{workerPosition.getxIndex(), workerPosition.getyIndex()});
-                this.workers[i].privacyBudgetArray = privacyBudgetListArray[i].toArray(new Double[0]);
-            }
+        Point taskPosition = taskPositionList.get(0);
+        Point workerPosition;
+        this.task = new BasicTask(new double[]{taskPosition.getxIndex(), taskPosition.getyIndex()});
+        this.task.valuation = taskValueArray[0];
+        this.workers = new SingleTaskBasicWorker[workerPositionList.size()];
+        for (int i = 0; i < workers.length; i++) {
+            workerPosition = workerPositionList.get(i);
+            this.workers[i] = new SingleTaskBasicWorker(new double[]{workerPosition.getxIndex(), workerPosition.getyIndex()});
+            this.workers[i].privacyBudgetArray = privacyBudgetListArray[i].toArray(new Double[0]);
+        }
 
     }
 

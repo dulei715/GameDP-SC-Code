@@ -3,6 +3,7 @@ package tools.basic;
 import tools.basic.comparator.TwoDimensionDouComparator;
 import tools.basic.comparator.TwoDimensionDoubleComparator;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,6 +82,17 @@ public class BasicArray {
 
     public static void twoDimensionalDoubleArraySort(Double[][] arr) {
         Arrays.sort(arr, new TwoDimensionDoubleComparator());
+    }
+
+    public static <T> T[] getInitializedArray(T value, int size) {
+        Class clazz = value.getClass();
+        Object array = null;
+        array = Array.newInstance(clazz, size);
+        for (int i = 0; i < size; i++) {
+            Array.set(array, i, value);
+        }
+        T[] result = (T[]) array;
+        return result;
     }
 
 
