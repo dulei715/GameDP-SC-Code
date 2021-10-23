@@ -1,7 +1,18 @@
-function y = drawAgentSimpleFromFile(filePath)
+function y = drawAgentSimple(fileParentPath)
+taskPath = [fileParentPath, '\task_point.txt'];
+workerPath = [fileParentPath, '\worker_point.txt'];
+% disp(taskPath);
+% disp(workerPath);
 
-taskPoints = [];
-workerPoints = [];
+taskPoints = textread(taskPath);
+taskSize = taskPoints(1);
+% disp(taskSize);
+
+workerPoints = textread(workerPath);
+workerSize = workerPoints(1);
+
+taskPoints = taskPoints(2:end,:);
+workerPoints = workerPoints(2:end, :);
 taskColor = 'black';
 workerColor = 'red';
 %disp(tasks(:,1))

@@ -1,6 +1,5 @@
 package edu.ecnu.dll.scheme.solution._2_single_task;
 
-import edu.ecnu.dll.basic_struct.agent.Worker;
 import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
@@ -89,14 +88,16 @@ public class SingleTaskSolution {
             this.workers[i].alreadyPublishedNoiseDistanceAndBudget = new TreeSet<>();
             this.workers[i].effectiveNoiseDistance = 0.0;
             this.workers[i].effectivePrivacyBudget = 0.0;
+            // currentUtilityFunctionValue初始化为0，但是可能由于被竞争下去导致值为负
             this.workers[i].currentUtilityFunctionValue = 0.0;
             this.workers[i].budgetIndex = 0;
+            this.workers[i].privacyBudgetCost = 0.0;
         }
     }
 
     private Double getNewCostPrivacyBudget(Integer workerID) {
         Double result;
-        result = this.workers[workerID].effectivePrivacyBudget + this.workers[workerID].privacyBudgetArray[this.workers[workerID].budgetIndex];
+        result = this.workers[workerID].privacyBudgetCost + this.workers[workerID].privacyBudgetArray[this.workers[workerID].budgetIndex];
         return result;
     }
 
@@ -110,13 +111,13 @@ public class SingleTaskSolution {
 //        todo: whether to add:  List<Integer>[] allocatedTaskIDListArray = new ArrayList[this.workers.length];
 
         // 针对该task，记录当前竞争成功的worker的ID
-        int taskTempWinnerID = -1;
+        Integer taskWinnerID = -1;
         // 针对该task，记录当前竞争成功的worker的budget以及扰动距离
-        double[] taskTempWinnerInfo = new double[2];
+        double[] taskWinnerInfo = new double[2];
         // 针对该task，初始化距离为最大距离值
-        taskTempWinnerInfo[DISTANCE_TAG] = Double.MAX_VALUE;
+        taskWinnerInfo[DISTANCE_TAG] = Double.MAX_VALUE;
         // 针对该task，初始化对应距离的隐私预算为最大隐私预算
-        taskTempWinnerInfo[BUDGET_TAG] = Double.MAX_VALUE;
+        taskWinnerInfo[BUDGET_TAG] = Double.MAX_VALUE;
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
         List<Integer> candidateWorkerIDList;
@@ -128,34 +129,34 @@ public class SingleTaskSolution {
         while (!candidateWorkerIDList.isEmpty()) {
             candidateWorkerIDArray = candidateWorkerIDList.toArray(new Integer[0]);
             candidateWorkerIDList.clear();
-            for (Integer i : candidateWorkerIDArray) {
+            for (Integer j : candidateWorkerIDArray) {
                 //进行是否竞争判断1：如果当前 worker 不需要竞争(是上轮的胜利者)，就不作为
-                if (i.equals(taskTempWinnerID)) {
+                if (j.equals(taskWinnerID)) {
                     continue;
                 }
 
                 // 进行是否竞争判断2：如果隐私预算数量不足，不作为
-                if (this.workers[i].budgetIndex >= this.workers[i].privacyBudgetArray.length) {
+                if (this.workers[j].budgetIndex >= this.workers[j].privacyBudgetArray.length) {
 //                    competeState[i] = false;
                     continue;
                 }
 
-                // 进行是否竞争判断3：如果发布当前隐私预算以及扰动距离长度使得效用函数值为负值，不作为
-//                tempUtilityArray[i] = getUlitityValue(allocatedTaskIDListArray[i], , workerArray[i].getMaxRange(), budgetMatrix, taskIndex, i, workerBudgetIndex[i]);
-//                double incrementUtility = getIncrementUtility(this.workers[i].toTaskDistance, this.workers[i].getMaxRange(), this.workers[i].privacyBudgetArray[this.workers[i].budgetIndex]);
-                double newCostPrivacyBudget = getNewCostPrivacyBudget(i);
-                double newPrivacyBudget = this.workers[i].privacyBudgetArray[this.workers[i].budgetIndex];
-                double newNoiseDistance = this.workers[i].toTaskDistance + LaplaceUtils.getLaplaceNoise(1, newPrivacyBudget);
-//                double[] newEffectiveDistanceAndPrivacyBudget = LaplaceUtils.getMaximumLikelihoodEstimationInGivenPoint(this.workers[i].alreadyPublishedNoiseDistanceAndBudget, new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
-                DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(i, newNoiseDistance, newPrivacyBudget);
-                double utilityValue = getUtilityValue(this.task.valuation, newEffectiveDistanceBudgetPair.budget, this.workers[i].toTaskDistance, newCostPrivacyBudget);
-                if (utilityValue <= this.workers[i].currentUtilityFunctionValue) {
+                // 进行是否竞争判断3：如果PPCF函数计算出来的距离大于之前胜利者的距离，不作为
+                //todo: 假设扰动距离的均值精度更高
+                if (this.workers[j].toTaskDistance >= taskWinnerInfo[0]) {
                     continue;
                 }
 
-                // 进行是否竞争判断4：如果PPCF函数计算出来的距离大于之前胜利者的距离，修改compteState为false，不作为
-                //todo: 假设扰动距离的均值精度更高
-                if (this.workers[i].toTaskDistance >= taskTempWinnerInfo[0]) {
+                // 进行是否竞争判断4：如果发布当前隐私预算以及扰动距离长度使得效用函数值为负值，不作为
+//                tempUtilityArray[i] = getUlitityValue(allocatedTaskIDListArray[i], , workerArray[i].getMaxRange(), budgetMatrix, taskIndex, i, workerBudgetIndex[i]);
+//                double incrementUtility = getIncrementUtility(this.workers[i].toTaskDistance, this.workers[i].getMaxRange(), this.workers[i].privacyBudgetArray[this.workers[i].budgetIndex]);
+                double newCostPrivacyBudget = getNewCostPrivacyBudget(j);
+                double newPrivacyBudget = this.workers[j].privacyBudgetArray[this.workers[j].budgetIndex];
+                double newNoiseDistance = this.workers[j].toTaskDistance + LaplaceUtils.getLaplaceNoise(1, newPrivacyBudget);
+//                double[] newEffectiveDistanceAndPrivacyBudget = LaplaceUtils.getMaximumLikelihoodEstimationInGivenPoint(this.workers[i].alreadyPublishedNoiseDistanceAndBudget, new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
+                DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(j, newNoiseDistance, newPrivacyBudget);
+                double newUtilityValue = getUtilityValue(this.task.valuation, newEffectiveDistanceBudgetPair.budget, this.workers[j].toTaskDistance, newCostPrivacyBudget);
+                if (newUtilityValue <= this.workers[j].currentUtilityFunctionValue) {
                     continue;
                 }
 
@@ -167,7 +168,7 @@ public class SingleTaskSolution {
 //                DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(i, newNoiseDistance, this.workers[i].privacyBudgetArray[this.workers[i].budgetIndex]);
                 double competeDistance = newEffectiveDistanceBudgetPair.distance;
                 double effectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
-                double competeValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(competeDistance, taskTempWinnerInfo[DISTANCE_TAG], effectivePrivacyBudget, taskTempWinnerInfo[BUDGET_TAG]);
+                double competeValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(competeDistance, taskWinnerInfo[DISTANCE_TAG], effectivePrivacyBudget, taskWinnerInfo[BUDGET_TAG]);
                 if (competeValue <= 0.5) {
 //                    competeState[i] = false;
                     continue;
@@ -175,40 +176,56 @@ public class SingleTaskSolution {
 
 
                 // 否则（竞争成功），发布当前扰动距离长度和隐私预算(这里只添加进候选列表供server进一步选择)，并将隐私自己的预算索引值加1
-                candidateWorkerIDList.add(i);
+                candidateWorkerIDList.add(j);
 //                this.workers[i].toCompetePublishEverageNoiseDistance = competeDistance;
 //                this.workers[i].toCompetePublishTotalPrivacyBudget = totalBudget;
 //                this.workers[i].alreadyPublishedAverageNoiseDistance = competeDistance;
 //                this.workers[i].alreadyPublishedTotalPrivacyBudget = totalBudget;
-                this.workers[i].alreadyPublishedNoiseDistanceAndBudget.add(new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
-                this.workers[i].effectiveNoiseDistance = competeDistance;
-                this.workers[i].effectivePrivacyBudget = effectivePrivacyBudget;
-                this.workers[i].currentUtilityFunctionValue = utilityValue;
-                this.workers[i].privacyBudgetCost = newCostPrivacyBudget;
-                this.workers[i].budgetIndex ++;
+                this.workers[j].alreadyPublishedNoiseDistanceAndBudget.add(new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
+                this.workers[j].effectiveNoiseDistance = competeDistance;
+                this.workers[j].effectivePrivacyBudget = effectivePrivacyBudget;
+                this.workers[j].completeUtilityFunctionValue = newUtilityValue;
+                this.workers[j].privacyBudgetCost = newCostPrivacyBudget;
+                this.workers[j].budgetIndex ++;
 //                candidateWorkerDistanceAndBudget.add(new double[]{competeDistance, totalBudget});
 
             }
 
+            if (candidateWorkerIDList.size() == 0) {
+                // 此处等价于continue;
+                break;
+            }
+
             // 服务器遍历每个worker，找出竞争成功的worker，修改他的competeState为false，将其他竞争状态为true的workerBudgetIndex值加1
-            // todo: 设置 taskTempWinnerID 和 taskTempWinnerInfo
+            // todo: 设置 taskTempWinnerID 和 taskTempWinnerInfo. 需要额外更新胜利者的 currentUtilityFunctionValue，被竞争下去的失败者的 currentUtilityFunctionValue
             //继续一轮竞争，直到除了胜利者其他的竞争者的competeState都为false.
-            for (Integer i : candidateWorkerIDArray) {
+            Integer taskWinnerIDBefore = taskWinnerID;
+            for (Integer j : candidateWorkerIDArray) {
 //                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].toCompetePublishEverageNoiseDistance, taskTempWinnerInfo[0], this.workers[i].toCompetePublishTotalPrivacyBudget, taskTempWinnerInfo[1]);
-                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].effectiveNoiseDistance, taskTempWinnerInfo[DISTANCE_TAG], this.workers[i].effectivePrivacyBudget, taskTempWinnerInfo[BUDGET_TAG]);
+                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[j].effectiveNoiseDistance, taskWinnerInfo[DISTANCE_TAG], this.workers[j].effectivePrivacyBudget, taskWinnerInfo[BUDGET_TAG]);
 
                 if (competeTemp > 0.5) {
-                    taskTempWinnerID = i;
+                    taskWinnerID = j;
 //                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishEverageNoiseDistance;
 //                    taskTempWinnerInfo[i] = this.workers[i].toCompetePublishTotalPrivacyBudget;
-                    taskTempWinnerInfo[DISTANCE_TAG] = this.workers[i].effectiveNoiseDistance;
-                    taskTempWinnerInfo[BUDGET_TAG] = this.workers[i].effectivePrivacyBudget;
+                    taskWinnerInfo[DISTANCE_TAG] = this.workers[j].effectiveNoiseDistance;
+                    taskWinnerInfo[BUDGET_TAG] = this.workers[j].effectivePrivacyBudget;
                 }
             }
+            // 调整竞争成功的worker和被竞争下去的worker
+            if (!taskWinnerIDBefore.equals(taskWinnerID)) {
+                if (!taskWinnerIDBefore.equals(-1)) {
+                    this.workers[taskWinnerIDBefore].currentUtilityFunctionValue -= this.task.valuation;
+                }
+                this.workers[taskWinnerID].currentUtilityFunctionValue = this.workers[taskWinnerID].completeUtilityFunctionValue;
+            }
+
+//            Integer beforeWinnerID = this.task
+
         }
-        System.out.println("The winner worker's id is " + taskTempWinnerID);
-        System.out.println("The winner worker's noise distance is " + taskTempWinnerInfo[DISTANCE_TAG]);
-        System.out.println("The winner worker's budget is " + taskTempWinnerInfo[BUDGET_TAG]);
+        System.out.println("The winner worker's id is " + taskWinnerID);
+        System.out.println("The winner worker's noise distance is " + taskWinnerInfo[DISTANCE_TAG]);
+        System.out.println("The winner worker's budget is " + taskWinnerInfo[BUDGET_TAG]);
     }
 
     private void initializeCandidateWorkers(List<Integer> candidateWorkerIDList) {

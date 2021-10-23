@@ -13,6 +13,7 @@ public class SingleTaskBasicWorker extends Worker {
 
     public int budgetIndex = 0;
 
+    public Double completeUtilityFunctionValue = null;
     public Double currentUtilityFunctionValue = null;
 
     public TreeSet<DistanceBudgetPair> alreadyPublishedNoiseDistanceAndBudget = null;

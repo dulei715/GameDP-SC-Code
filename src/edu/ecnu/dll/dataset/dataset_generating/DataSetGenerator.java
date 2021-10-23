@@ -1,11 +1,11 @@
 package edu.ecnu.dll.dataset.dataset_generating;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
+
+import java.io.*;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Random;
 
 public class DataSetGenerator {
@@ -65,6 +65,64 @@ public class DataSetGenerator {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void generateDataSet(String dataPointInputPath, String samplingOutputPath, SamplingFunction samplingFunction) {
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+        File outputFile = null;
+        File outputFileParent = null;
+        String lineString;
+        int dataSize, dataIndex = 0;
+        List<Integer> sampleIndexList = null;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(new File(dataPointInputPath)));
+            outputFile = new File(samplingOutputPath);
+            outputFileParent = outputFile.getParentFile();
+            if (!outputFileParent.exists()) {
+                outputFileParent.mkdirs();
+                outputFile.createNewFile();
+            } else if (!outputFile.exists()) {
+                outputFile.createNewFile();
+            }
+
+            bufferedWriter = new BufferedWriter(new FileWriter(new File(samplingOutputPath)));
+
+            lineString = bufferedReader.readLine();
+            dataSize = Integer.valueOf(lineString);
+            sampleIndexList = samplingFunction.sample(dataSize);
+            bufferedWriter.write(String.valueOf(sampleIndexList.size()));
+            bufferedWriter.newLine();
+
+            for (Integer chosenIndex : sampleIndexList) {
+                for (; dataIndex < chosenIndex; ++dataIndex) {
+                    bufferedReader.readLine();
+                }
+                lineString = bufferedReader.readLine();
+                ++ dataIndex;
+//                if (lineString == null) {
+//                    System.out.println(lineString);
+//                }
+                bufferedWriter.write(lineString);
+                bufferedWriter.newLine();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void generateWorkerDataSet() {
+
     }
 
 

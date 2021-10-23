@@ -15,7 +15,17 @@ public class BasicArray {
         }
     }
 
+    public static void setIntArrayTo(Integer[] element, int value) {
+        for (int i = 0; i < element.length; i++) {
+            element[i] = value;
+        }
+    }
+
     public static void setIntArrayToZero(int[] element) {
+        setIntArrayTo(element, 0);
+    }
+
+    public static void setIntArrayToZero(Integer[] element) {
         setIntArrayTo(element, 0);
     }
 

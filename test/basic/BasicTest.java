@@ -33,5 +33,19 @@ public class BasicTest {
         String[] initializedArray = BasicArray.getInitializedArray("abcd", 10);
         MyPrint.showStringArray(initializedArray);
     }
+    
+    @Test
+    public void fun5() {
+        int[] data = new int[] {
+                23, -6, 11, -4, -7, 8, 9
+        };
+        int[] divides = new int[]{3, -4};
+        for (int j = 0; j < divides.length; j++) {
+            for (int i = 0; i < data.length; i++) {
+                System.out.print(data[i] % divides[j] + ", ");
+            }
+            System.out.println();
+        }
+    }
 
 }

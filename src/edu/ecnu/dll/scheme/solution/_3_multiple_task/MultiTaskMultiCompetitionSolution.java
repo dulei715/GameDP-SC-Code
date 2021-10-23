@@ -1,9 +1,6 @@
 package edu.ecnu.dll.scheme.solution._3_multiple_task;
 
-import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPair;
-import edu.ecnu.dll.scheme.struct.task.BasicTask;
-import edu.ecnu.dll.scheme.struct.worker.MultiTaskBasicWorker;
 import tools.basic.BasicArray;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.io.print.MyPrint;
@@ -58,11 +55,11 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
 
 
         // 针对每个task，记录当前竞争成功的worker的ID
-        int[] taskCurrentWinnerIDArray = new int[this.tasks.length];
+        Integer[] taskCurrentWinnerIDArray = new Integer[this.tasks.length];
         BasicArray.setIntArrayTo(taskCurrentWinnerIDArray, -1);
 
         // 针对每个task，记录当前竞争成功的worker的budget以及扰动距离
-        double[][] taskCurrentWinnerInfoArray = new double[this.tasks.length][2];
+        Double[][] taskCurrentWinnerInfoArray = new Double[this.tasks.length][2];
 
         // 针对每个task，初始化距离为最大距离值
         // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
@@ -121,7 +118,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                     //todo: 好好设计一下：
                     // 进行是否竞争判断3： 遍历所有的可选task, 选出最大使得自身Utility增加最大的task, 如果为空，则不作为。
                     TaskIDDistanceBudgetPair maxIncrementUtilityInfo;
-                    maxIncrementUtilityInfo = chooseByTaskEntropy(tempCandidateTaskList, this.workers[i], competingTimes, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, completedWorkerIDSet);
+                    maxIncrementUtilityInfo = chooseByTaskEntropy(tempCandidateTaskList, i, competingTimes, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, completedWorkerIDSet);
                     if (maxIncrementUtilityInfo == null) {
                         continue;
                     }
@@ -129,8 +126,8 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                     // 否则（竞争成功），发布当前扰动距离长度和隐私预算(这里只添加进候选列表供server进一步选择)，并将隐私自己的预算索引值加1
                     newCandidateWorkerIDList[maxIncrementUtilityInfo.taskID].add(i);
                     completedWorkerIDSet[i].add(i);
-                    this.workers[i].effectiveNoiseDistance[maxIncrementUtilityInfo.taskID] = maxIncrementUtilityInfo.noiseAverageDistance;
-                    this.workers[i].effectivePrivacyBudget[maxIncrementUtilityInfo.taskID] = maxIncrementUtilityInfo.totalPrivacyBudget;
+                    this.workers[i].effectiveNoiseDistance[maxIncrementUtilityInfo.taskID] = maxIncrementUtilityInfo.noiseEffectiveDistance;
+                    this.workers[i].effectivePrivacyBudget[maxIncrementUtilityInfo.taskID] = maxIncrementUtilityInfo.effectivePrivacyBudget;
                     this.workers[i].budgetIndex[maxIncrementUtilityInfo.taskID] ++;
                     this.workers[i].taskCompletingTimes[k] ++;
                     totalCompleteWorkerNumber ++;

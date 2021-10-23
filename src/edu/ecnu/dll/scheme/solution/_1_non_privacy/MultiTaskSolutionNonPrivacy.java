@@ -2,7 +2,7 @@ package edu.ecnu.dll.scheme.solution._1_non_privacy;
 
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPairProposingValue;
-import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPairTaskEntropy;
+import edu.ecnu.dll.basic_struct.pack.EntropyInfo;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskBasicWorker;
@@ -187,7 +187,7 @@ public class MultiTaskSolutionNonPrivacy {
      * @param lastTermTaskWinnerInfoArray 记录上轮竞争中成功竞争每个task的worker其他信息
      * @return 经过考虑PPCF，PCF，task熵之后选择的taskID以及对应要的worker要修改的发布平均噪声距离，总的隐私预算和task熵值
      */
-    private TaskIDDistanceBudgetPairTaskEntropy chooseByTaskEntropy(Task[] taskArray, MultiTaskNonPrivacyWorker worker, Integer[] totalCompetingTimesList, int[] lastTermTaskWinnerIDArray, double[] lastTermTaskWinnerInfoArray, HashSet<Integer>[] competingWorkerIDSet) {
+    private EntropyInfo chooseByTaskEntropy(Task[] taskArray, MultiTaskNonPrivacyWorker worker, Integer[] totalCompetingTimesList, int[] lastTermTaskWinnerIDArray, double[] lastTermTaskWinnerInfoArray, HashSet<Integer>[] competingWorkerIDSet) {
         // 遍历taskIDList中的所有task，找出能使当前worker的utility增加最大的task，返回（该task的ID, 申请即将泄露的平均distance[此处可返回扰动], 申请泄露的budget总和[此处可返回当前budget]）
         Integer taskID = null;
         Double noiseAverageDistance = null;
@@ -207,7 +207,7 @@ public class MultiTaskSolutionNonPrivacy {
         if (taskID == null) {
             return null;
         }
-        return new TaskIDDistanceBudgetPairTaskEntropy(taskID, noiseAverageDistance, totalPrivacyBudget, candidateTaskEntropy);
+        return new EntropyInfo(taskID, noiseAverageDistance, totalPrivacyBudget, candidateTaskEntropy);
     }
 
     private double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
