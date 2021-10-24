@@ -33,12 +33,12 @@ public class MeanSamplingFunction extends SamplingFunction {
     }
 
     @Override
-    public List<Integer> sample(int size) {
+    public List<Integer> sample(int totalSize) {
         List<Integer> result = new ArrayList<>();
         int lowerBound = this.bias;
         int upperBound = this.bias + this.shareSize;
         int groupInnerIndex;
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < totalSize; i++) {
             groupInnerIndex = i % this.groupMemberSize;
             if (groupInnerIndex >= lowerBound && groupInnerIndex < upperBound) {
                 result.add(i);

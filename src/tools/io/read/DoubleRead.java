@@ -8,6 +8,8 @@ import java.util.List;
 
 public class DoubleRead {
 
+    public static final String SPLIT_TAG = " ";
+
     public static Double[] readDouble(String filePath, int scale) {
         BufferedReader bufferedReader = null;
         String line;
@@ -58,7 +60,7 @@ public class DoubleRead {
                     continue;
                 }
                 doubleListArray[++k] = new ArrayList();
-                dataElement = line.split(" ");
+                dataElement = line.split(SPLIT_TAG);
                 for (String s : dataElement) {
                     doubleListArray[k].add(Double.valueOf(s));
                 }

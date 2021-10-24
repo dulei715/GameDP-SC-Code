@@ -1,6 +1,7 @@
 package edu.ecnu.dll.dataset.dataset_generating;
 
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
+import tools.basic.BasicCalculation;
 
 import java.io.*;
 import java.math.RoundingMode;
@@ -10,7 +11,9 @@ import java.util.Random;
 
 public class DataSetGenerator {
 
-    public void generateUniformPlaneDataPoint(int dimensionLength, int pointSize, String outputPath) {
+    public static final String WRITING_SPLIT_TAG_IN_LINE = " ";
+
+    public static void generateUniformPlaneDataPoint(int dimensionLength, int pointSize, String outputPath) {
         BufferedWriter bufferedWriter = null;
         double x, y;
         DecimalFormat decimalFormat = new DecimalFormat("0.000000");
@@ -22,7 +25,7 @@ public class DataSetGenerator {
             for (int i = 0; i < pointSize; i++) {
                 x = Math.random() * dimensionLength;
                 y = Math.random() * dimensionLength;
-                bufferedWriter.write(decimalFormat.format(x) + " " + decimalFormat.format(y));
+                bufferedWriter.write(decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y));
                 bufferedWriter.newLine();
             }
             bufferedWriter.flush();
@@ -38,7 +41,7 @@ public class DataSetGenerator {
         }
     }
 
-    public void generateNormalPlaneDataPoint(int dimensionLength, int pointSize, double mean, double variance, String outputPath) {
+    public static void generateNormalPlaneDataPoint(int dimensionLength, int pointSize, double mean, double variance, String outputPath) {
         Random random = new Random();
         BufferedWriter bufferedWriter = null;
         double x, y;
@@ -51,7 +54,7 @@ public class DataSetGenerator {
             for (int i = 0; i < pointSize; i++) {
                 x = Math.sqrt(variance)*random.nextGaussian() + mean;
                 y = Math.sqrt(variance)*random.nextGaussian() + mean;
-                bufferedWriter.write(decimalFormat.format(x) + " " + decimalFormat.format(y));
+                bufferedWriter.write(decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y));
                 bufferedWriter.newLine();
             }
             bufferedWriter.flush();
@@ -67,7 +70,7 @@ public class DataSetGenerator {
         }
     }
 
-    public void generateDataSet(String dataPointInputPath, String samplingOutputPath, SamplingFunction samplingFunction) {
+    public static int generateDataSet(String dataPointInputPath, String samplingOutputPath, SamplingFunction samplingFunction) {
         BufferedReader bufferedReader = null;
         BufferedWriter bufferedWriter = null;
         File outputFile = null;
@@ -119,9 +122,70 @@ public class DataSetGenerator {
                 e.printStackTrace();
             }
         }
+        return sampleIndexList.size();
     }
 
-    public void generateWorkerDataSet() {
+    public static void generateTaskValuesDataSet(String outputPath, int taskSize, double lowerBound, double upperBound, int precision) {
+        BufferedWriter bufferedWriter = null;
+        String taskValue = null;
+        try {
+            File outputFile = new File(outputPath);
+            File parentDir = outputFile.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+            bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+            bufferedWriter.write(String.valueOf(taskSize));
+            bufferedWriter.newLine();
+            for (int i = 0; i < taskSize; i++) {
+                taskValue = BasicCalculation.getRandomValueInRange(lowerBound, upperBound, precision);
+                bufferedWriter.write(taskValue);
+                bufferedWriter.newLine();
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public static void generateWorkerPrivacyBudgetDataSet(String outputPath, int workerSize, int taskSize, int budgetGroupSize, double lowerBound, double upperBound, int precision) {
+        BufferedWriter bufferedWriter = null;
+        String[][] taskValue = null;
+        try {
+            File outputFile = new File(outputPath);
+            File parentDir = outputFile.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+            bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+            bufferedWriter.write(String.valueOf(workerSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(taskSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(budgetGroupSize));
+            bufferedWriter.newLine();
+            for (int i = 0, j, k; i < workerSize; i++) {
+                taskValue = BasicCalculation.getRandomValueTwoDimensionArrayInRange(lowerBound, upperBound, precision, taskSize, budgetGroupSize);
+                for (j = 0; j < taskValue.length; j++) {
+                    for (k = 0; k < taskValue[0].length - 1; k++) {
+                        bufferedWriter.write(taskValue[j][k]);
+                        bufferedWriter.write(WRITING_SPLIT_TAG_IN_LINE);
+                    }
+                    bufferedWriter.write(taskValue[j][k]);
+                    bufferedWriter.newLine();
+                }
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -130,6 +194,8 @@ public class DataSetGenerator {
 //        String outputPath = System.getProperty("user.dir") + "\\dataset\\UniformDataPoint.txt";
 //        DataSetGenerator dataSetGenerator = new DataSetGenerator();
 //        dataSetGenerator.generateUniformPlaneDataPoint(200000, 10000, outputPath);
+
+
         String outputPath = System.getProperty("user.dir") + "\\dataset\\NormalDataPoint.txt";
         DataSetGenerator dataSetGenerator = new DataSetGenerator();
         dataSetGenerator.generateNormalPlaneDataPoint(200000, 10000, 0, 10000000000L, outputPath);

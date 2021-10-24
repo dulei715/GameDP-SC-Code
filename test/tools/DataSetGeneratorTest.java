@@ -28,4 +28,28 @@ public class DataSetGeneratorTest {
         int bias = 3;
         dataSetGenerator.generateDataSet(inputDataSetPath, outputDataSetPath, new MeanSamplingFunction(groupMemberSize, shareSize, bias));
     }
+
+    @Test
+    public void fun3() {
+        String basicPath = System.getProperty("user.dir") + "\\dataset\\";
+        String outputDataSetPath = basicPath + "test_dataset\\_2_multiple_task_dataset\\test1\\task_value.txt";
+        int taskSize = 645;
+        double lowerBound = 100;
+        double upperBound = 200;
+        int precision = 2;
+        DataSetGenerator.generateTaskValuesDataSet(outputDataSetPath, taskSize, lowerBound, upperBound, precision);
+    }
+
+    @Test
+    public void fun4() {
+        String basicPath = System.getProperty("user.dir") + "\\dataset\\";
+        String outputDataSetPath = basicPath + "test_dataset\\_2_multiple_task_dataset\\test1\\worker_privacy_budget.txt";
+        int taskSize = 645;
+        int workerSize = 215;
+        int budgetGroupSize = 3;
+        double lowerBound = 0;
+        double upperBound = 10;
+        int precision = 2;
+        DataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputDataSetPath, workerSize, taskSize, budgetGroupSize, lowerBound, upperBound, precision);
+    }
 }

@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Set;
 
 public class PointRead {
+
+    public static final String SPLIT_TAG = " ";
+
     protected List<Point> pointList = null;
     protected String filePath;
     protected Integer dataSize = null;
@@ -35,7 +38,7 @@ public class PointRead {
                 if (i % scale != 0) {
                     continue;
                 }
-                dataElement = line.split(" ");
+                dataElement = line.split(SPLIT_TAG);
                 this.pointList.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
             }
 //            if (!this.dataSize.equals(this.pointList.size())) {
@@ -70,7 +73,7 @@ public class PointRead {
             dataSize = Integer.valueOf(bufferedReader.readLine());
             pointList = new ArrayList<>(dataSize);
             while ((line = bufferedReader.readLine()) != null) {
-                dataElement = line.split(" ");
+                dataElement = line.split(SPLIT_TAG);
                 pointList.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
             }
             if (dataSize != pointList.size()) {
