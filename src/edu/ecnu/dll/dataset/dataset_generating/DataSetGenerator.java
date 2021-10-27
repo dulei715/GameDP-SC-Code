@@ -138,7 +138,7 @@ public class DataSetGenerator {
             bufferedWriter.write(String.valueOf(taskSize));
             bufferedWriter.newLine();
             for (int i = 0; i < taskSize; i++) {
-                taskValue = BasicCalculation.getRandomValueInRange(lowerBound, upperBound, precision);
+                taskValue = BasicCalculation.getRandomStringValueInRange(lowerBound, upperBound, precision);
                 bufferedWriter.write(taskValue);
                 bufferedWriter.newLine();
             }
@@ -167,7 +167,7 @@ public class DataSetGenerator {
             bufferedWriter.write(String.valueOf(workerSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(taskSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(budgetGroupSize));
             bufferedWriter.newLine();
             for (int i = 0, j, k; i < workerSize; i++) {
-                taskValue = BasicCalculation.getRandomValueTwoDimensionArrayInRange(lowerBound, upperBound, precision, taskSize, budgetGroupSize);
+                taskValue = BasicCalculation.getRandomStringValueTwoDimensionArrayInRange(lowerBound, upperBound, precision, taskSize, budgetGroupSize);
                 for (j = 0; j < taskValue.length; j++) {
                     for (k = 0; k < taskValue[0].length - 1; k++) {
                         bufferedWriter.write(taskValue[j][k]);

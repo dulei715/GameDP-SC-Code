@@ -120,7 +120,7 @@ public class SingleTaskSolution {
         taskWinnerInfo[BUDGET_TAG] = Double.MAX_VALUE;
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
-        List<Integer> candidateWorkerIDLists;
+        List<Integer> candidateWorkerIDList;    //todo: 注释掉去测试
         candidateWorkerIDList = new ArrayList<>();
         initializeCandidateWorkers(candidateWorkerIDList);
 
