@@ -120,7 +120,7 @@ public class SingleTaskSolution {
         taskWinnerInfo[BUDGET_TAG] = Double.MAX_VALUE;
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
-        List<Integer> candidateWorkerIDList;
+        List<Integer> candidateWorkerIDLists;
         candidateWorkerIDList = new ArrayList<>();
         initializeCandidateWorkers(candidateWorkerIDList);
 
@@ -225,6 +225,7 @@ public class SingleTaskSolution {
         }
         System.out.println("The winner worker's id is " + taskWinnerID);
         System.out.println("The winner worker's noise distance is " + taskWinnerInfo[DISTANCE_TAG]);
+        System.out.println("The winner worker's real distance is " + this.workers[taskWinnerID].toTaskDistance);
         System.out.println("The winner worker's budget is " + taskWinnerInfo[BUDGET_TAG]);
     }
 

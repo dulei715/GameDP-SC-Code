@@ -58,9 +58,9 @@ public class TwoDimensionDoubleRead {
         String taskPointPath = basicPath + "worker_privacy_budget.txt";
         List<Double[]>[] result = TwoDimensionDoubleRead.readDouble(taskPointPath);
         for (int i = 0; i < result.length; i++) {
-            List<Double[]> innnerList = result[i];
-            for (int j = 0; j < innnerList.size(); j++) {
-                MyPrint.showDoubleArray(innnerList.get(j));
+            List<Double[]> innerList = result[i];
+            for (int j = 0; j < innerList.size(); j++) {
+                MyPrint.showDoubleArray(innerList.get(j));
             }
             System.out.println("**********************************************");
         }

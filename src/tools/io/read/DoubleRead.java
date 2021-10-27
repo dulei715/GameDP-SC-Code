@@ -43,17 +43,21 @@ public class DoubleRead {
         return doubleArray;
     }
 
-    public static List[] readDoubleList(String filePath, int scale) {
+    public static List<Double>[] readDoubleList(String filePath, int scale) {
         BufferedReader bufferedReader = null;
         String line;
-        int dataSize;
+        int[] dataInfo = new int[3];
+//        String[] dataInfoStringArray;
         String[] dataElement;
-        List[] doubleListArray = null;
+        List<Double>[] doubleListArray = null;
         int i = 0, k = -1;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
-            dataSize = Integer.valueOf(bufferedReader.readLine());
-            doubleListArray = new List[dataSize/scale];
+            dataElement = bufferedReader.readLine().split(SPLIT_TAG);
+            for (int j = 0; j < 3; j++) {
+                dataInfo[j] = Integer.valueOf(dataElement[j]);
+            }
+            doubleListArray = new List[dataInfo[0]/scale];
             while ((line = bufferedReader.readLine()) != null) {
                 ++i;
                 if (i % scale != 0) {

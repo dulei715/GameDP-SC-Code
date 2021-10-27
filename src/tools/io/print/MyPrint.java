@@ -1,5 +1,7 @@
 package tools.io.print;
 
+import tools.io.read.DoubleRead;
+
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -16,18 +18,18 @@ public class MyPrint {
 //            System.out.println(pattern.toString());
             DecimalFormat df = new DecimalFormat(pattern.toString());
             for (i = 0; i < data.length - 1; i++) {
-                System.out.print(df.format(data[i]) + split + " ");
+                System.out.print(df.format(data[i]) + split);
             }
             System.out.println(df.format(data[i]));
         } else {
             for (i = 0; i < data.length - 1; i++) {
-                System.out.printf(data[i] + split + " ");
+                System.out.printf(data[i] + split);
             }
             System.out.println(data[i]);
         }
     }
     public static void showDoubleArray(double[] data) {
-        showDoubleArray(data, ",", -1);
+        showDoubleArray(data, ", ", -1);
     }
 
     public static void showDoubleArray(Double[] data, String split, int precision) {
@@ -41,19 +43,19 @@ public class MyPrint {
 //            System.out.println(pattern.toString());
             DecimalFormat df = new DecimalFormat(pattern.toString());
             for (i = 0; i < data.length - 1; i++) {
-                System.out.print(df.format(data[i]) + split + " ");
+                System.out.print(df.format(data[i]) + split);
             }
             System.out.println(df.format(data[i]));
         } else {
             for (i = 0; i < data.length - 1; i++) {
-                System.out.printf(data[i] + split + " ");
+                System.out.printf(data[i] + split);
             }
             System.out.println(data[i]);
         }
     }
 
     public static void showDoubleArray(Double[] data) {
-        showDoubleArray(data, ",", -1);
+        showDoubleArray(data, ", ", -1);
     }
 
     public static void showIntegerArray(int[] data, String split, int precision){
@@ -67,19 +69,19 @@ public class MyPrint {
 //            System.out.println(pattern.toString());
             DecimalFormat df = new DecimalFormat(pattern.toString());
             for (i = 0; i < data.length - 1; i++) {
-                System.out.print(df.format(data[i]) + split + " ");
+                System.out.print(df.format(data[i]) + split);
             }
             System.out.println(df.format(data[i]));
         } else {
             for (i = 0; i < data.length - 1; i++) {
-                System.out.printf(data[i] + split + " ");
+                System.out.printf(data[i] + split);
             }
             System.out.println(data[i]);
         }
     }
 
     public static void showIntegerArray(int[] data) {
-        showIntegerArray(data, ",", -1);
+        showIntegerArray(data, ", ", -1);
     }
 
     public static void showIntegerArray(Integer[] data, String split, int precision){
@@ -93,19 +95,19 @@ public class MyPrint {
 //            System.out.println(pattern.toString());
             DecimalFormat df = new DecimalFormat(pattern.toString());
             for (i = 0; i < data.length - 1; i++) {
-                System.out.print(df.format(data[i]) + split + " ");
+                System.out.print(df.format(data[i]) + split);
             }
             System.out.println(df.format(data[i]));
         } else {
             for (i = 0; i < data.length - 1; i++) {
-                System.out.printf(data[i] + split + " ");
+                System.out.printf(data[i] + split);
             }
             System.out.println(data[i]);
         }
     }
 
     public static void showIntegerArray(Integer[] data) {
-        showIntegerArray(data, ",", -1);
+        showIntegerArray(data, ", ", -1);
     }
 
     public static void show2DimensionDoubleArray(double[][] data, String split, int precision) {
@@ -120,14 +122,14 @@ public class MyPrint {
             DecimalFormat df = new DecimalFormat(pattern.toString());
             for (i = 0; i < data.length; i++) {
                 for (j = 0; j < data[0].length - 1; j++) {
-                    System.out.print(df.format(data[i][j]) + split + " ");
+                    System.out.print(df.format(data[i][j]) + split);
                 }
                 System.out.println(df.format(data[i][j]));
             }
         } else {
             for (i = 0; i < data.length; i++) {
                 for (j = 0; j < data[0].length - 1; j++) {
-                    System.out.print(data[i][j] + split + " ");
+                    System.out.print(data[i][j] + split);
                 }
                 System.out.println(data[i][j]);
             }
@@ -135,7 +137,7 @@ public class MyPrint {
     }
 
     public static void show2DimensionDoubleArray(double[][] data) {
-        show2DimensionDoubleArray(data, ",", -1);
+        show2DimensionDoubleArray(data, ", ", -1);
     }
 
     public static void showList(List<? extends Object> list) {
@@ -149,7 +151,7 @@ public class MyPrint {
     public static void showByteArray(byte[] data, String split){
         int i;
         for (i = 0; i < data.length - 1; i++) {
-            System.out.printf(data[i] + split + " ");
+            System.out.printf(data[i] + split);
         }
         System.out.println(data[i]);
     }
@@ -157,13 +159,13 @@ public class MyPrint {
     public static void showStringArray(String[] data, String split){
         int i;
         for (i = 0; i < data.length - 1; i++) {
-            System.out.printf(data[i] + split + " ");
+            System.out.printf(data[i] + split);
         }
         System.out.println(data[i]);
     }
 
     public static void showStringArray(String[] data) {
-        showStringArray(data, ",");
+        showStringArray(data, ", ");
     }
 
     public static void showListArray(List[] data) {
@@ -173,5 +175,25 @@ public class MyPrint {
             }
             System.out.println();
         }
+    }
+
+    public static void showListDoubleArray(List<Double[]>[] data, String doubleArraySplitSymbol, String listSplitSymbol) {
+        List<Double[]> doubleArrayList;
+        Double[] tempDoubleArray;
+        for (int i = 0; i < data.length; i++) {
+            doubleArrayList = data[i];
+            for (int j = 0, k; j < doubleArrayList.size(); j++) {
+                tempDoubleArray = doubleArrayList.get(j);
+                for (k = 0; k < tempDoubleArray.length - 1; k++) {
+                    System.out.print(tempDoubleArray[k] + doubleArraySplitSymbol);
+                }
+                System.out.print(tempDoubleArray[k] + listSplitSymbol);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void showListDoubleArray(List<Double[]>[] data) {
+        showListDoubleArray(data, ", ", "; ");
     }
 }

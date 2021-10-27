@@ -94,7 +94,7 @@ public class MultiTaskSingleCompetitionSolution {
             this.workers[j].privacyBudgetCost = new Double[this.tasks.length];
             this.workers[j].taskCompletingTimes = new Integer[this.tasks.length];
             for (int i = 0; i < tasks.length; i++) {
-                this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[i].location);
+                this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[j].location);
                 this.workers[j].budgetIndex[i] = 0;
                 this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray[i] = new TreeSet<>();
                 this.workers[j].completeUtilityFunctionValue = BasicArray.getInitializedArray(0.0, this.tasks.length);
@@ -112,6 +112,20 @@ public class MultiTaskSingleCompetitionSolution {
             if (worker.budgetIndex[i] < worker.privacyBudgetArray[i].length) {
                 tempCandidateTaskList.add(i);
             }
+        }
+    }
+
+    private void initializeAllocationByOrderedAllocation(List<Integer>[] newCandidateWorkerIDList, Integer[] taskCurrentWinnerIDArray, Double[][] taskCurrentWinnerInfoArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
+        // 针对每个task，初始化距离为最大距离值
+        // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
+        // 针对每个task，初始化总的被竞争次数为0
+        // 针对每个task，初始化访问过被访问worker集合为空集合
+        for (int i = 0; i < this.tasks.length; i++) {
+            newCandidateWorkerIDList[i] = new ArrayList<>();
+            taskCurrentWinnerInfoArray[i][DISTANCE_TAG] = Double.MAX_VALUE;
+            taskCurrentWinnerInfoArray[i][BUDGET_TAG] = Double.MAX_VALUE;
+            competingTimes[i] = 0;
+            completedWorkerIDSet[i] = new HashSet<>();
         }
     }
 
@@ -135,21 +149,13 @@ public class MultiTaskSingleCompetitionSolution {
         // 针对每个task，记录当前竞争成功的worker的budget以及扰动距离
         Double[][] taskCurrentWinnerInfoArray = new Double[this.tasks.length][2];
 
-        // 针对每个task，初始化距离为最大距离值
-        // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
-        // 针对每个task，初始化总的被竞争次数为0
-        // 针对每个task，初始化访问过被访问worker集合为空集合
-        for (int i = 0; i < this.tasks.length; i++) {
-            taskCurrentWinnerInfoArray[i][DISTANCE_TAG] = Double.MAX_VALUE;
-            taskCurrentWinnerInfoArray[i][BUDGET_TAG] = Double.MAX_VALUE;
-            competingTimes[i] = 0;
-            completedWorkerIDSet[i] = new HashSet<>();
-        }
+        // todo: 封装到了initializeAllocations
 
         // 针对每个task，本轮提出竞争的worker的ID（每轮需要清空）
         List<Integer>[] newCandidateWorkerIDList, oldCandidateWorkerIDList;
         newCandidateWorkerIDList = new ArrayList[this.tasks.length];
-        BasicArray.setListArrayToEmptyList(newCandidateWorkerIDList);
+//        BasicArray.setListArrayToEmptyList(newCandidateWorkerIDList);
+        initializeAllocationByOrderedAllocation(newCandidateWorkerIDList, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, competingTimes, completedWorkerIDSet);
 
 
         double competeTemp;
@@ -246,6 +252,8 @@ public class MultiTaskSingleCompetitionSolution {
         MyPrint.showDoubleArray(taskCurrentWinnerInfoArray[DISTANCE_TAG]);
         MyPrint.showDoubleArray(taskCurrentWinnerInfoArray[BUDGET_TAG]);
     }
+
+
 
 
     private Double getNewCostPrivacyBudget(Integer workerID, Integer taskID) {
