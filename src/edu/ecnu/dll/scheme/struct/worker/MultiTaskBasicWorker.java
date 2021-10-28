@@ -13,7 +13,9 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
 
     public int[] budgetIndex = null;
 
+    // 记录成功进入候选的utility函数值
     public Double[] completeUtilityFunctionValue = null;
+    // 记录每次计算的utility函数值
     public Double[] currentUtilityFunctionValue = null;
 
     public TreeSet<DistanceBudgetPair>[] alreadyPublishedNoiseDistanceAndBudgetTreeSetArray = null;

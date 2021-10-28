@@ -10,7 +10,7 @@ import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction
 import tools.differential_privacy.noise.LaplaceUtils;
 
 import java.util.*;
-
+@Deprecated
 public class MultiTaskSolution {
     public PPPTask[] tasks  = null;
     public PPPWorker[] workers = null;
@@ -18,6 +18,7 @@ public class MultiTaskSolution {
     public int[][] taskPreferenceTable = null;
     // 记录每个task的当前考察到对应的偏好表里的哪个位置了
     public int[] taskPreferenceIndex = null;
+    // 记录每个冲突每个worker的taskID集合
     public LinkedList[] candidateTaskIDListArray = null;
     public LinkedList<Integer> conflictWorkerIDList = null;
 

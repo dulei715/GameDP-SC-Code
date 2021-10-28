@@ -6,6 +6,7 @@ import tools.io.print.MyPrint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 public class BasicTest {
     @Test
@@ -46,6 +47,20 @@ public class BasicTest {
             }
             System.out.println();
         }
+    }
+
+    @Test
+    public void fun6() {
+        TreeSet<Integer> treeSet = new TreeSet<>();
+        treeSet.add(23);
+        treeSet.add(78);
+        treeSet.add(56);
+
+        Object[] arr = treeSet.stream().toArray();
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
+        }
+
     }
 
 }

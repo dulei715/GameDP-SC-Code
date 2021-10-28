@@ -120,7 +120,7 @@ public class SingleTaskSolution {
         taskWinnerInfo[BUDGET_TAG] = Double.MAX_VALUE;
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
-        List<Integer> candidateWorkerIDList;    //todo: 注释掉去测试
+        List<Integer> candidateWorkerIDList;
         candidateWorkerIDList = new ArrayList<>();
         initializeCandidateWorkers(candidateWorkerIDList);
 
@@ -216,6 +216,8 @@ public class SingleTaskSolution {
             if (!taskWinnerIDBefore.equals(taskWinnerID)) {
                 if (!taskWinnerIDBefore.equals(-1)) {
                     this.workers[taskWinnerIDBefore].currentUtilityFunctionValue -= this.task.valuation;
+                    // 将被竞争下去的worker加入竞争集合，以便下轮判断是否可以竞争
+                    candidateWorkerIDList.add(taskWinnerIDBefore);
                 }
                 this.workers[taskWinnerID].currentUtilityFunctionValue = this.workers[taskWinnerID].completeUtilityFunctionValue;
             }
