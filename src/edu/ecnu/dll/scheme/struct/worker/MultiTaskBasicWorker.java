@@ -28,9 +28,12 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
 
 
     // 用于记录该worker对所有task的竞争次数 // todo: 竞争次数怎么定义有待考究，他会影响任务熵的定义
-    public Integer[] taskCompletingTimes = null;
+    public Integer[] taskCompetingTimes = null;
 
-//    public Double toCompetePublishEverageNoiseDistance = null;
+    // 记录当前是否已经竞争到了task。只用于多竞争情况。
+    public Boolean currentWinningState = null;
+
+//    public Double toCompetePublishAverageNoiseDistance = null;
 //    public Double toCompetePublishTotalPrivacyBudget = null;
 
     public MultiTaskBasicWorker() {

@@ -105,7 +105,7 @@ public class MultiTaskMultiCompetitionSolutionBefore extends MultiTaskSingleComp
                     this.workers[i].effectiveNoiseDistance[maxIncrementUtilityInfo.taskID] = maxIncrementUtilityInfo.noiseEffectiveDistance;
                     this.workers[i].effectivePrivacyBudget[maxIncrementUtilityInfo.taskID] = maxIncrementUtilityInfo.effectivePrivacyBudget;
                     this.workers[i].budgetIndex[maxIncrementUtilityInfo.taskID] ++;
-                    this.workers[i].taskCompletingTimes[k] ++;
+                    this.workers[i].taskCompetingTimes[k] ++;
                     totalCompleteWorkerNumber ++;
                 }
             }

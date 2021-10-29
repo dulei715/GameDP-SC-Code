@@ -1,7 +1,6 @@
 package edu.ecnu.dll.scheme.solution._3_multiple_task;
 
 import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
-import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPairProposingValue;
 import edu.ecnu.dll.basic_struct.pack.TargetInfo;
 import edu.ecnu.dll.basic_struct.pack.Winner;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
@@ -31,7 +30,7 @@ public class MultiTaskSingleCompetitionSolution {
 
     public static final int budgetSize = 3;
 
-    private double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
+    protected double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
         return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
     }
 
@@ -76,9 +75,6 @@ public class MultiTaskSingleCompetitionSolution {
             workerPosition = workerPositionList.get(j);
             this.workers[j] = new MultiTaskBasicWorker(workerPosition.getIndex());
             this.workers[j].privacyBudgetArray = privacyBudgetListArray[j].toArray(new Double[0][0]);
-//            for (int i = 0; i < this.tasks.length; i++) {
-//                this.workers[j].privacyBudgetArray[i] = privacyBudgetListArray
-//            }
         }
 
     }
@@ -92,7 +88,7 @@ public class MultiTaskSingleCompetitionSolution {
             this.workers[j].effectiveNoiseDistance = new Double[this.tasks.length];
             this.workers[j].effectivePrivacyBudget = new Double[this.tasks.length];
             this.workers[j].privacyBudgetCost = new Double[this.tasks.length];
-            this.workers[j].taskCompletingTimes = new Integer[this.tasks.length];
+            this.workers[j].taskCompetingTimes = new Integer[this.tasks.length];
             this.workers[j].currentUtilityFunctionValue = new Double[this.tasks.length];
             for (int i = 0; i < tasks.length; i++) {
                 this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[j].location);
@@ -102,7 +98,7 @@ public class MultiTaskSingleCompetitionSolution {
                 this.workers[j].effectiveNoiseDistance[i] = 0.0;
                 this.workers[j].effectivePrivacyBudget[i] = 0.0;
                 this.workers[j].privacyBudgetCost[i] = 0.0;
-                this.workers[j].taskCompletingTimes[i] = 0;
+                this.workers[j].taskCompetingTimes[i] = 0;
                 this.workers[j].currentUtilityFunctionValue[i] = 0.0;
             }
         }
@@ -205,8 +201,8 @@ public class MultiTaskSingleCompetitionSolution {
 
                     TargetInfo winnerInfo;
                     // todo: 暂时用一个函数测试task entropy 和 proposing value。 由于task entropy需要统计竞争次数，因此影响时间，需要和proposing value 分开对比
-//                    winnerInfo = chooseByTaskEntropy(tempCandidateTaskList, j, competingTimes, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, completedWorkerIDSet);
-                    winnerInfo = chooseByProposingValue(tempCandidateTaskList, j, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray);
+                    winnerInfo = chooseByTaskEntropy(tempCandidateTaskList, j, competingTimes, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, completedWorkerIDSet);
+//                    winnerInfo = chooseByProposingValue(tempCandidateTaskList, j, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray);
 //                    winnerInfo = chooseByTaskEntropy();
                     if (winnerInfo == null) {
                         continue;
@@ -221,13 +217,16 @@ public class MultiTaskSingleCompetitionSolution {
                     this.workers[j].completeUtilityFunctionValue[winnerInfo.taskID] = winnerInfo.newUtilityValue;
                     this.workers[j].budgetIndex[winnerInfo.taskID] ++;
 
-                    this.workers[j].taskCompletingTimes[i] ++;
+                    this.workers[j].taskCompetingTimes[winnerInfo.taskID] ++;
                     totalCompleteWorkerNumber ++;
+
+                    competingTimes[winnerInfo.taskID] ++;
+
                 }
             }
 
 
-            chosenByServer(competingTimes, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, newCandidateWorkerIDList);
+            chosenByServer(taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, newCandidateWorkerIDList);
         }
 //        System.out.println("The winner worker's id is " + taskTempWinnerID);
 //        System.out.println("The winner worker's noise distance is " + taskTempWinnerInfo[0]);
@@ -239,16 +238,14 @@ public class MultiTaskSingleCompetitionSolution {
         return new Winner(taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray);
     }
 
-    protected void chosenByServer(Integer[] competingTimes, Integer[] taskCurrentWinnerIDArray, Double[][] taskCurrentWinnerInfoArray, List<Integer>[] newCandidateWorkerIDList) {
+    protected void chosenByServer(Integer[] taskCurrentWinnerIDArray, Double[][] taskCurrentWinnerInfoArray, List<Integer>[] newCandidateWorkerIDList) {
         double competeTemp;
-        // 服务器遍历每个worker，找出竞争成功的worker，修改他的competeState为false
         // todo: 设置 taskTempWinnerID 和 taskTempWinnerInfo
         Integer[] taskBeforeWinnerIDArray = new Integer[newCandidateWorkerIDList.length];
         for (int i = 0; i < newCandidateWorkerIDList.length; i++) {
             if (newCandidateWorkerIDList[i].size() == 0) {
                 continue;
             }
-            competingTimes[i] += newCandidateWorkerIDList[i].size();
             taskBeforeWinnerIDArray[i] = taskCurrentWinnerIDArray[i];
             for (Integer j : newCandidateWorkerIDList[i]) {
                 competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[j].effectiveNoiseDistance[i], taskCurrentWinnerInfoArray[i][DISTANCE_TAG], this.workers[j].effectivePrivacyBudget[i], taskCurrentWinnerInfoArray[i][BUDGET_TAG]);
@@ -305,7 +302,7 @@ public class MultiTaskSingleCompetitionSolution {
         double candidateTaskEntropy = Double.MAX_VALUE;
         Double newCostPrivacyBudget = null, newPrivacyBudget = null, newNoiseDistance = null, newUtilityValue = null;
         for (Integer i : taskIDList) {
-            if (lastTermTaskWinnerIDArray[i] == workerID) {
+            if (lastTermTaskWinnerIDArray[i].equals(workerID)) {
                 continue;
             }
             // PPCF 判断
@@ -359,7 +356,7 @@ public class MultiTaskSingleCompetitionSolution {
         double taskEntropy = 0;
         double tempRatio;
         for (Integer j : competingWorkerIDSet) {
-            tempRatio = this.workers[j].taskCompletingTimes[taskID] / totalCompetingTime;
+            tempRatio = this.workers[j].taskCompetingTimes[taskID] / totalCompetingTime;
             taskEntropy -= tempRatio * Math.log(tempRatio);
         }
         return taskEntropy;
