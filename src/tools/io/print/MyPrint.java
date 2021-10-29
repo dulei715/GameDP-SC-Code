@@ -141,6 +141,10 @@ public class MyPrint {
     }
 
     public static void showList(List<? extends Object> list) {
+        if (list.isEmpty()) {
+            System.out.println("Empty!!!");
+            return;
+        }
         int i;
         for (i = 0; i < list.size() - 1; i++) {
             System.out.print(list.get(i) + ", ");

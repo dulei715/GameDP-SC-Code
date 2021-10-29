@@ -1,4 +1,4 @@
-package edu.ecnu.dll.scheme.solution._3_multiple_task.before;
+package edu.ecnu.dll.scheme.solution._0_before;
 
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.Winner;

@@ -56,10 +56,10 @@ public class ConflictElimination {
         this.preferenceTable = new PreferenceTable(this.taskSize, this.workerIDDistanceBudgetPairComparator);
         this.preferenceTable.setPreferenceTable(data);
         this.taskPreferenceIndex = new Integer[this.taskSize];
+        BasicArray.setIntArrayToZero(this.taskPreferenceIndex);
         this.conflictWorkerIDList = new LinkedList();
         this.candidateTaskIDListArray = new LinkedList[this.workerSize];
         for (int i = 0; i < this.workerSize; i++) {
-            this.taskPreferenceIndex[i] = 0;
             this.candidateTaskIDListArray[i] = new LinkedList();
         }
     }
@@ -219,8 +219,40 @@ public class ConflictElimination {
     }
 
 
-    public Integer[] assignment(List<WorkerIDDistanceBudgetPair>[] newCandidateWorkerIDList) {
-        Integer[] result = new Integer[this.taskSize];
+    public WorkerIDDistanceBudgetPair[] assignment(List<WorkerIDDistanceBudgetPair>[] newCandidateWorkerIDList) {
+        WorkerIDDistanceBudgetPair[] result = new WorkerIDDistanceBudgetPair[this.taskSize];
+        initialize(newCandidateWorkerIDList);
+        Integer workerID;
+        int workerTaskSize;
+        for (int i = 0; i < this.preferenceTable.taskSize; i++) {
+            if (this.preferenceTable.table[i].isEmpty()) {
+                continue;
+            }
+            workerID = this.preferenceTable.table[i].get(0).workerID;
+
+            workerTaskSize = addToCandidateTaskIDListArray(workerID, i);
+
+            if (workerTaskSize == 2){
+                // 2代表有冲突，且第一次发现有冲突
+                this.conflictWorkerIDList.add(workerID);
+            }
+        }
+        while (!conflictWorkerIDList.isEmpty()) {
+            workerID = conflictWorkerIDList.removeFirst();
+            solveConflict(workerID);
+        }
+        for (int i = 0; i < this.taskSize; i++) {
+            if (this.taskPreferenceIndex[i] >= this.preferenceTable.table[i].size()) {
+                result[i] = null;
+            } else {
+                result[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]);
+            }
+        }
+        return result;
+    }
+    public void assignment(List<WorkerIDDistanceBudgetPair>[] newCandidateWorkerIDList, Integer[] winnerArray) {
+//        winnerArray = new Integer[this.taskSize];
+        BasicArray.setIntArrayTo(winnerArray, -1);
         initialize(newCandidateWorkerIDList);
         Integer workerID;
         int workerTaskSize;
@@ -240,12 +272,11 @@ public class ConflictElimination {
         }
         for (int i = 0; i < this.taskSize; i++) {
             if (this.taskPreferenceIndex[i] >= this.preferenceTable.table[i].size()) {
-                result[i] = null;
+                winnerArray[i] = null;
             } else {
-                result[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]).workerID;
+                winnerArray[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]).workerID;
             }
         }
-        return result;
     }
 }
 

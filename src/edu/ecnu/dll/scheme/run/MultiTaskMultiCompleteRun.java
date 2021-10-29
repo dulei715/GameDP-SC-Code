@@ -2,9 +2,8 @@ package edu.ecnu.dll.scheme.run;
 
 import edu.ecnu.dll.basic_struct.comparator.TaskWorkerIDComparator;
 import edu.ecnu.dll.basic_struct.pack.TaskWorkerIDPair;
-import edu.ecnu.dll.basic_struct.pack.Winner;
 import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
-import edu.ecnu.dll.scheme.solution._2_single_task.SingleTaskSolution;
+import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskMultiCompetitionSolution;
 import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskSingleCompetitionSolution;
 import tools.io.print.MyPrint;
 import tools.io.read.DoubleRead;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MultiTaskSingleCompleteRun {
+public class MultiTaskMultiCompleteRun {
     public static void main(String[] args) {
         // 从数据库读数据
         String basicPath = System.getProperty("user.dir") + "\\dataset\\test_dataset\\_2_multiple_task_dataset\\";
@@ -31,23 +30,15 @@ public class MultiTaskSingleCompleteRun {
         List<Point> workerPointList = PointRead.readPoint(workerPointPath);
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 
-//        MyPrint.showList(taskPointList);
-//        System.out.println("******************************************************************************");
-//        MyPrint.showDoubleArray(taskValueArray);
-//        System.out.println("******************************************************************************");
-//        MyPrint.showList(workerPointList);
-//        System.out.println("******************************************************************************");
-//        MyPrint.showListDoubleArray(workerPrivacyBudgetList);
-//        System.out.println("******************************************************************************");
 
         // 初始化 task 和 workers
-        MultiTaskSingleCompetitionSolution multiTaskSingleCompetitionSolution = new MultiTaskSingleCompetitionSolution();
-        multiTaskSingleCompetitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerPrivacyBudgetList);
-        multiTaskSingleCompetitionSolution.initializeAgents();
+        MultiTaskMultiCompetitionSolution multiTaskMultiCompetitionSolution = new MultiTaskMultiCompetitionSolution();
+        multiTaskMultiCompetitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerPrivacyBudgetList);
+        multiTaskMultiCompetitionSolution.initializeAgents();
 
 
         // 执行竞争过程
-        WorkerIDDistanceBudgetPair[] winner = multiTaskSingleCompetitionSolution.complete();
+        WorkerIDDistanceBudgetPair[] winner = multiTaskMultiCompetitionSolution.complete();
 
 //        showResultA(winner);
         showResultB(winner);
@@ -75,8 +66,17 @@ public class MultiTaskSingleCompleteRun {
         TaskWorkerIDPair[] taskWorkerIDPairArray;
         List<TaskWorkerIDPair> taskWorkerIDPairList = new ArrayList<>();
 
+        List<Integer> nonCompeteTaskIDList = new ArrayList<>();
+        List<Integer> competeFailureTaskIDList = new ArrayList<>();
+
         for (int i = 0; i < winnerTaskWorkerPackedArray.length; i++) {
+
+            if (winnerTaskWorkerPackedArray[i] == null) {
+                competeFailureTaskIDList.add(i);
+                continue;
+            }
             if (winnerTaskWorkerPackedArray[i].workerID == -1) {
+                nonCompeteTaskIDList.add(i);
                 continue;
             }
             taskWorkerIDPairList.add(new TaskWorkerIDPair(i, winnerTaskWorkerPackedArray[i].workerID));
@@ -94,5 +94,10 @@ public class MultiTaskSingleCompleteRun {
         }
 
         System.out.println(serveredTaskSize);
+        System.out.println("Non competing tasks are:");
+        MyPrint.showList(nonCompeteTaskIDList);
+        System.out.println("Failure competing tasks are:");
+        MyPrint.showList(competeFailureTaskIDList);
+
     }
 }
