@@ -7,6 +7,18 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class MyPrint {
+
+    public static void showSplitLine(String unitString, int number) {
+        if (number <= 0) {
+            return;
+        }
+        int num = number - 1;
+        for (int i = 0; i < num; i++) {
+            System.out.print(unitString);
+        }
+        System.out.println(unitString);
+    }
+
     public static void showDoubleArray(double[] data, String split, int precision){
         int i;
         if (precision >= 0) {
@@ -148,6 +160,18 @@ public class MyPrint {
         int i;
         for (i = 0; i < list.size() - 1; i++) {
             System.out.print(list.get(i) + ", ");
+        }
+        System.out.println(list.get(i));
+    }
+
+    public static void showList(List<? extends Object> list, String splitSymbol) {
+        if (list.isEmpty()) {
+            System.out.println("Empty!!!");
+            return;
+        }
+        int i;
+        for (i = 0; i < list.size() - 1; i++) {
+            System.out.print(list.get(i) + splitSymbol);
         }
         System.out.println(list.get(i));
     }

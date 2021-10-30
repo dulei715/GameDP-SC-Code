@@ -16,4 +16,13 @@ public class WorkerIDDistanceBudgetPair {
         this.noiseEffectiveDistance = noiseEffectiveDistance;
         this.effectivePrivacyBudget = effectivePrivacyBudget;
     }
+
+    @Override
+    public String toString() {
+        return "WorkerIDDistanceBudgetPair{" +
+                "workerID=" + workerID +
+                ", noiseEffectiveDistance=" + noiseEffectiveDistance +
+                ", effectivePrivacyBudget=" + effectivePrivacyBudget +
+                '}';
+    }
 }

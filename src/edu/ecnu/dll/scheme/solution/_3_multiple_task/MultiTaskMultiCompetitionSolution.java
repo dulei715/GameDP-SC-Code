@@ -269,7 +269,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             }
 
         }
-        if (taskID == null) {
+        if (candidateTargetInfoSet.isEmpty()) {
             return null;
         }
         return candidateTargetInfoSet.toArray(new TargetInfo[0]);
