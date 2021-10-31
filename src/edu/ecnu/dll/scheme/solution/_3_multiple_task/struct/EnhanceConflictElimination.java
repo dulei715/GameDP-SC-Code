@@ -9,7 +9,7 @@ public class EnhanceConflictElimination extends ConflictElimination {
     }
 
     @Override
-    protected boolean compareFourValues(Integer workerID, Integer taskIDA, Integer taskIDB, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
-        return super.compareFourValues(workerID, taskIDA, taskIDB, taskIDANextWorkerInfo, taskIDBNextWorkerInfo);
+    protected boolean compareFourValuesWithSuccessor(Integer workerID, Integer taskIDA, Integer taskIDB, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
+        return super.compareFourValuesWithSuccessor(workerID, taskIDA, taskIDB, taskIDANextWorkerInfo, taskIDBNextWorkerInfo);
     }
 }

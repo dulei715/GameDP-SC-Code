@@ -169,8 +169,8 @@ public class MultiTaskSingleCompetitionSolution {
 
                     TargetInfo winnerInfo;
                     // todo: 暂时用一个函数测试task entropy 和 proposing value。 由于task entropy需要统计竞争次数，因此影响时间，需要和proposing value 分开对比
-//                    winnerInfo = chooseByTaskEntropy(tempCandidateTaskList, j, competingTimes, taskCurrentWinnerPackedArray, completedWorkerIDSet);
-                    winnerInfo = chooseByProposingValue(tempCandidateTaskList, j, taskCurrentWinnerPackedArray);
+                    winnerInfo = chooseByTaskEntropy(tempCandidateTaskList, j, competingTimes, taskCurrentWinnerPackedArray, completedWorkerIDSet);
+//                    winnerInfo = chooseByProposingValue(tempCandidateTaskList, j, taskCurrentWinnerPackedArray);
                     if (winnerInfo == null) {
                         continue;
                     }
@@ -259,7 +259,8 @@ public class MultiTaskSingleCompetitionSolution {
         Double noiseEfficientDistance = null;
         Double effectivePrivacyBudget = null;
 //        Double efficientPrivacyBudget = null;
-        double candidateTaskEntropy = Double.MAX_VALUE;
+//        double candidateTaskEntropy = Double.MAX_VALUE;
+        double candidateTaskEntropy = -1;
         Double newCostPrivacyBudget = null, newPrivacyBudget = null, newNoiseDistance = null, newUtilityValue = null;
         for (Integer i : taskIDList) {
             if (lastTermTaskWinnerPackedArray[i].workerID.equals(workerID)) {
@@ -290,7 +291,7 @@ public class MultiTaskSingleCompetitionSolution {
 
             // 根据 taskEntropy 挑选
             double taskEntropy = getTaskEntropy(i, totalCompetingTimesList[i], competingWorkerIDSetArray[i]);
-            if (taskEntropy < candidateTaskEntropy) {
+            if (taskEntropy > candidateTaskEntropy) {
                 candidateTaskEntropy = taskEntropy;
                 taskID = i;
                 noiseEfficientDistance = tempCompeteDistance;

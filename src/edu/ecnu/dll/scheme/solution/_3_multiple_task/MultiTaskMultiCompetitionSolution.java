@@ -3,12 +3,13 @@ package edu.ecnu.dll.scheme.solution._3_multiple_task;
 import edu.ecnu.dll.basic_struct.comparator.TargetInfoForTaskEntropyComparator;
 import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.TargetInfo;
-import edu.ecnu.dll.basic_struct.pack.Winner;
 import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.scheme.solution._3_multiple_task.struct.EnhanceConflictElimination;
 import edu.ecnu.dll.scheme_compared.solution.ConflictElimination;
+import tools.basic.BasicArray;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
+import tools.struct.PreferenceTable;
 
 import java.util.*;
 
@@ -17,7 +18,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
 
     public static final int proposalSize = 5;
     public static TargetInfoForTaskEntropyComparator targetInfoForTaskEntropyComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.ASCENDING);
-    public static TargetInfoForTaskEntropyComparator targetInfoForProposingValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
+    public static TargetInfoForTaskEntropyComparator targetInfoForProposingValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.ASCENDING);
 
     public ConflictElimination conflictElimination = null;
 
@@ -28,9 +29,34 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
         for (int i = 0; i < workerIDList.length; i++) {
             table[i] = new ArrayList<>();
             for (Integer workerID : workerIDList[i]) {
+                if (workerID.equals(ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.workerID) && workerIDList[i].size() > 1) {
+                    continue;
+                }
                 tempPair = new WorkerIDDistanceBudgetPair(workerID, this.workers[workerID].effectiveNoiseDistance[i], this.workers[workerID].effectivePrivacyBudget[i]);
                 table[i].add(tempPair);
             }
+        }
+
+        return table;
+    }
+
+    public List<WorkerIDDistanceBudgetPair>[] createTableDataOfPreferenceTableByID(WorkerIDDistanceBudgetPair[] originalWinnerInfo, List<Integer>[] workerIDList) {
+        List<WorkerIDDistanceBudgetPair>[] table = new ArrayList[workerIDList.length];
+        WorkerIDDistanceBudgetPair tempPair;
+        Integer tempWorkerID;
+        for (int i = 0; i < workerIDList.length; i++) {
+            table[i] = new ArrayList<>();
+            for (Integer workerID : workerIDList[i]) {
+                if (workerID.equals(ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.workerID) && workerIDList[i].size() > 1) {
+                    continue;
+                }
+                tempPair = new WorkerIDDistanceBudgetPair(workerID, this.workers[workerID].effectiveNoiseDistance[i], this.workers[workerID].effectivePrivacyBudget[i]);
+                table[i].add(tempPair);
+            }
+            if (!originalWinnerInfo[i].workerID.equals(ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.workerID) || workerIDList[i].isEmpty()) {
+                table[i].add(originalWinnerInfo[i]);
+            }
+            PreferenceTable.sortedPreferenceTable(table[i], this.conflictElimination.workerIDDistanceBudgetPairComparator);
         }
         return table;
     }
@@ -43,23 +69,17 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
         }
     }
 
-//    protected void initializeAllocationByFirstTaskAndNullAllocation(List<Integer>[] newCandidateWorkerIDList, WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
-//        // 针对每个task，初始化距离为最大距离值
-//        // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
-//        // 针对每个task，初始化总的被竞争次数为0
-//        // 针对每个task，初始化访问过被访问worker集合为空集合
-//        for (int i = 0; i < this.tasks.length; i++) {
-//            newCandidateWorkerIDList[i] = new ArrayList<>();
-//            taskCurrentWinnerPackedArray[i].workerID = -1;
-//            taskCurrentWinnerPackedArray[i].noiseEffectiveDistance = Double.MAX_VALUE;
-//            taskCurrentWinnerPackedArray[i].effectivePrivacyBudget = Double.MAX_VALUE;
-//            competingTimes[i] = 0;
-//            completedWorkerIDSet[i] = new HashSet<>();
-//        }
-//        for (int i = 0; i < this.workers.length; i++) {
-//            newCandidateWorkerIDList[0].add(i);
-//        }
-//    }
+    protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
+        // 针对每个task，初始化距离为最大距离值
+        // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
+        // 针对每个task，初始化总的被竞争次数为0
+        // 针对每个task，初始化访问过被访问worker集合为空集合
+        for (int i = 0; i < this.tasks.length; i++) {
+            taskCurrentWinnerPackedArray[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR;
+            competingTimes[i] = 0;
+            completedWorkerIDSet[i] = new HashSet<>();
+        }
+    }
 
     @Override
     public WorkerIDDistanceBudgetPair[] complete() {
@@ -90,7 +110,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
         List<Integer>[] newCandidateWorkerIDList, oldCandidateWorkerIDList;
         newCandidateWorkerIDList = new ArrayList[this.tasks.length];
 //        BasicArray.setListArrayToEmptyList(newCandidateWorkerIDList);
-        initializeAllocationByFirstTaskAndNullAllocation(newCandidateWorkerIDList, taskCurrentWinnerPackedArray, competingTimes, completedWorkerIDSet);
+        initializeAllocationByFirstTaskAndNullAllocation(taskCurrentWinnerPackedArray, competingTimes, completedWorkerIDSet);
 
 
         double competeTemp;
@@ -107,6 +127,8 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
         while (!newTotalCompetingWorkerIDSet.isEmpty()) {
             oldTotalCompetingWorkerIDSet = newTotalCompetingWorkerIDSet;
             newTotalCompetingWorkerIDSet = new HashSet<>();
+//            newCandidateWorkerIDList
+            BasicArray.setListArrayToEmptyList(newCandidateWorkerIDList);
 
             /*
              * 遍历每个竞争集合 oldTotalCompetingWorkerIDSet 对应的候选集合中的worker。
@@ -129,6 +151,9 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                     continue;
                 }
 
+                // 更新下一轮可以去竞争的worker的集合
+                newTotalCompetingWorkerIDSet.add(tempWorkerID);
+
                 // 进行是否竞争判断3： 考察 utility函数、PPCF函数、PCF函数、任务熵
 
                 TargetInfo[] winnerInfoArray;
@@ -139,6 +164,18 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                 }
 
                 // 否则（竞争成功），发布当前扰动距离长度和隐私预算(这里只添加进候选列表供server进一步选择)，并将隐私自己的预算索引值加1
+
+
+
+                /**
+                 * for test
+                System.out.println(tempWorkerID);
+                Integer[] tempChosenTaskIDArray = new Integer[winnerInfoArray.length];
+                for (int i = 0; i < winnerInfoArray.length; i++) {
+                    tempChosenTaskIDArray[i] = winnerInfoArray[i].taskID;
+                }
+                MyPrint.showIntegerArray(tempChosenTaskIDArray, ", ", 2);
+                */
 
                 Integer tempTaskID;
                 for (int i = 0; i < winnerInfoArray.length; i++) {
@@ -156,7 +193,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                 }
 
             }
-            taskCurrentWinnerPackedArray = chosenByServerAndReturnWinnerPackedArray(taskCurrentWinnerPackedArray, newCandidateWorkerIDList);
+            taskCurrentWinnerPackedArray = chosenByServerAndReturnWinnerPackedArray(taskCurrentWinnerPackedArray, newCandidateWorkerIDList, newTotalCompetingWorkerIDSet);
         }
         return taskCurrentWinnerPackedArray;
     }
@@ -228,6 +265,13 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
 
         Double newCostPrivacyBudget = null, newPrivacyBudget = null, newNoiseDistance = null, newUtilityValue = null;
         for (Integer i : taskIDList) {
+//            /**
+//             * for test
+//             */
+//            if (lastTermTaskWinnerPackedArray[i] == null){
+//                System.out.println("hehe");
+//            }
+
             if (lastTermTaskWinnerPackedArray[i].equals(workerID)) {
                 continue;
             }
@@ -261,12 +305,14 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             if (candidateTargetInfoSet.size() < topK) {
                 candidateTargetInfoSet.add(new TargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempTaskEntropy, tempNewCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
             } else {
+                // 应该挑选task entropy 最大的!!!
                 targetInfo = candidateTargetInfoSet.last();
-                if (tempTaskEntropy < targetInfo.target) {
+                if (tempTaskEntropy > targetInfo.target) {
                     candidateTargetInfoSet.remove(targetInfo); //todo: 测试是否能够真的删除
                     candidateTargetInfoSet.add(new TargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempTaskEntropy, tempNewCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
                 }
             }
+//            System.out.println("test");
 
         }
         if (candidateTargetInfoSet.isEmpty()) {
@@ -288,12 +334,12 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
      * @param taskCurrentWinnerPackedArray 记录当前每个task被竞争获胜的worker的信息
      * @param newCandidateWorkerIDList 记录每个task候选的worker id列表
      */
-    public WorkerIDDistanceBudgetPair[] chosenByServerAndReturnWinnerPackedArray(WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, List<Integer>[] newCandidateWorkerIDList) {
+    public WorkerIDDistanceBudgetPair[] chosenByServerAndReturnWinnerPackedArray(WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, List<Integer>[] newCandidateWorkerIDList, Set<Integer> newTotalCompetingWorkerIDSet) {
         Integer currentWinnerWorkerID, beforeWinnerWorkerID;
         WorkerIDDistanceBudgetPair[] taskBeforeWinnerPackedArray = taskCurrentWinnerPackedArray;
         // 1. 获取获胜者，并更新胜利列表
-        List<WorkerIDDistanceBudgetPair>[] unSortedTable = createTableDataOfPreferenceTableByID(newCandidateWorkerIDList);
-        taskCurrentWinnerPackedArray = this.conflictElimination.assignment(unSortedTable);
+        List<WorkerIDDistanceBudgetPair>[] sortedTable = createTableDataOfPreferenceTableByID(taskBeforeWinnerPackedArray, newCandidateWorkerIDList);
+        taskCurrentWinnerPackedArray = this.conflictElimination.assignment(sortedTable);
 
         for (int i = 0; i < taskCurrentWinnerPackedArray.length; i++) {
             if (taskCurrentWinnerPackedArray[i] == null ||taskCurrentWinnerPackedArray[i].workerID.equals(taskBeforeWinnerPackedArray[i].workerID)) {
@@ -302,14 +348,17 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             currentWinnerWorkerID = taskCurrentWinnerPackedArray[i].workerID;
             beforeWinnerWorkerID = taskBeforeWinnerPackedArray[i].workerID;
             // 2. 设置获胜的worker的[有效噪声距离、有效隐私预算](已经包含在packedArray中，无需设置)、当前效用函数值、胜利状态
+//            if (currentWinnerWorkerID.equals(-1)) {
+//                System.out.println("wocao!");
+//            }
             this.workers[currentWinnerWorkerID].currentUtilityFunctionValue[i] = this.workers[currentWinnerWorkerID].completeUtilityFunctionValue[i];
             this.workers[currentWinnerWorkerID].currentWinningState = true; // 设置成胜利者，之后在没被竞争掉的情况下不会再竞争其他task
             // 3. 设置被竞争下去的worker的当前效用函数值、胜利状态，并将其加入竞争列表
             if (!beforeWinnerWorkerID.equals(-1)) {
                 this.workers[beforeWinnerWorkerID].currentUtilityFunctionValue[i] -= this.tasks[i].valuation;
                 this.workers[beforeWinnerWorkerID].currentWinningState = false;
-                // 将被竞争下去的worker加入竞争集合，以便下轮判断是否可以竞争
-                newCandidateWorkerIDList[i].add(beforeWinnerWorkerID);
+                // 将被竞争下去的worker加入可竞争集合，以便获取考察资格
+                newTotalCompetingWorkerIDSet.add(beforeWinnerWorkerID);
             }
 
         }

@@ -27,6 +27,16 @@ public class PreferenceTable {
         }
     }
 
+    public static void sortedPreferenceTable(List<WorkerIDDistanceBudgetPair>[] table, WorkerIDDistanceBudgetPairComparator comparator) {
+        for (int i = 0; i < table.length; i++) {
+            Collections.sort(table[i], comparator);
+        }
+    }
+
+    public static void sortedPreferenceTable(List<WorkerIDDistanceBudgetPair> tableElement, WorkerIDDistanceBudgetPairComparator comparator) {
+        Collections.sort(tableElement, comparator);
+    }
+
     public Iterator<WorkerIDDistanceBudgetPair>[] getNewIteratorArray() {
         Iterator<WorkerIDDistanceBudgetPair>[] iterators = new Iterator[this.taskSize];
         for (int i = 0; i < this.taskSize; i++) {

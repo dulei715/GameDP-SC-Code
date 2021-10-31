@@ -1,21 +1,17 @@
 package edu.ecnu.dll.scheme_compared.solution;
 
 
-import com.sun.deploy.util.ArrayUtil;
 import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
-import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
-import edu.ecnu.dll.scheme_compared.struct.task.PPPTask;
-import edu.ecnu.dll.scheme_compared.struct.worker.PPPWorker;
 import tools.basic.BasicArray;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.struct.PreferenceTable;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ConflictElimination {
+
+    public static final WorkerIDDistanceBudgetPair DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR = new WorkerIDDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE);
 
     public Integer taskSize;
     public Integer workerSize;
@@ -77,6 +73,14 @@ public class ConflictElimination {
         return this.preferenceTable.table[taskID].get(nextIndex);
     }
 
+    protected WorkerIDDistanceBudgetPair getCurrentWorkerInfo(Integer taskID) {
+        int currentIndex = this.taskPreferenceIndex[taskID];
+        if (currentIndex >= this.preferenceTable.table[taskID].size()) {
+            return null;
+        }
+        return this.preferenceTable.table[taskID].get(currentIndex);
+    }
+
     /**
      * 添加task到worker的候选集合，并返回当前worker候选集合的task个数
      * @param workerID
@@ -91,7 +95,7 @@ public class ConflictElimination {
     }
 
     protected void solveConflict(Integer workerID) {
-        WorkerIDDistanceBudgetPair chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo;
+        WorkerIDDistanceBudgetPair chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo, chosenTaskCurrentWorkerInfo, tempTaskCurrentWorkerInfo;
         Integer chosenTaskID, tempTaskID, tempTaskNextWorkerID;
         int workerTaskSize;
 
@@ -108,19 +112,69 @@ public class ConflictElimination {
         /** 3. 计算解决当前冲突的所有可能的调整后的距离值，并比较选出最小的
          */
         Iterator<Integer> conflictIterator = conflictTaskIDList.iterator();
-        //获取其中一个冲突的task的ID
-        chosenTaskID = conflictIterator.next();
-        chosenTaskNextWorkerInfo = getNextWorkerInfo(chosenTaskID);
-        while (conflictIterator.hasNext()) {
-            tempTaskID = conflictIterator.next();
-            tempTaskNextWorkerInfo = getNextWorkerInfo(tempTaskID);
 
-//            nextWorkerInfo = compareFourValues(nextWorkerInfo, tempTaskID);
-            if (compareFourValues(workerID, chosenTaskID, tempTaskID, chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo)) {
-                chosenTaskID = tempTaskID;
-                chosenTaskNextWorkerInfo = tempTaskNextWorkerInfo;
+
+//        /**
+//         * for test
+//         */
+//        if (workerID.equals(115)) {
+//            System.out.println("xixi");
+//        }
+
+         /*
+            假设没有后继worker的task优先权最高(没有后继相当于后继worker距离其无限远)
+            将没有后继worker的task的当前workerIDInfo加入二次判断列表 SecondJudgeMap
+            SecondJudgeMap是空的，那就和之前一样，如果非空，就在SecondJudgeMap中选择
+        */
+
+        List<Integer> nonSucceedWorkerTaskIDList = new ArrayList<>();
+        List<Integer> haveSucceedWorkerTaskIDList = new ArrayList<>();
+
+        while (conflictIterator.hasNext()) {
+            chosenTaskID = conflictIterator.next();
+            chosenTaskNextWorkerInfo = getNextWorkerInfo(chosenTaskID);
+            if (chosenTaskNextWorkerInfo == null) {
+                nonSucceedWorkerTaskIDList.add(chosenTaskID);
+            } else if (nonSucceedWorkerTaskIDList.isEmpty()) {
+                haveSucceedWorkerTaskIDList.add(chosenTaskID);
             }
         }
+
+        if (!nonSucceedWorkerTaskIDList.isEmpty()) {
+            Iterator<Integer> iterator = nonSucceedWorkerTaskIDList.iterator();
+            //获取其中一个冲突的task的ID
+//            chosenTaskID = conflictIterator.next();
+//            chosenTaskNextWorkerInfo = getNextWorkerInfo(chosenTaskID);
+            chosenTaskID = iterator.next();
+            chosenTaskCurrentWorkerInfo = getCurrentWorkerInfo(chosenTaskID);
+
+            while (iterator.hasNext()) {
+                tempTaskID = iterator.next();
+                tempTaskCurrentWorkerInfo = getCurrentWorkerInfo(tempTaskID);
+
+                if (compareWithCurrentInfo(workerID, chosenTaskID, tempTaskID, chosenTaskCurrentWorkerInfo, tempTaskCurrentWorkerInfo)) {
+                    chosenTaskID = tempTaskID;
+                }
+            }
+        } else {
+            Iterator<Integer> iterator = haveSucceedWorkerTaskIDList.iterator();
+            //获取其中一个冲突的task的ID
+            chosenTaskID = iterator.next();
+            chosenTaskNextWorkerInfo = getNextWorkerInfo(chosenTaskID);
+
+            while (iterator.hasNext()) {
+                tempTaskID = iterator.next();
+                tempTaskNextWorkerInfo = getNextWorkerInfo(tempTaskID);
+
+                if (compareFourValuesWithSuccessor(workerID, chosenTaskID, tempTaskID, chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo)) {
+                    chosenTaskID = tempTaskID;
+                    chosenTaskNextWorkerInfo = tempTaskNextWorkerInfo;
+                }
+            }
+        }
+
+
+
 
         /** 4. 设置当前冲突该worker的所有task的候选worker值(后移指标变量)，并更新下一个worker的候选列表
          */
@@ -146,6 +200,9 @@ public class ConflictElimination {
 
     }
 
+
+
+
     /**
      *
      * @param workerID
@@ -155,9 +212,32 @@ public class ConflictElimination {
      * @param taskIDBNextWorkerInfo
      * @return 如果 taskIDB 比 taskIDA 占优，返回true，否则返回false
      */
-    protected boolean compareFourValues(Integer workerID, Integer taskIDA, Integer taskIDB, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
+    protected boolean compareFourValuesWithSuccessor(Integer workerID, Integer taskIDA, Integer taskIDB, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
         double tempPCFValue;
+//        if (taskIDANextWorkerInfo == null || taskIDBNextWorkerInfo == null) {
+//            System.out.println("null");
+//        }
         tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDANextWorkerInfo.noiseEffectiveDistance, taskIDBNextWorkerInfo.noiseEffectiveDistance, taskIDANextWorkerInfo.effectivePrivacyBudget, taskIDBNextWorkerInfo.effectivePrivacyBudget);
+        if (tempPCFValue > 0.5) {
+            // tempPCFValue 大于 0.5，说明taskIDA的候选距离小于taskIDB的候选距离的概率更大，说明taskIDB的更应该充当被选择的角色，因此taskIDB占优势
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param workerID
+     * @param taskIDA
+     * @param taskIDB
+     * @param taskIDANextWorkerInfo
+     * @param taskIDBNextWorkerInfo
+     * @return 如果 taskIDB 比 taskIDA 占优(距离小)，返回true，否则返回false
+     */
+    protected boolean compareWithCurrentInfo(Integer workerID, Integer taskIDA, Integer taskIDB, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
+        double tempPCFValue;
+        // PCF(B,A,B,A)
+        tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDBNextWorkerInfo.noiseEffectiveDistance, taskIDANextWorkerInfo.noiseEffectiveDistance, taskIDBNextWorkerInfo.effectivePrivacyBudget, taskIDANextWorkerInfo.effectivePrivacyBudget);
         if (tempPCFValue > 0.5) {
             // tempPCFValue 大于 0.5，说明taskIDA的候选距离小于taskIDB的候选距离的概率更大，说明taskIDB的更应该充当被选择的角色，因此taskIDB占优势
             return true;
@@ -188,7 +268,7 @@ public class ConflictElimination {
         }
         for (int i = 0; i < this.taskSize; i++) {
             if (this.taskPreferenceIndex[i] >= this.preferenceTable.table[i].size()) {
-                result[i] = null;
+                result[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.workerID;
             } else {
                 result[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]).workerID;
             }
@@ -229,6 +309,9 @@ public class ConflictElimination {
                 continue;
             }
             workerID = this.preferenceTable.table[i].get(0).workerID;
+            if (workerID.equals(DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.workerID)) {
+                continue;
+            }
 
             workerTaskSize = addToCandidateTaskIDListArray(workerID, i);
 
@@ -243,7 +326,7 @@ public class ConflictElimination {
         }
         for (int i = 0; i < this.taskSize; i++) {
             if (this.taskPreferenceIndex[i] >= this.preferenceTable.table[i].size()) {
-                result[i] = null;
+                result[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR;
             } else {
                 result[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]);
             }

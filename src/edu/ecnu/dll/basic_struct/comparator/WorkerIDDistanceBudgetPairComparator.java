@@ -20,6 +20,7 @@ public class WorkerIDDistanceBudgetPairComparator implements Comparator<WorkerID
         if (elemB == null || elemB.workerID == null || elemB.noiseEffectiveDistance == null || elemB.effectivePrivacyBudget == null) {
             return -1;
         }
+
         double compareValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(elemA.noiseEffectiveDistance, elemB.noiseEffectiveDistance, elemA.effectivePrivacyBudget, elemB.effectivePrivacyBudget);
         if (compareValue > 0.5) {
             return -1;
