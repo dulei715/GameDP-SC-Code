@@ -1,6 +1,5 @@
-package edu.ecnu.dll.scheme.run;
+package edu.ecnu.dll.scheme.run.main_run;
 
-import edu.ecnu.dll.scheme.run.io.ReadDataSet;
 import edu.ecnu.dll.scheme.solution._2_single_task.SingleTaskSolution;
 import tools.io.print.MyPrint;
 import tools.io.read.DoubleRead;

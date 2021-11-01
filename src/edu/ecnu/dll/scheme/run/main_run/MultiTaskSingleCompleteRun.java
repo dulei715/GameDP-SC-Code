@@ -1,9 +1,10 @@
-package edu.ecnu.dll.scheme.run;
+package edu.ecnu.dll.scheme.run.main_run;
 
 import edu.ecnu.dll.basic_struct.comparator.TaskWorkerIDComparator;
 import edu.ecnu.dll.basic_struct.pack.TaskWorkerIDPair;
+import edu.ecnu.dll.basic_struct.pack.Winner;
 import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
-import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskMultiCompetitionSolution;
+import edu.ecnu.dll.scheme.solution._2_single_task.SingleTaskSolution;
 import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskSingleCompetitionSolution;
 import tools.io.print.MyPrint;
 import tools.io.read.DoubleRead;
@@ -15,14 +16,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MultiTaskMultiCompleteRun {
+public class MultiTaskSingleCompleteRun {
     public static void main(String[] args) {
         // 从数据库读数据
         String basicPath = System.getProperty("user.dir") + "\\dataset\\test_dataset\\_2_multiple_task_dataset\\";
-        String taskPointPath = basicPath + "test1\\task_point.txt";
-        String taskValuePath = basicPath + "test1\\task_value.txt";
-        String workerPointPath = basicPath + "test1\\worker_point.txt";
-        String workerPrivacyBudgetPath = basicPath + "test1\\worker_privacy_budget.txt";
+        String testPath = "test2\\";
+        String taskPointPath = basicPath + testPath + "task_point.txt";
+        String taskValuePath = basicPath + testPath + "task_value.txt";
+        String workerPointPath = basicPath + testPath + "worker_point.txt";
+        String workerPrivacyBudgetPath = basicPath + testPath + "worker_privacy_budget.txt";
 
         List<Point> taskPointList = PointRead.readPoint(taskPointPath);
         Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
@@ -30,15 +32,23 @@ public class MultiTaskMultiCompleteRun {
         List<Point> workerPointList = PointRead.readPoint(workerPointPath);
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 
+//        MyPrint.showList(taskPointList);
+//        System.out.println("******************************************************************************");
+//        MyPrint.showDoubleArray(taskValueArray);
+//        System.out.println("******************************************************************************");
+//        MyPrint.showList(workerPointList);
+//        System.out.println("******************************************************************************");
+//        MyPrint.showListDoubleArray(workerPrivacyBudgetList);
+//        System.out.println("******************************************************************************");
 
         // 初始化 task 和 workers
-        MultiTaskMultiCompetitionSolution multiTaskMultiCompetitionSolution = new MultiTaskMultiCompetitionSolution();
-        multiTaskMultiCompetitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerPrivacyBudgetList);
-        multiTaskMultiCompetitionSolution.initializeAgents();
+        MultiTaskSingleCompetitionSolution multiTaskSingleCompetitionSolution = new MultiTaskSingleCompetitionSolution();
+        multiTaskSingleCompetitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerPrivacyBudgetList);
+        multiTaskSingleCompetitionSolution.initializeAgents();
 
 
         // 执行竞争过程
-        WorkerIDDistanceBudgetPair[] winner = multiTaskMultiCompetitionSolution.complete();
+        WorkerIDDistanceBudgetPair[] winner = multiTaskSingleCompetitionSolution.complete();
 
 //        showResultA(winner);
         showResultB(winner);
@@ -66,17 +76,8 @@ public class MultiTaskMultiCompleteRun {
         TaskWorkerIDPair[] taskWorkerIDPairArray;
         List<TaskWorkerIDPair> taskWorkerIDPairList = new ArrayList<>();
 
-        List<Integer> nonCompeteTaskIDList = new ArrayList<>();
-        List<Integer> competeFailureTaskIDList = new ArrayList<>();
-
         for (int i = 0; i < winnerTaskWorkerPackedArray.length; i++) {
-
-            if (winnerTaskWorkerPackedArray[i] == null) {
-                competeFailureTaskIDList.add(i);
-                continue;
-            }
             if (winnerTaskWorkerPackedArray[i].workerID == -1) {
-                nonCompeteTaskIDList.add(i);
                 continue;
             }
             taskWorkerIDPairList.add(new TaskWorkerIDPair(i, winnerTaskWorkerPackedArray[i].workerID));
@@ -94,10 +95,5 @@ public class MultiTaskMultiCompleteRun {
         }
 
         System.out.println(serveredTaskSize);
-        System.out.println("Non competing tasks are:");
-        MyPrint.showList(nonCompeteTaskIDList);
-        System.out.println("Failure competing tasks are:");
-        MyPrint.showList(competeFailureTaskIDList);
-
     }
 }
