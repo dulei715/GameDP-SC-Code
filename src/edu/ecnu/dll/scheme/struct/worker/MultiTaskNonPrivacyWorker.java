@@ -16,9 +16,13 @@ public class MultiTaskNonPrivacyWorker extends Worker {
 
     }
 
-    public MultiTaskNonPrivacyWorker(int taskNumber) {
-        this.toTaskDistance = new Double[taskNumber];
-        this.taskCompletingTimes = new Integer[taskNumber];
+//    public MultiTaskNonPrivacyWorker(int taskNumber) {
+//        this.toTaskDistance = new Double[taskNumber];
+//        this.taskCompletingTimes = new Integer[taskNumber];
+//    }
+
+    public MultiTaskNonPrivacyWorker(double[] index) {
+        super(index);
     }
 
 

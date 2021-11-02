@@ -1,80 +1,59 @@
 package edu.ecnu.dll.scheme.solution._1_non_privacy;
 
+import edu.ecnu.dll.basic_struct.agent.Task;
+import edu.ecnu.dll.basic_struct.pack.TargetInfo;
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.TaskIDDistanceBudgetPairProposingValue;
-import edu.ecnu.dll.basic_struct.pack.TargetInfo;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
-import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskBasicWorker;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskNonPrivacyWorker;
+import edu.ecnu.dll.scheme.struct.worker.SingleTaskBasicWorker;
 import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
+import tools.struct.Point;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class MultiTaskSolutionNonPrivacy {
+public class SingleTaskSolutionNonPrivacy {
 
-    public static final int DISTANCE_TAG = 0;
-    public static final int BUDGET_TAG = 1;
+    public Task task = null;
+    public SingleTaskBasicWorker[] workers = null;
+    public static final double alpha = 1;
 
-    public Task[] tasks = null;
-    public MultiTaskNonPrivacyWorker[] workers = null;
 
-    public static final int budgetSize = 3;
+//    public static final int budgetSize = 3;
 
-    private double getUtilityValue(List<Integer> taskList, Double workerMaxRange, int taskIndex, int workerIndex) {
-        return 0;
+    protected double getUtilityValue(double taskValue, double realDistance) {
+        return taskValue * 2  - alpha * realDistance;
     }
 
-    private double getIncrementUtility(double distance, double maximumRange, double addingPrivacyBudget) {
-        return 1 + distance - addingPrivacyBudget;
-    }
+//    private double getIncrementUtility(double distance, double maximumRange, double addingPrivacyBudget) {
+//        return 1 + distance - addingPrivacyBudget;
+//    }
 
-    public void initializeBasicInformation() {
-        // todo: 初始化 task 位置，以及 workers 的位置
-        this.tasks = new Task[]{new BasicTask(new double[]{0.0, 0.0}), new BasicTask(new double[]{1.0, 1.0})};
-        // todo: 初始化 workers 针对 task 的 privacy budget
-        this.workers = new MultiTaskNonPrivacyWorker[4];
-        for (int i = 0; i < this.workers.length; i++) {
-            this.workers[i] = new MultiTaskNonPrivacyWorker(this.tasks.length);
-        }
-
-        this.workers[0].location = new double[]{2.0, 2.0};
-        this.workers[0].maxRange = 4.0;
-
-        this.workers[1].location = new double[]{-1.5, -1.5};
-        this.workers[1].maxRange = 3.0;
-
-        this.workers[2].location = new double[]{0.5, 0.5};
-        this.workers[2].maxRange = 2.0;
-
-        this.workers[3].location = new double[]{2.5, 2.5};
-        this.workers[3].maxRange = 3.5;
-
+    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList) {
 
     }
 
     public void initializeAgents() {
         for (int j = 0; j < this.workers.length; j++) {
-            for (int i = 0; i < tasks.length; i++) {
-                this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[i].location);
-                this.workers[j].currentUtilityFunctionValue = 0.0;
-            }
+            this.workers[j].toTaskDistance = BasicCalculation.get2Norm(this.task.location, this.workers[j].location);
+            this.workers[j].currentUtilityFunctionValue = 0.0;
         }
     }
 
 
     public void complete() {
 
-        // 记录每个task的被竞争的总次数
-        Integer[] competingTimes = new Integer[this.tasks.length];
+        // 记录task的被竞争的总次数
+//        Integer competingTime = null;
         // 记录每个task被竞争过的worker id的集合
-        HashSet<Integer>[] completedWorkerIDSet = new HashSet[this.tasks.length];
+        HashSet<Integer> completedWorkerIDSet = new HashSet();
 
         // 记录worker竞争时临时效用函数值
         double[] tempUtilityArray = new double[this.workers.length];
@@ -83,27 +62,25 @@ public class MultiTaskSolutionNonPrivacy {
         List<Integer>[] allocatedTaskIDListArray = new ArrayList[this.workers.length];
 
 
-        // 针对每个task，记录当前竞争成功的worker的ID
-        int[] taskCurrentWinnerIDArray = new int[this.tasks.length];
-        BasicArray.setIntArrayTo(taskCurrentWinnerIDArray, -1);
+        // 针对task，记录当前竞争成功的worker的ID
+        int taskCurrentWinnerID = -1;
 
-        // 针对每个task，记录当前竞争成功的worker的距离
-        double[] taskCurrentWinnerInfoArray = new double[this.tasks.length];
+        // 针对task，记录当前竞争成功的worker的距离
+        double taskCurrentWinnerInfo = Double.MAX_VALUE;
 
         // 针对每个task，初始化距离为最大距离值
         // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
         // 针对每个task，初始化总的被竞争次数为0
         // 针对每个task，初始化访问过被访问worker集合为空集合
-        for (int i = 0; i < this.tasks.length; i++) {
-            taskCurrentWinnerInfoArray[i] = Double.MAX_VALUE;
-            competingTimes[i] = 0;
-            completedWorkerIDSet[i] = new HashSet<>();
-        }
+//        for (int i = 0; i < this.tasks.length; i++) {
+//            taskCurrentWinnerInfo[i] = Double.MAX_VALUE;
+//            competingTimes[i] = 0;
+//            completedWorkerIDSet[i] = new HashSet<>();
+//        }
 
-        // 针对每个task，本轮提出竞争的worker的ID（每轮需要清空）
-        List<Integer>[] newCandidateWorkerIDList, oldCandidateWorkerIDList;
-        newCandidateWorkerIDList = new ArrayList[this.tasks.length];
-        BasicArray.setListArrayToEmptyList(newCandidateWorkerIDList);
+        // 针对task，本轮提出竞争的worker的ID（每轮需要清空）
+        List<Integer> newCandidateWorkerIDList, oldCandidateWorkerIDList;
+        newCandidateWorkerIDList = new ArrayList();
 
 
         double competeTemp;
@@ -118,45 +95,47 @@ public class MultiTaskSolutionNonPrivacy {
             totalCompleteWorkerNumber = 0;
 
             oldCandidateWorkerIDList = newCandidateWorkerIDList;
-            newCandidateWorkerIDList = new ArrayList[oldCandidateWorkerIDList.length];
-            BasicArray.setListArrayToEmptyList(newCandidateWorkerIDList);
+            newCandidateWorkerIDList = new ArrayList();
 
             /*
-             * 遍历每个 task 对应的候选集合中的worker。
-             * 每个 worker 对所有的 tasks 进行竞争。但只能挑出其中 1 个 task 作为最终竞争对象。
+             * 遍历 task 对应的候选集合中的worker。
+             * 每个 worker 对该 task 进行竞争。
              * 每轮结束后统计剩余的总的将要竞争的 workers 的数量。
              */
-            for (int k = 0; k < oldCandidateWorkerIDList.length; k++) {
+            for (Integer i : oldCandidateWorkerIDList) {
+                //进行是否竞争判断1：如果当前 worker 不需要竞争(是上轮的胜利者)，就不作为
+                if (i.equals(taskCurrentWinnerID)) {
+                    continue;
+                }
 
-                for (Integer i : oldCandidateWorkerIDList[k]) {
-                    //进行是否竞争判断1：如果当前 worker 不需要竞争(是上轮的胜利者)，就不作为
-                    if (i.equals(taskCurrentWinnerIDArray[k])) {
-                        continue;
-                    }
-
-                    // 进行是否竞争判断2：计算出所有预算充足的 task ID 的集合。如果该集合为空，则不作为
+                // 进行是否竞争判断2：计算出所有预算充足的 task ID 的集合。如果该集合为空，则不作为
 //                    tempCandidateTaskList.clear();
 //                    setCandidateTaskByBudget(tempCandidateTaskList, this.workers[i]);
 //                    if (tempCandidateTaskList.isEmpty()) {
 //                        continue;
 //                    }
-
-
-
-                    //todo: 好好设计一下：
-                    // 进行是否竞争判断3： 遍历所有的可选task, 选出最大使得自身Utility增加最大的task, 如果为空，则不作为。
-                    TaskIDDistanceBudgetPair maxIncrementUtilityInfo;
-                    maxIncrementUtilityInfo = chooseByTaskEntropy(this.tasks, this.workers[i], competingTimes, taskCurrentWinnerIDArray, taskCurrentWinnerInfoArray, completedWorkerIDSet);
-                    if (maxIncrementUtilityInfo == null) {
-                        continue;
-                    }
-
-                    // 否则（竞争成功），发布当前扰动距离长度和隐私预算(这里只添加进候选列表供server进一步选择)，并将隐私自己的预算索引值加1
-                    newCandidateWorkerIDList[maxIncrementUtilityInfo.taskID].add(i);
-                    completedWorkerIDSet[i].add(i);
-                    this.workers[i].taskCompletingTimes[k] ++;
-                    totalCompleteWorkerNumber ++;
+                // 进行是否竞争判断2：计算出所有预算充足的 task ID 的集合。如果该集合为空，则不作为
+                tempCandidateTaskList.clear();
+                setCandidateTaskByBudget(tempCandidateTaskList, this.workers[j]);
+                if (tempCandidateTaskList.isEmpty()) {
+                    continue;
                 }
+
+
+
+                //todo: 好好设计一下：
+                // 进行是否竞争判断3： 遍历所有的可选task, 选出最大使得自身Utility增加最大的task, 如果为空，则不作为。
+                TaskIDDistanceBudgetPair maxIncrementUtilityInfo;
+                maxIncrementUtilityInfo = chooseByTaskEntropy(this.tasks, this.workers[i], competingTimes, taskCurrentWinnerID, taskCurrentWinnerInfo, completedWorkerIDSet);
+                if (maxIncrementUtilityInfo == null) {
+                    continue;
+                }
+
+                // 否则（竞争成功），发布当前扰动距离长度和隐私预算(这里只添加进候选列表供server进一步选择)，并将隐私自己的预算索引值加1
+                newCandidateWorkerIDList[maxIncrementUtilityInfo.taskID].add(i);
+                completedWorkerIDSet[i].add(i);
+                this.workers[i].taskCompletingTimes[k] ++;
+                totalCompleteWorkerNumber ++;
             }
 
 
@@ -165,15 +144,15 @@ public class MultiTaskSolutionNonPrivacy {
             for (int i = 0; i < newCandidateWorkerIDList.length; i++) {
                 competingTimes[i] += newCandidateWorkerIDList[i].size();
                 for (Integer j : newCandidateWorkerIDList[i]) {
-                    if (taskCurrentWinnerInfoArray[i] > this.workers[j].toTaskDistance[i]) {
-                        taskCurrentWinnerIDArray[i] = j;
-                        taskCurrentWinnerInfoArray[i] = this.workers[j].toTaskDistance[i];
+                    if (taskCurrentWinnerInfo[i] > this.workers[j].toTaskDistance[i]) {
+                        taskCurrentWinnerID[i] = j;
+                        taskCurrentWinnerInfo[i] = this.workers[j].toTaskDistance[i];
                     }
                 }
             }
         }
-        MyPrint.showIntegerArray(taskCurrentWinnerIDArray);
-        MyPrint.showDoubleArray(taskCurrentWinnerInfoArray);
+        MyPrint.showIntegerArray(taskCurrentWinnerID);
+        MyPrint.showDoubleArray(taskCurrentWinnerInfo);
     }
 
 
@@ -260,11 +239,9 @@ public class MultiTaskSolutionNonPrivacy {
     }
 
     public static void main(String[] args) {
-        MultiTaskSolutionNonPrivacy mTNPW = new MultiTaskSolutionNonPrivacy();
-        mTNPW.initializeBasicInformation();
-        mTNPW.initializeAgents();
-        mTNPW.complete();
+//        MultiTaskSingleCompetitionNonPrivacySolution mTNPW = new MultiTaskSingleCompetitionNonPrivacySolution();
+//        mTNPW.initializeBasicInformation();
+//        mTNPW.initializeAgents();
+//        mTNPW.complete();
     }
-
-
 }
