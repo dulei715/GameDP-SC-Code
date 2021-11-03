@@ -1,6 +1,8 @@
-package edu.ecnu.dll.basic_struct.pack;
+package edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class;
 
-public class DistanceBudgetPair implements Comparable<DistanceBudgetPair> {
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.SingleInfoPack;
+
+public class DistanceBudgetPair extends SingleInfoPack implements Comparable<DistanceBudgetPair> {
     public Double distance = null;
     public Double budget = null;
 

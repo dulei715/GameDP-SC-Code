@@ -27,16 +27,16 @@ public class TaskWorkerIDComparator implements Comparator<TaskWorkerIDPair> {
 
     private int compareTask(TaskWorkerIDPair elemA, TaskWorkerIDPair elemB) {
         if (this.taskOrderType == TASK_ASCENDING) {
-            if (elemA.taskID < elemB.taskID) {
+            if (elemA.getTaskID() < elemB.getTaskID()) {
                 return -1;
-            } else if (elemA.taskID > elemB.taskID) {
+            } else if (elemA.getTaskID() > elemB.getTaskID()) {
                 return 1;
             }
             return 0;
         } else if (this.taskOrderType == TASK_DESCENDING) {
-            if (elemA.taskID < elemB.taskID) {
+            if (elemA.getTaskID() < elemB.getTaskID()) {
                 return 1;
-            } else if (elemA.taskID > elemB.taskID) {
+            } else if (elemA.getTaskID() > elemB.getTaskID()) {
                 return -1;
             }
             return 0;
@@ -46,16 +46,16 @@ public class TaskWorkerIDComparator implements Comparator<TaskWorkerIDPair> {
 
     private int compareWorker(TaskWorkerIDPair elemA, TaskWorkerIDPair elemB) {
         if (this.workerOrderType == WORKER_ASCENDING) {
-            if (elemA.workerID < elemB.workerID) {
+            if (elemA.getWorkerID() < elemB.getWorkerID()) {
                 return -1;
-            } else if (elemA.workerID > elemB.workerID) {
+            } else if (elemA.getWorkerID() > elemB.getWorkerID()) {
                 return 1;
             }
             return 0;
         } else if (this.workerOrderType == WORKER_DESCENDING) {
-            if (elemA.workerID < elemB.workerID) {
+            if (elemA.getWorkerID() < elemB.getWorkerID()) {
                 return 1;
-            } else if (elemA.workerID > elemB.workerID) {
+            } else if (elemA.getWorkerID() > elemB.getWorkerID()) {
                 return -1;
             }
             return 0;

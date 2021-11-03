@@ -2,7 +2,7 @@ package edu.ecnu.dll.scheme_compared.solution;
 
 
 import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
-import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import tools.basic.BasicArray;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.struct.PreferenceTable;
@@ -191,7 +191,7 @@ public class ConflictElimination {
                 // task已经没有候选的偏好的worker了
                 continue;
             }
-            tempTaskNextWorkerID =  this.preferenceTable.table[tempTaskID].get(this.taskPreferenceIndex[tempTaskID]).workerID;
+            tempTaskNextWorkerID =  this.preferenceTable.table[tempTaskID].get(this.taskPreferenceIndex[tempTaskID]).getWorkerID();
             workerTaskSize = addToCandidateTaskIDListArray(tempTaskNextWorkerID, tempTaskID);
             if (workerTaskSize == 2) {
                 this.conflictWorkerIDList.add(tempTaskNextWorkerID);
@@ -217,7 +217,7 @@ public class ConflictElimination {
 //        if (taskIDANextWorkerInfo == null || taskIDBNextWorkerInfo == null) {
 //            System.out.println("null");
 //        }
-        tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDANextWorkerInfo.noiseEffectiveDistance, taskIDBNextWorkerInfo.noiseEffectiveDistance, taskIDANextWorkerInfo.effectivePrivacyBudget, taskIDBNextWorkerInfo.effectivePrivacyBudget);
+        tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDANextWorkerInfo.getNoiseEffectiveDistance(), taskIDBNextWorkerInfo.getNoiseEffectiveDistance(), taskIDANextWorkerInfo.getEffectivePrivacyBudget(), taskIDBNextWorkerInfo.getEffectivePrivacyBudget());
         if (tempPCFValue > 0.5) {
             // tempPCFValue 大于 0.5，说明taskIDA的候选距离小于taskIDB的候选距离的概率更大，说明taskIDB的更应该充当被选择的角色，因此taskIDB占优势
             return true;
@@ -237,7 +237,7 @@ public class ConflictElimination {
     protected boolean compareWithCurrentInfo(Integer workerID, Integer taskIDA, Integer taskIDB, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
         double tempPCFValue;
         // PCF(B,A,B,A)
-        tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDBNextWorkerInfo.noiseEffectiveDistance, taskIDANextWorkerInfo.noiseEffectiveDistance, taskIDBNextWorkerInfo.effectivePrivacyBudget, taskIDANextWorkerInfo.effectivePrivacyBudget);
+        tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDBNextWorkerInfo.getNoiseEffectiveDistance(), taskIDANextWorkerInfo.getNoiseEffectiveDistance(), taskIDBNextWorkerInfo.getEffectivePrivacyBudget(), taskIDANextWorkerInfo.getEffectivePrivacyBudget());
         if (tempPCFValue > 0.5) {
             // tempPCFValue 大于 0.5，说明taskIDA的候选距离小于taskIDB的候选距离的概率更大，说明taskIDB的更应该充当被选择的角色，因此taskIDB占优势
             return true;
@@ -253,7 +253,7 @@ public class ConflictElimination {
         Integer workerID;
         int workerTaskSize;
         for (int i = 0; i < this.preferenceTable.taskSize; i++) {
-            workerID = this.preferenceTable.table[i].get(0).workerID;
+            workerID = this.preferenceTable.table[i].get(0).getWorkerID();
 
             workerTaskSize = addToCandidateTaskIDListArray(workerID, i);
 
@@ -268,9 +268,9 @@ public class ConflictElimination {
         }
         for (int i = 0; i < this.taskSize; i++) {
             if (this.taskPreferenceIndex[i] >= this.preferenceTable.table[i].size()) {
-                result[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.workerID;
+                result[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID();
             } else {
-                result[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]).workerID;
+                result[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]).getWorkerID();
             }
         }
         return result;
@@ -308,8 +308,8 @@ public class ConflictElimination {
             if (this.preferenceTable.table[i].isEmpty()) {
                 continue;
             }
-            workerID = this.preferenceTable.table[i].get(0).workerID;
-            if (workerID.equals(DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.workerID)) {
+            workerID = this.preferenceTable.table[i].get(0).getWorkerID();
+            if (workerID.equals(DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID())) {
                 continue;
             }
 
@@ -340,7 +340,7 @@ public class ConflictElimination {
         Integer workerID;
         int workerTaskSize;
         for (int i = 0; i < this.preferenceTable.taskSize; i++) {
-            workerID = this.preferenceTable.table[i].get(0).workerID;
+            workerID = this.preferenceTable.table[i].get(0).getWorkerID();
 
             workerTaskSize = addToCandidateTaskIDListArray(workerID, i);
 
@@ -357,7 +357,7 @@ public class ConflictElimination {
             if (this.taskPreferenceIndex[i] >= this.preferenceTable.table[i].size()) {
                 winnerArray[i] = null;
             } else {
-                winnerArray[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]).workerID;
+                winnerArray[i] = this.preferenceTable.table[i].get(this.taskPreferenceIndex[i]).getWorkerID();
             }
         }
     }

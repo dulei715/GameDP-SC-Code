@@ -1,12 +1,11 @@
 package function;
 
-import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import org.junit.Test;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
 
-import java.util.Arrays;
 import java.util.TreeSet;
 
 public class MaximumLikelihoodEstimationTest {

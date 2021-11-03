@@ -1,7 +1,7 @@
 package edu.ecnu.dll.scheme_compared.tools;
 
 import edu.ecnu.dll.basic_struct.agent.*;
-import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 
 import java.util.Iterator;

@@ -2,7 +2,7 @@ package edu.ecnu.dll.scheme.struct.worker;
 
 
 import edu.ecnu.dll.basic_struct.agent.PrivacyWorker;
-import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 
 import java.util.TreeSet;
 
@@ -14,7 +14,7 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
     public int[] budgetIndex = null;
 
     // 记录成功进入候选的utility函数值
-    public Double[] completeUtilityFunctionValue = null;
+    public Double[] successfullyUtilityFunctionValue = null;
     // 记录每次计算的utility函数值
     public Double[] currentUtilityFunctionValue = null;
 

@@ -48,6 +48,12 @@ public class BasicArray {
         }
     }
 
+    public static void setIntegerListToContinuousNaturalNumber(List<Integer> list, Integer maxNaturalNumber) {
+        for (int i = 0; i <= maxNaturalNumber; i++) {
+            list.add(i);
+        }
+    }
+
     public static void setDoubleArrayToZero(double[] element) {
         setDoubleArrayTo(element, 0.0);
     }

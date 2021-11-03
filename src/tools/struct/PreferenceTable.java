@@ -1,8 +1,7 @@
 package tools.struct;
 
-import edu.ecnu.dll.basic_struct.comparator.TaskWorkerIDComparator;
 import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
-import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 
 import java.util.*;
 

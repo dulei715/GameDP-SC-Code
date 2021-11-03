@@ -7,10 +7,16 @@ public class MultiTaskNonPrivacyWorker extends Worker {
     public Double[] toTaskDistance = null;
     //task number * budget number
 
-    public Double currentUtilityFunctionValue = null;
 
 
-    public Integer[] taskCompletingTimes = null;
+    public Integer[] taskCompetingTimes = null;
+
+
+    // 记录成功进入候选的utility函数值
+    public Double[] successfullyUtilityFunctionValue = null;
+    // 记录每次计算的utility函数值
+    public Double[] currentUtilityFunctionValue = null;
+
 
     public MultiTaskNonPrivacyWorker() {
 

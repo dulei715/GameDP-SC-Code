@@ -2,7 +2,7 @@ package edu.ecnu.dll.scheme.struct.worker;
 
 
 import edu.ecnu.dll.basic_struct.agent.Worker;
-import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 
 import java.util.TreeSet;
 
@@ -13,7 +13,7 @@ public class SingleTaskBasicWorker extends Worker {
 
     public int budgetIndex = 0;
 
-    public Double completeUtilityFunctionValue = null;
+    public Double successfulUtilityFunctionValue = null;
     public Double currentUtilityFunctionValue = null;
 
     public TreeSet<DistanceBudgetPair> alreadyPublishedNoiseDistanceAndBudget = null;

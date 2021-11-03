@@ -1,8 +1,8 @@
 package edu.ecnu.dll.scheme_compared.solution;
 
 
-import edu.ecnu.dll.basic_struct.pack.DistanceBudgetPair;
-import edu.ecnu.dll.basic_struct.pack.DistanceIDPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.IDDistancePair;
 import edu.ecnu.dll.scheme_compared.struct.task.PPPTask;
 import edu.ecnu.dll.scheme_compared.struct.worker.PPPWorker;
 import tools.basic.BasicCalculation;
@@ -31,18 +31,18 @@ public class MultiTaskSolution {
     public void initialize() {
         this.taskPreferenceTable = new int[this.tasks.length][this.workers.length];
         this.taskPreferenceIndex = new int[this.tasks.length];
-        DistanceIDPair[] distanceIDPairs;
+        IDDistancePair[] IDDistancePairs;
         for (int i = 0; i < this.tasks.length; i++) {
             this.taskPreferenceIndex[i] = 0;
-            distanceIDPairs = new DistanceIDPair[this.workers.length];
+            IDDistancePairs = new IDDistancePair[this.workers.length];
             for (int j = 0; j < this.workers.length; j++) {
                 this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.workers[j].location, this.tasks[i].location);
                 this.workers[j].toTaskNoiseDistance[i] = this.workers[j].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, this.workers[j].privacyBudget);
-                distanceIDPairs[j] = new DistanceIDPair(this.workers[j].toTaskNoiseDistance[i], j);
+                IDDistancePairs[j] = new IDDistancePair(this.workers[j].toTaskNoiseDistance[i], j);
             }
-            Arrays.sort(distanceIDPairs);
+            Arrays.sort(IDDistancePairs);
             for (int j = 0; j < this.workers.length; j++) {
-                this.taskPreferenceTable[i][j] = distanceIDPairs[j].id;
+                this.taskPreferenceTable[i][j] = IDDistancePairs[j].getAgentID();
             }
         }
     }

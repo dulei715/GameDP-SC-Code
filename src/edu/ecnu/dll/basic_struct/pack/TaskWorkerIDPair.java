@@ -1,10 +1,26 @@
 package edu.ecnu.dll.basic_struct.pack;
 
 public class TaskWorkerIDPair{
-    public Integer taskID;
-    public Integer workerID;
+    private Integer taskID;
+    private Integer workerID;
 
     public TaskWorkerIDPair() {
+    }
+
+    public Integer getTaskID() {
+        return taskID;
+    }
+
+    public void setTaskID(Integer taskID) {
+        this.taskID = taskID;
+    }
+
+    public Integer getWorkerID() {
+        return workerID;
+    }
+
+    public void setWorkerID(Integer workerID) {
+        this.workerID = workerID;
     }
 
     public TaskWorkerIDPair(Integer taskID, Integer workerID) {

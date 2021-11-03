@@ -1,7 +1,7 @@
 package struct;
 
 import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
-import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import org.junit.Test;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;

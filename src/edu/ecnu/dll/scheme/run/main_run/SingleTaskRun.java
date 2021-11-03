@@ -39,7 +39,7 @@ public class SingleTaskRun {
 
 
         // 执行竞争过程
-        singleTaskSolution.complete();
+        singleTaskSolution.compete();
 
     }
 }

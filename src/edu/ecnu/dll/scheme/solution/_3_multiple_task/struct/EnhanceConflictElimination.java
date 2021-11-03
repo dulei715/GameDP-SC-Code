@@ -1,6 +1,6 @@
 package edu.ecnu.dll.scheme.solution._3_multiple_task.struct;
 
-import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.scheme_compared.solution.ConflictElimination;
 
 public class EnhanceConflictElimination extends ConflictElimination {

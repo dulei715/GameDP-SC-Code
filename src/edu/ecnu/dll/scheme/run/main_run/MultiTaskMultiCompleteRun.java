@@ -2,9 +2,8 @@ package edu.ecnu.dll.scheme.run.main_run;
 
 import edu.ecnu.dll.basic_struct.comparator.TaskWorkerIDComparator;
 import edu.ecnu.dll.basic_struct.pack.TaskWorkerIDPair;
-import edu.ecnu.dll.basic_struct.pack.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskMultiCompetitionSolution;
-import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskSingleCompetitionSolution;
 import tools.io.print.MyPrint;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
@@ -49,13 +48,13 @@ public class MultiTaskMultiCompleteRun {
         int serveredTaskSize = 0;
         for (int i = 0; i < winnerTaskWorkerPackedArray.length; i++) {
 //        for (int i = 0; i < 10; i++) {
-            if (winnerTaskWorkerPackedArray[i].workerID == -1) {
+            if (winnerTaskWorkerPackedArray[i].getWorkerID().equals(-1)) {
                 continue;
             }
             ++ serveredTaskSize;
-            System.out.println("Task ID: " + i + "; Winner worker ID: " + winnerTaskWorkerPackedArray[i].workerID + "; Effective noise distance: "
-                    + winnerTaskWorkerPackedArray[i].noiseEffectiveDistance + "; Effective privacy budget: "
-                    + winnerTaskWorkerPackedArray[i].effectivePrivacyBudget);
+            System.out.println("Task ID: " + i + "; Winner worker ID: " + winnerTaskWorkerPackedArray[i].getWorkerID() + "; Effective noise distance: "
+                    + winnerTaskWorkerPackedArray[i].getNoiseEffectiveDistance() + "; Effective privacy budget: "
+                    + winnerTaskWorkerPackedArray[i].getEffectivePrivacyBudget());
         }
 
         System.out.println(serveredTaskSize);
@@ -75,22 +74,22 @@ public class MultiTaskMultiCompleteRun {
                 competeFailureTaskIDList.add(i);
                 continue;
             }
-            if (winnerTaskWorkerPackedArray[i].workerID == -1) {
+            if (winnerTaskWorkerPackedArray[i].getWorkerID().equals(-1)) {
                 nonCompeteTaskIDList.add(i);
                 continue;
             }
-            taskWorkerIDPairList.add(new TaskWorkerIDPair(i, winnerTaskWorkerPackedArray[i].workerID));
+            taskWorkerIDPairList.add(new TaskWorkerIDPair(i, winnerTaskWorkerPackedArray[i].getWorkerID()));
         }
         serveredTaskSize = taskWorkerIDPairList.size();
         taskWorkerIDPairArray = taskWorkerIDPairList.toArray(new TaskWorkerIDPair[0]);
         Arrays.sort(taskWorkerIDPairArray, new TaskWorkerIDComparator(TaskWorkerIDComparator.WORKER_FIRST, TaskWorkerIDComparator.TASK_ASCENDING, TaskWorkerIDComparator.WORKER_ASCENDING));
         int tempTaskID, tempWorkerID;
         for (int i = 0; i < serveredTaskSize; i++) {
-            tempTaskID = taskWorkerIDPairArray[i].taskID;
-            tempWorkerID = taskWorkerIDPairArray[i].workerID;
+            tempTaskID = taskWorkerIDPairArray[i].getTaskID();
+            tempWorkerID = taskWorkerIDPairArray[i].getWorkerID();
             System.out.println("Winner worker ID: " + tempWorkerID + "; Task ID: " + tempTaskID + "; Effective noise distance: "
-                    + winnerTaskWorkerPackedArray[tempTaskID].noiseEffectiveDistance + "; Effective privacy budget: "
-                    + winnerTaskWorkerPackedArray[tempTaskID].effectivePrivacyBudget);
+                    + winnerTaskWorkerPackedArray[tempTaskID].getNoiseEffectiveDistance() + "; Effective privacy budget: "
+                    + winnerTaskWorkerPackedArray[tempTaskID].getEffectivePrivacyBudget());
         }
 
         System.out.println(serveredTaskSize);
