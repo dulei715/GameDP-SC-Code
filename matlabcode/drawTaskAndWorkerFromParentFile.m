@@ -1,4 +1,4 @@
-function y = drawAgentSimple(fileParentPath)
+function y = drawTaskAndWorkerFromParentFile(fileParentPath)
 taskPath = [fileParentPath, '\task_point.txt'];
 workerPath = [fileParentPath, '\worker_point.txt'];
 % disp(taskPath);

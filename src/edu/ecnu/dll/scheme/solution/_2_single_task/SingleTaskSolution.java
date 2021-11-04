@@ -160,10 +160,6 @@ public class SingleTaskSolution {
 
                 // 否则（竞争成功），发布当前扰动距离长度和隐私预算(这里只添加进候选列表供server进一步选择)，并将隐私自己的预算索引值加1
                 candidateWorkerIDList.add(j);
-//                this.workers[i].toCompetePublishEverageNoiseDistance = competeDistance;
-//                this.workers[i].toCompetePublishTotalPrivacyBudget = totalBudget;
-//                this.workers[i].alreadyPublishedAverageNoiseDistance = competeDistance;
-//                this.workers[i].alreadyPublishedTotalPrivacyBudget = totalBudget;
                 this.workers[j].alreadyPublishedNoiseDistanceAndBudget.add(new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
                 this.workers[j].effectiveNoiseDistance = competeDistance;
                 this.workers[j].effectivePrivacyBudget = effectivePrivacyBudget;

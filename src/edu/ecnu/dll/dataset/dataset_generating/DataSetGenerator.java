@@ -41,7 +41,7 @@ public class DataSetGenerator {
         }
     }
 
-    public static void generateNormalPlaneDataPoint(int dimensionLength, int pointSize, double mean, double variance, String outputPath) {
+    public static void generateNormalPlaneDataPoint(int pointSize, double mean, double variance, String outputPath) {
         Random random = new Random();
         BufferedWriter bufferedWriter = null;
         double x, y;
