@@ -21,4 +21,8 @@ public class DatasetGenerateTest {
         double variance = 1_000_000_000;
         DataSetGenerator.generateNormalPlaneDataPoint(pointSize, mean, variance, basicPath);
     }
+
+    
+
+
 }
