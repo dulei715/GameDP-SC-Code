@@ -3,6 +3,7 @@ package edu.ecnu.dll.scheme.solution._1_non_privacy;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.sub_class.TaskTargetNonPrivacyInfo;
+import edu.ecnu.dll.scheme.solution.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskNonPrivacyWorker;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class MultiTaskSingleCompetitionNonPrivacySolution {
+public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
 
     public static final int DISTANCE_TAG = 0;
     public static final int BUDGET_TAG = 1;
@@ -30,8 +31,9 @@ public class MultiTaskSingleCompetitionNonPrivacySolution {
 
 
 
+    // Task value 保证是[0,1]之间的值
     protected double getUtilityValue(double taskValue, double realDistance) {
-        return taskValue * 2  - alpha * realDistance;
+        return taskValue * 2  - alpha * super.normalizeDistance(realDistance);
     }
     private double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
         if (totalCompetingTime <= 0) {

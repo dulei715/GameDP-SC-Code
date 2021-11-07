@@ -2,6 +2,7 @@ package edu.ecnu.dll.scheme.solution._2_single_task;
 
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.scheme.solution.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.SingleTaskBasicWorker;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-public class SingleTaskSolution {
+public class SingleTaskSolution extends Solution {
 
     public static final int DISTANCE_TAG = 0;
     public static final int BUDGET_TAG = 1;
@@ -35,7 +36,8 @@ public class SingleTaskSolution {
      *
      */
     protected double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
-        return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
+//        return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
+        return taskValue + taskValue * super.normalizePrivacybudget(effectivePrivacyBudget) - alpha * super.normalizeDistance(realDistance) - beta * super.normalizePrivacybudget(privacyBudgetCost);
     }
     private DistanceBudgetPair getNewEffectiveNoiseDistanceAndPrivacyBudget(Integer workerID, double newNoiseDistance, double newPrivacyBudget) {
         TreeSet<DistanceBudgetPair> tempTreeSet = new TreeSet<>();

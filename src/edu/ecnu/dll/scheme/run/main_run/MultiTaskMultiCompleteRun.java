@@ -3,6 +3,7 @@ package edu.ecnu.dll.scheme.run.main_run;
 import edu.ecnu.dll.basic_struct.comparator.TaskWorkerIDComparator;
 import edu.ecnu.dll.basic_struct.pack.TaskWorkerIDPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.scheme.run.target_tools.TargetTool;
 import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskMultiCompetitionSolution;
 import tools.io.print.MyPrint;
 import tools.io.read.DoubleRead;
@@ -17,6 +18,7 @@ import java.util.List;
 public class MultiTaskMultiCompleteRun {
     public static void main(String[] args) {
         // 从数据库读数据
+//        String basicPath = System.getProperty("user.dir") + "\\dataset\\test_dataset\\_2_multiple_task_dataset\\";
         String basicPath = System.getProperty("user.dir") + "\\dataset\\test_dataset\\_2_multiple_task_dataset\\";
         String taskPointPath = basicPath + "test1\\task_point.txt";
         String taskValuePath = basicPath + "test1\\task_value.txt";
@@ -37,11 +39,15 @@ public class MultiTaskMultiCompleteRun {
 
 
         // 执行竞争过程
+        long startCompetingTime = System.currentTimeMillis();
         WorkerIDDistanceBudgetPair[] winner = multiTaskMultiCompetitionSolution.complete();
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
 //        showResultA(winner);
         showResultB(winner);
 
+        System.out.println("Running time is: " + runningTime);
     }
 
     private static void showResultA(WorkerIDDistanceBudgetPair[] winnerTaskWorkerPackedArray) {

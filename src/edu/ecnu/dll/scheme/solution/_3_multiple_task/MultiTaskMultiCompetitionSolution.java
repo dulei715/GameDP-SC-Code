@@ -17,7 +17,7 @@ import java.util.*;
 public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitionSolution {
 
 
-    public static final int proposalSize = 5;
+    public static final int proposalSize = 50;
     public static TargetInfoForTaskEntropyComparator targetInfoForTaskEntropyComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForProposingValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForUtilityValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
@@ -95,7 +95,6 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
      * 2种worker的选择函数
      */
     protected TaskTargetInfo[] chooseArrayByUtilityFunction(List<Integer> taskIDList, Integer workerID, WorkerIDDistanceBudgetPair[] lastTermTaskWinnerPackedArray, int topK){
-        Integer taskID = null;
         TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForUtilityValueComparator);
         for (Integer i : taskIDList) {
             if (lastTermTaskWinnerPackedArray[i].getWorkerID().equals(workerID)) {
@@ -122,7 +121,10 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
 
             // Utility 函数判断
             Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].toTaskDistance[i], tempNewCostPrivacyBudget);
-            if (tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+//            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+//                continue;
+//            }
+            if (tempNewUtilityValue <= 0) {
                 continue;
             }
 
@@ -141,11 +143,66 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             }
 
         }
-        if (taskID == null) {
+        if (candidateTaskTargetInfoSet.isEmpty()) {
             return null;
         }
         return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
     }
+
+    protected TaskTargetInfo[] chooseArrayByUtilityFunctionInfluencedByTaskEntropy(List<Integer> taskIDList, Integer workerID, Integer[] totalCompetingTimesList, WorkerIDDistanceBudgetPair[] lastTermTaskWinnerPackedArray, HashSet<Integer>[] competingWorkerIDSetArray, int topK) {
+        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForUtilityValueComparator);
+        for (Integer i : taskIDList) {
+            if (lastTermTaskWinnerPackedArray[i].getWorkerID().equals(workerID)) {
+                continue;
+            }
+            // PPCF 判断
+            if (this.workers[workerID].toTaskDistance[i] >= lastTermTaskWinnerPackedArray[i].getNoiseEffectiveDistance()) {
+                continue;
+            }
+
+            Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
+            Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
+            Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
+            double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
+            double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
+
+            // PCF 判断
+            double pcfValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(tempCompeteDistance, lastTermTaskWinnerPackedArray[i].getNoiseEffectiveDistance(), tempEffectivePrivacyBudget, lastTermTaskWinnerPackedArray[i].getEffectivePrivacyBudget());
+            if (pcfValue <= 0.5) {
+                continue;
+            }
+
+
+            // Utility 函数判断
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].toTaskDistance[i], tempNewCostPrivacyBudget);
+//            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+//                continue;
+//            }
+            if (tempNewUtilityValue <= 0) {
+                continue;
+            }
+
+
+            TaskTargetInfo taskTargetInfo = null;
+
+            if (candidateTaskTargetInfoSet.size() < topK) {
+                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+            } else {
+                taskTargetInfo = candidateTaskTargetInfoSet.last();
+                if (tempNewUtilityValue > taskTargetInfo.getTarget()) {
+                    candidateTaskTargetInfoSet.remove(taskTargetInfo); //todo: 测试是否能够真的删除
+                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+                }
+            }
+
+        }
+        if (candidateTaskTargetInfoSet.isEmpty()) {
+            return null;
+        }
+        return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
+    }
+
     protected TaskTargetInfo[] chooseArrayByTaskEntropy(List<Integer> taskIDList, Integer workerID, Integer[] totalCompetingTimesList, WorkerIDDistanceBudgetPair[] lastTermTaskWinnerPackedArray, HashSet<Integer>[] competingWorkerIDSetArray, int topK) {
         // 遍历taskIDList中的所有task，找出能使当前worker的utility增加最大的task，返回（该task的ID, 申请即将泄露的平均distance[此处可返回扰动], 申请泄露的budget总和[此处可返回当前budget]）
         TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForTaskEntropyComparator);
@@ -249,7 +306,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             }
 
         }
-        if (taskID == null) {
+        if (candidateTaskTargetInfoSet.isEmpty()) {
             return null;
         }
         return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
@@ -370,7 +427,8 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                 // 进行是否竞争判断3： 考察 utility函数、PPCF函数、PCF函数、任务熵
 
                 TaskTargetInfo[] winnerInfoArray;
-                winnerInfoArray = chooseArrayByTaskEntropy(tempCandidateTaskList, tempWorkerID, competingTimes, taskCurrentWinnerPackedArray, completedWorkerIDSet, proposalSize);
+                winnerInfoArray = chooseArrayByUtilityFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
+//                winnerInfoArray = chooseArrayByTaskEntropy(tempCandidateTaskList, tempWorkerID, competingTimes, taskCurrentWinnerPackedArray, completedWorkerIDSet, proposalSize);
 //                winnerInfoArray = chooseArrayByProposingValue(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
                 if (winnerInfoArray == null) {
                     continue;

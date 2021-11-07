@@ -196,8 +196,8 @@ public class DataSetGenerator {
 //        dataSetGenerator.generateUniformPlaneDataPoint(200000, 10000, outputPath);
 
 
-        String outputPath = System.getProperty("user.dir") + "\\dataset\\NormalDataPoint.txt";
-        DataSetGenerator dataSetGenerator = new DataSetGenerator();
-        dataSetGenerator.generateNormalPlaneDataPoint(200000, 10000, 0, 10000000000L, outputPath);
+//        String outputPath = System.getProperty("user.dir") + "\\dataset\\NormalDataPoint.txt";
+//        DataSetGenerator dataSetGenerator = new DataSetGenerator();
+//        dataSetGenerator.generateNormalPlaneDataPoint(200000, 10000, 0, 10000000000L, outputPath);
     }
 }

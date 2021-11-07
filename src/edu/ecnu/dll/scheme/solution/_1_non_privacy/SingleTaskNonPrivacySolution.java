@@ -4,6 +4,7 @@ import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
+import edu.ecnu.dll.scheme.solution.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.scheme.struct.worker.SingleTaskBasicWorker;
 import edu.ecnu.dll.scheme.struct.worker.SingleTaskNonPrivacyWorker;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-public class SingleTaskNonPrivacySolution {
+public class SingleTaskNonPrivacySolution extends Solution {
 
     public static final int DISTANCE_TAG = 0;
     public static final int BUDGET_TAG = 1;
@@ -37,7 +38,8 @@ public class SingleTaskNonPrivacySolution {
      *
      */
     protected double getUtilityValue(double taskValue, double realDistance) {
-        return taskValue * 2 - alpha * realDistance;
+//        return taskValue * 2 - alpha * realDistance;
+        return taskValue * 2 - alpha * super.normalizeDistance(realDistance);
     }
 
 

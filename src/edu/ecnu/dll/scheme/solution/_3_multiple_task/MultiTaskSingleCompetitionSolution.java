@@ -1,8 +1,10 @@
 package edu.ecnu.dll.scheme.solution._3_multiple_task;
 
+import edu.ecnu.dll.basic_struct.function.Normalization;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.sub_class.TaskTargetInfo;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.scheme.solution.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskBasicWorker;
@@ -17,7 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.TreeSet;
 
-public class MultiTaskSingleCompetitionSolution {
+public class MultiTaskSingleCompetitionSolution extends Solution {
 
     public static final int DISTANCE_TAG = 0;
     public static final int BUDGET_TAG = 1;
@@ -35,7 +37,9 @@ public class MultiTaskSingleCompetitionSolution {
      *  5个 get 函数
      */
     protected double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
-        return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
+//        return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
+        double normalizedValue = super.normalizeTaskValue(taskValue);
+        return normalizedValue + normalizedValue * super.normalizePrivacybudget(effectivePrivacyBudget) - alpha * super.normalizeDistance(realDistance) - beta * super.normalizePrivacybudget(privacyBudgetCost);
     }
     protected double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
         if (totalCompetingTime <= 0) {
@@ -185,7 +189,10 @@ public class MultiTaskSingleCompetitionSolution {
             // Utility 函数判断
             Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].toTaskDistance[i], tempNewCostPrivacyBudget);
 
-            if (tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+//            if (tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+//                continue;
+//            }
+            if (tempNewUtilityValue <= 0) {
                 continue;
             }
 
