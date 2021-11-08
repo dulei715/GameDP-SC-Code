@@ -23,10 +23,10 @@ public class MultiTaskSingleCompleteRun {
         String workerPointPath = basicPath + testPath + "worker_point.txt";
         String workerPrivacyBudgetPath = basicPath + testPath + "worker_privacy_budget.txt";
 
-        List<Point> taskPointList = PointRead.readPoint(taskPointPath);
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
         Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
 
-        List<Point> workerPointList = PointRead.readPoint(workerPointPath);
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 
 //        MyPrint.showList(taskPointList);

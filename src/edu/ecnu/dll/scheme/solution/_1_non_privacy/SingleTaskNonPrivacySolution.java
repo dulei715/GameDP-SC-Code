@@ -1,16 +1,11 @@
 package edu.ecnu.dll.scheme.solution._1_non_privacy;
 
 import edu.ecnu.dll.basic_struct.agent.Task;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import edu.ecnu.dll.scheme.solution.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
-import edu.ecnu.dll.scheme.struct.worker.SingleTaskBasicWorker;
 import edu.ecnu.dll.scheme.struct.worker.SingleTaskNonPrivacyWorker;
 import tools.basic.BasicCalculation;
-import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
-import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
@@ -18,7 +13,6 @@ import tools.struct.Point;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public class SingleTaskNonPrivacySolution extends Solution {
 
@@ -184,9 +178,9 @@ public class SingleTaskNonPrivacySolution extends Solution {
         String workerPointPath = basicPath + "worker_point.txt";
 //        String workerPrivacyBudgetPath = basicPath + "worker_privacy_budget.txt";
 
-        List<Point> taskPointList = PointRead.readPoint(taskPointPath);
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
         Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
-        List<Point> workerPointList = PointRead.readPoint(workerPointPath);
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
 //        List[] workerPrivacyBudgetList = DoubleRead.readDoubleList(workerPrivacyBudgetPath);
 
 

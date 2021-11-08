@@ -5,9 +5,7 @@ import tools.struct.Point;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class PointRead {
 
@@ -24,7 +22,7 @@ public class PointRead {
     /**
      * The first line should be the size of the dataset
      */
-    public void readPoint(int scale) {
+    public void readPointWithFirstLineCount(int scale) {
         BufferedReader bufferedReader = null;
         String line = null;
         String[] dataElement;
@@ -58,11 +56,11 @@ public class PointRead {
         }
     }
 
-    public void readPoint() {
-        this.readPoint(1);
+    public void readPointWithFirstLineCount() {
+        this.readPointWithFirstLineCount(1);
     }
 
-    public static List<Point> readPoint(String filePath) {
+    public static List<Point> readPointWithFirstLineCount(String filePath) {
         BufferedReader bufferedReader = null;
         String line = null;
         String[] dataElement;
@@ -113,7 +111,7 @@ public class PointRead {
     public static void main(String[] args) {
         String filePath = "E:\\1.学习\\4.论文\\程鹏\\dataset\\dataset\\Chengdu\\chengdu.node";
         PointRead pointRead = new PointRead(filePath);
-        pointRead.readPoint();
+        pointRead.readPointWithFirstLineCount();
         List<Point> pointSet = pointRead.getPointList();
         MyPrint.showList(pointSet);
     }

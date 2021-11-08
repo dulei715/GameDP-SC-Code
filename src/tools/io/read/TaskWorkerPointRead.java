@@ -17,11 +17,11 @@ public class TaskWorkerPointRead {
 
 
     public void readTaskPoint() {
-        this.taskPointList = PointRead.readPoint(this.taskFilePath);
+        this.taskPointList = PointRead.readPointWithFirstLineCount(this.taskFilePath);
     }
 
     public void readWorkerPoint() {
-        this.workerPointList = PointRead.readPoint(this.workerFilePath);
+        this.workerPointList = PointRead.readPointWithFirstLineCount(this.workerFilePath);
     }
 
 }

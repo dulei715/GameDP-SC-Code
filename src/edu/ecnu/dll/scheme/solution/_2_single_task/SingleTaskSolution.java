@@ -222,9 +222,9 @@ public class SingleTaskSolution extends Solution {
         String workerPointPath = basicPath + "worker_point.txt";
         String workerPrivacyBudgetPath = basicPath + "worker_privacy_budget.txt";
 
-        List<Point> taskPointList = PointRead.readPoint(taskPointPath);
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
         Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
-        List<Point> workerPointList = PointRead.readPoint(workerPointPath);
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
         List[] workerPrivacyBudgetList = DoubleRead.readDoubleList(workerPrivacyBudgetPath);
 
 

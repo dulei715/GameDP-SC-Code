@@ -3,7 +3,6 @@ package edu.ecnu.dll.scheme.run.compare_run;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import edu.ecnu.dll.scheme.run.target_tools.TargetTool;
 import edu.ecnu.dll.scheme.solution._1_non_privacy.SingleTaskNonPrivacySolution;
-import edu.ecnu.dll.scheme.solution._2_single_task.SingleTaskSolution;
 import tools.io.print.MyPrint;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
@@ -20,10 +19,10 @@ public class SingleTaskNonPrivacyRun {
         String workerPointPath = basicPath + "test1\\worker_point.txt";
 //        String workerPrivacyBudgetPath = basicPath + "test1\\worker_privacy_budget.txt";
 
-        List<Point> taskPointList = PointRead.readPoint(taskPointPath);
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
         Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
 
-        List<Point> workerPointList = PointRead.readPoint(workerPointPath);
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
 //        List<Double>[] workerPrivacyBudgetList = DoubleRead.readDoubleList(workerPrivacyBudgetPath);
 
         MyPrint.showList(taskPointList);

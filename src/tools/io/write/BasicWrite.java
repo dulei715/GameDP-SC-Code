@@ -8,7 +8,7 @@ import java.util.List;
 
 public class BasicWrite {
     public String OUTPUT_SPLIT_SYMBOL = " ";
-    private BufferedWriter bufferedWriter = null;
+    protected BufferedWriter bufferedWriter = null;
 
     public BasicWrite() {
     }

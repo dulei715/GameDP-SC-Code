@@ -19,16 +19,20 @@ public class MultiTaskMultiCompleteRun {
     public static void main(String[] args) {
         // 从数据库读数据
 //        String basicPath = System.getProperty("user.dir") + "\\dataset\\test_dataset\\_2_multiple_task_dataset\\";
-        String basicPath = System.getProperty("user.dir") + "\\dataset\\test_dataset\\_2_multiple_task_dataset\\";
-        String taskPointPath = basicPath + "test1\\task_point.txt";
-        String taskValuePath = basicPath + "test1\\task_value.txt";
-        String workerPointPath = basicPath + "test1\\worker_point.txt";
-        String workerPrivacyBudgetPath = basicPath + "test1\\worker_privacy_budget.txt";
+//        String taskPointPath = basicPath + "test1\\task_point.txt";
+//        String taskValuePath = basicPath + "test1\\task_value.txt";
+//        String workerPointPath = basicPath + "test1\\worker_point.txt";
+//        String workerPrivacyBudgetPath = basicPath + "test1\\worker_privacy_budget.txt";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\";
+        String workerPointPath = basicDatasetPath + "worker_point.txt";
+        String taskPointPath = basicDatasetPath + "task_point.txt";
+        String taskValuePath = basicDatasetPath + "task_value.txt";
+        String workerPrivacyBudgetPath = basicDatasetPath + "worker_privacy_budget.txt";
 
-        List<Point> taskPointList = PointRead.readPoint(taskPointPath);
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
         Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
 
-        List<Point> workerPointList = PointRead.readPoint(workerPointPath);
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 
 

@@ -199,5 +199,12 @@ public class DataSetGenerator {
 //        String outputPath = System.getProperty("user.dir") + "\\dataset\\NormalDataPoint.txt";
 //        DataSetGenerator dataSetGenerator = new DataSetGenerator();
 //        dataSetGenerator.generateNormalPlaneDataPoint(200000, 10000, 0, 10000000000L, outputPath);
+
+//        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\task_value.txt";
+//        DataSetGenerator.generateTaskValuesDataSet(outputPath, 1286, 0, 1, 6);
+
+        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_privacy_budget.txt";
+        DataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputPath, 28029, 1286, 5, 0, 10, 6);
+
     }
 }
