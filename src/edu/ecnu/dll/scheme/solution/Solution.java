@@ -9,8 +9,10 @@ public abstract class Solution {
     protected Double maxDistance = 100_000.0;
     protected Double minPrivacyBudget = 0.0;
     protected Double maxPrivacyBudget = 100.0;   // 最大单个隐私预算*budget个数
-    protected Double maxValue = 100000.0;   // 最大单个隐私预算*budget个数
-    protected Double minValue = 10000.0;   // 最大单个隐私预算*budget个数
+//    protected Double maxValue = 100000.0;
+//    protected Double minValue = 10000.0;
+    protected Double maxValue = 0.0;
+    protected Double minValue = 1.0;
 
     public Solution() {
     }

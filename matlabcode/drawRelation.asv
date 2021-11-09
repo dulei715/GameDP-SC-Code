@@ -1,0 +1,9 @@
+function y = drawRelation(m, n, p)
+k = 1:m;
+xx = (n.*k-p.*k.*k)/m;
+y = zeros(size(xx));
+upper = floor(n/k);
+for i = 1:upper
+    y
+end
+plot(k, y);

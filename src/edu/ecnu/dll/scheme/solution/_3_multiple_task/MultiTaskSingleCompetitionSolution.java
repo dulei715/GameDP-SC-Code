@@ -101,16 +101,18 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
             this.workers[j].privacyBudgetCost = new Double[this.tasks.length];
             this.workers[j].taskCompetingTimes = new Integer[this.tasks.length];
             this.workers[j].currentUtilityFunctionValue = new Double[this.tasks.length];
+//            this.workers[j].successfullyUtilityFunctionValue = BasicArray.getInitializedArray(0.0, this.tasks.length);
+            this.workers[j].successfullyUtilityFunctionValue = new Double[this.tasks.length];
             for (int i = 0; i < tasks.length; i++) {
                 this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[j].location);
                 this.workers[j].budgetIndex[i] = 0;
                 this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray[i] = new TreeSet<>();
-                this.workers[j].successfullyUtilityFunctionValue = BasicArray.getInitializedArray(0.0, this.tasks.length);
                 this.workers[j].effectiveNoiseDistance[i] = 0.0;
                 this.workers[j].effectivePrivacyBudget[i] = 0.0;
                 this.workers[j].privacyBudgetCost[i] = 0.0;
                 this.workers[j].taskCompetingTimes[i] = 0;
                 this.workers[j].currentUtilityFunctionValue[i] = 0.0;
+                this.workers[j].successfullyUtilityFunctionValue[i] = 0.0;
             }
         }
     }
