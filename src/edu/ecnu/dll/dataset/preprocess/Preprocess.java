@@ -1,5 +1,6 @@
 package edu.ecnu.dll.dataset.preprocess;
 
+import tools.io.read.CSVRead;
 import tools.io.read.OrderRead;
 import tools.io.read.PointRead;
 import tools.io.read.TaxiRead;
@@ -8,12 +9,10 @@ import tools.struct.Order;
 import tools.struct.Point;
 import tools.struct.Taxi;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Preprocess {
-    public static void extractPointToDataset(String inputDataParentPath, String outputParentPath) {
+    public static void extractChengduDataToDataset(String inputDataParentPath, String outputParentPath) {
         String nodeFileName = "\\chengdu.node";
         String taxiFileName = "\\chengdu_taxi.txt";
         String orderFileName = "\\chengdu_order.txt";
@@ -54,10 +53,95 @@ public class Preprocess {
 
     }
 
+    public static void extractTSMCNYCAndTKYToDataset(String inputDataParentPath, String outputParentPath) {
+        String nycFileName = "\\dataset_TSMC2014_NYC.csv";
+        String tkyFileName = "\\dataset_TSMC2014_TKY.csv";
+
+        String sncSubParentOutputDir = "\\SYN";
+        String tkySubParentOutputDir = "\\TKY";
+
+        String taskPointOutputFileName = "\\task_point.txt";
+        String workerPointOutputFileName = "\\worker_point.txt";
+
+        String effectiveCharacter = "venueCategory";
+        String taskCharacterValue = "Subway";
+        String workerCharacterValue = "Office";
+        String xIndexCharacterName = "latitude";
+        String yIndexCharacterName = "longitude";
+
+        String tempValue;
+        PointWrite pointWrite = new PointWrite();
+
+//        List<Point> taskPointCollection, workerPointCollection;
+//        taskPointCollection = new ArrayList<>();
+//        workerPointCollection = new ArrayList<>();
+        Set<Point> taskPointCollection, workerPointCollection;
+        Set<Point>[] taskWorkerPointSetArray;
+        taskPointCollection = new HashSet<>();
+        workerPointCollection = new HashSet<>();
+
+        taskWorkerPointSetArray = readAndFilterData(inputDataParentPath, nycFileName, effectiveCharacter, taskCharacterValue, workerCharacterValue, xIndexCharacterName, yIndexCharacterName);
+        taskPointCollection = taskWorkerPointSetArray[0];
+        workerPointCollection = taskWorkerPointSetArray[1];
+
+        pointWrite.startWriting(outputParentPath + sncSubParentOutputDir + taskPointOutputFileName);
+        pointWrite.writePoint(taskPointCollection);
+        pointWrite.endWriting();
+
+        pointWrite.startWriting(outputParentPath + sncSubParentOutputDir + workerPointOutputFileName);
+        pointWrite.writePoint(workerPointCollection);
+        pointWrite.endWriting();
+
+
+        taskWorkerPointSetArray = readAndFilterData(inputDataParentPath, tkyFileName, effectiveCharacter, taskCharacterValue, workerCharacterValue, xIndexCharacterName, yIndexCharacterName);
+        taskPointCollection = taskWorkerPointSetArray[0];
+        workerPointCollection = taskWorkerPointSetArray[1];
+
+        pointWrite.startWriting(outputParentPath + tkySubParentOutputDir + taskPointOutputFileName);
+        pointWrite.writePoint(taskPointCollection);
+        pointWrite.endWriting();
+
+        pointWrite.startWriting(outputParentPath + tkySubParentOutputDir + workerPointOutputFileName);
+        pointWrite.writePoint(workerPointCollection);
+        pointWrite.endWriting();
+
+//        System.out.println(nycData.size());
+//        System.out.println(taskPointCollection.size());
+//        System.out.println(workerPointCollection.size());
+
+
+
+
+    }
+
+    protected static HashSet<Point>[] readAndFilterData(String inputDataParentPath, String dataFileName, String effectiveCharacter, String taskCharacterValue, String workerCharacterValue, String xIndexCharacterName, String yIndexCharacterName) {
+        String tempValue;
+        List<Map<String, String>> nycData = CSVRead.readData(inputDataParentPath + dataFileName);
+        Point tempPoint;
+        HashSet<Point> taskPointCollection = new HashSet<>(), workerPointCollection = new HashSet<>();
+        for (Map<String, String> nycDatum : nycData) {
+            tempValue = nycDatum.get(effectiveCharacter).trim();
+            if (taskCharacterValue.equalsIgnoreCase(tempValue)) {
+                tempPoint = new Point(Double.valueOf(nycDatum.get(xIndexCharacterName)), Double.valueOf(nycDatum.get(yIndexCharacterName)));
+                taskPointCollection.add(tempPoint);
+//                System.out.println(tempValue + ": " + tempPoint);
+            } else if (workerCharacterValue.equalsIgnoreCase(tempValue)) {
+                tempPoint = new Point(Double.valueOf(nycDatum.get(xIndexCharacterName)), Double.valueOf(nycDatum.get(yIndexCharacterName)));
+                workerPointCollection.add(tempPoint);
+//                System.out.println(tempValue + ": " + tempPoint);
+            }
+        }
+        return new HashSet[]{taskPointCollection, workerPointCollection};
+    }
+
     public static void main(String[] args) {
-        String inputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original";
-        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
-        extractPointToDataset(inputParentPath, outputParentPath);
+//        String inputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original";
+//        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
+//        extractChengduDataToDataset(inputParentPath, outputParentPath);
+        String parentInputPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins";
+        String parentOutputPath = parentInputPath + "\\output";
+        Preprocess.extractTSMCNYCAndTKYToDataset(parentInputPath, parentOutputPath);
+
     }
 
 }
