@@ -56,6 +56,25 @@ public class PointRead {
         }
     }
 
+    public static Integer readPointSizeWithFirstLineCount(String filePath) {
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
+            return Integer.valueOf(bufferedReader.readLine());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
     public void readPointWithFirstLineCount() {
         this.readPointWithFirstLineCount(1);
     }

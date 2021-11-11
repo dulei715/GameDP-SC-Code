@@ -2,6 +2,8 @@ package edu.ecnu.dll.dataset.dataset_generating;
 
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
 import tools.basic.BasicCalculation;
+import tools.io.read.PointRead;
+import tools.struct.Point;
 
 import java.io.*;
 import java.math.RoundingMode;
@@ -189,6 +191,28 @@ public class DataSetGenerator {
 
     }
 
+    public static void generateTaskValuesAndPrivacyBudgetFromTaskWorkerPoint(String parentDirPath) {
+        String taskFileName = "\\task_point.txt";
+        String workerFileName = "\\worker_point.txt";
+        String outputTaskValueFileName = "\\task_value.txt";
+        String outputWorkerPrivacyBudgetFileName = "\\worker_budget.txt";
+
+        double valueLowerBound = 7000;
+        double valueUpperBound = 15000;
+        int precision = 2;
+        int budgetGroupSize = 7;
+        double budgetGroupLowerBound = 0;
+        double budgetGroupUpperBound = 10;
+
+        Integer taskSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + taskFileName);
+        Integer workerSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + workerFileName);
+
+        generateTaskValuesDataSet(parentDirPath + outputTaskValueFileName, taskSize, valueLowerBound, valueUpperBound, precision);
+
+        generateWorkerPrivacyBudgetDataSet(parentDirPath + outputWorkerPrivacyBudgetFileName, workerSize, taskSize, budgetGroupSize, budgetGroupLowerBound, budgetGroupUpperBound, precision);
+
+    }
+
 
     public static void main(String[] args) {
 //        String outputPath = System.getProperty("user.dir") + "\\dataset\\UniformDataPoint.txt";
@@ -203,8 +227,13 @@ public class DataSetGenerator {
 //        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\task_value.txt";
 //        DataSetGenerator.generateTaskValuesDataSet(outputPath, 1286, 0, 1, 6);
 
-        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_privacy_budget.txt";
-        DataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputPath, 28029, 1286, 5, 0, 10, 6);
+//        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_privacy_budget.txt";
+//        DataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputPath, 28029, 1286, 5, 0, 10, 6);
+
+        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+        String parentDirTKY = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
+        DataSetGenerator.generateTaskValuesAndPrivacyBudgetFromTaskWorkerPoint(parentDirSYN);
+        DataSetGenerator.generateTaskValuesAndPrivacyBudgetFromTaskWorkerPoint(parentDirTKY);
 
     }
 }

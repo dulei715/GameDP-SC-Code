@@ -73,7 +73,45 @@ public class DatasetGenerateTest {
 
     @Test
     public void generateTaskAndWorkerFromDataset() throws IOException {
-        int workerScale = 1;
+        String basicBasicPath = "E:\\dataset\\output\\";
+        String[] subParentPaths = new String[]{"normal", "uniform", "chengdu"};
+//        String[] datasetScaleStrings = new String[]{"1000.0", "100.0", "10.0", "1.0"};
+        String[] datasetScaleStrings = new String[]{"1000.0", "100.0", "10.0"};
+//        String[]
+//        Map<String, String[]> map = new HashMap();
+        int totalSize, taskSize, workerSize;
+        int budgetGroupSize = 7;
+        int lowerBound = 7000;
+        int upperBound = 15000;
+        SamplingFunction taskSamplingFunction, workerSamplingFunction;
+        taskSamplingFunction = new MeanSamplingFunction(2, 1, 0);
+        workerSamplingFunction = new MeanSamplingFunction(2, 1, 1);
+        String tempDirPath, tempTotalDatasetPath, taskPointOutputPath, workerPointOutputPath, taskValueOutputPath, workerBudgetOutputPath;
+//        for (int i = 0; i < subParentPaths.length; i++) {
+        for (int i = 1; i < subParentPaths.length; i++) {
+            for (int j = 0; j < datasetScaleStrings.length; j++) {
+                tempDirPath = basicBasicPath + subParentPaths[i] + "\\" + subParentPaths[i] + "_1_" + datasetScaleStrings[j];
+                tempTotalDatasetPath = tempDirPath + ".txt";
+
+                taskPointOutputPath = tempDirPath + "\\task_point.txt";
+                workerPointOutputPath = tempDirPath + "\\worker_point.txt";
+                taskValueOutputPath = tempDirPath + "\\task_value.txt";
+                workerBudgetOutputPath = tempDirPath + "\\worker_budget.txt";
+                totalSize = getDataSize(tempTotalDatasetPath);
+                // 生成task节点
+                taskSize = DataSetGenerator.generateDataSet(tempTotalDatasetPath, taskPointOutputPath, taskSamplingFunction);
+                // 生成worker节点
+                workerSize = DataSetGenerator.generateDataSet(tempTotalDatasetPath, workerPointOutputPath, workerSamplingFunction);
+                // 生成value值
+                DataSetGenerator.generateTaskValuesDataSet(taskValueOutputPath, taskSize, lowerBound, upperBound, 2);
+                // 生成budget值
+                DataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerSize, taskSize, budgetGroupSize, 0, 10, 2);
+            }
+        }
+    }
+
+    @Test
+    public void generateValueAndPrivacyBudgetFromTaskAndWorkerDataset() throws IOException {
         String basicBasicPath = "E:\\dataset\\output\\";
         String[] subParentPaths = new String[]{"normal", "uniform", "chengdu"};
 //        String[] datasetScaleStrings = new String[]{"1000.0", "100.0", "10.0", "1.0"};

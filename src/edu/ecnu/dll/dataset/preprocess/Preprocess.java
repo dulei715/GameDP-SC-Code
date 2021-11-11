@@ -134,6 +134,7 @@ public class Preprocess {
         return new HashSet[]{taskPointCollection, workerPointCollection};
     }
 
+
     public static void main(String[] args) {
 //        String inputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original";
 //        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";

@@ -23,11 +23,14 @@ public class MultiTaskMultiCompleteRun {
 //        String taskValuePath = basicPath + "test1\\task_value.txt";
 //        String workerPointPath = basicPath + "test1\\worker_point.txt";
 //        String workerPrivacyBudgetPath = basicPath + "test1\\worker_privacy_budget.txt";
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\";
-        String workerPointPath = basicDatasetPath + "worker_point.txt";
-        String taskPointPath = basicDatasetPath + "task_point.txt";
-        String taskValuePath = basicDatasetPath + "task_value.txt";
-        String workerPrivacyBudgetPath = basicDatasetPath + "worker_privacy_budget.txt";
+
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+
+        String workerPointPath = basicDatasetPath + "\\worker_point.txt";
+        String taskPointPath = basicDatasetPath + "\\task_point.txt";
+        String taskValuePath = basicDatasetPath + "\\task_value.txt";
+        String workerPrivacyBudgetPath = basicDatasetPath + "\\worker_budget.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
         Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);

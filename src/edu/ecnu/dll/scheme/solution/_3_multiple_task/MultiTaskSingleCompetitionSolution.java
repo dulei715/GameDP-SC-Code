@@ -25,21 +25,26 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
     public static final int BUDGET_TAG = 1;
 
     public static final double alpha = 1;
-    public static final double beta = 1;
+    public static final double beta = 20;
 
     public Task[] tasks = null;
     public MultiTaskBasicWorker[] workers = null;
 
     public static final int budgetSize = 3;
 
+    protected double toNormalValue(double privacyBudget) {
+        double expValue = Math.exp(-privacyBudget);
+        return (1 - expValue) / (1 + expValue);
+    }
 
     /**
      *  5个 get 函数
      */
     protected double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
 //        return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
-        double normalizedValue = super.normalizeTaskValue(taskValue);
-        return normalizedValue + normalizedValue * super.normalizePrivacybudget(effectivePrivacyBudget) - alpha * super.normalizeDistance(realDistance) - beta * super.normalizePrivacybudget(privacyBudgetCost);
+        return taskValue + taskValue * toNormalValue(effectivePrivacyBudget) - alpha * realDistance - beta * privacyBudgetCost;
+//        double normalizedValue = super.normalizeTaskValue(taskValue);
+//        return normalizedValue + normalizedValue * super.normalizePrivacybudget(effectivePrivacyBudget) - alpha * super.normalizeDistance(realDistance) - beta * super.normalizePrivacybudget(privacyBudgetCost);
     }
     protected double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
         if (totalCompetingTime <= 0) {
