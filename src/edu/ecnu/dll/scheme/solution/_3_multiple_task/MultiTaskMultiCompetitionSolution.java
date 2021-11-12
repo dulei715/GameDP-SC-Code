@@ -17,7 +17,7 @@ import java.util.*;
 public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitionSolution {
 
 
-    public static final int proposalSize = 50;
+    public static final int proposalSize = 5;
     public static TargetInfoForTaskEntropyComparator targetInfoForTaskEntropyComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForProposingValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForUtilityValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
@@ -75,6 +75,15 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             this.workers[i].currentWinningState = false;
         }
     }
+
+    @Override
+    public void initializeAgentsWithLatitudeLongitude() {
+        super.initializeAgentsWithLatitudeLongitude();
+        for (int i = 0; i < this.workers.length; i++) {
+            this.workers[i].currentWinningState = false;
+        }
+    }
+
     protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
         // 针对每个task，初始化距离为最大距离值
         // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
@@ -102,13 +111,17 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                 continue;
             }
             // PPCF 判断
-            if (this.workers[workerID].toTaskDistance[i] >= lastTermTaskWinnerPackedArray[i].getNoiseEffectiveDistance()) {
-                continue;
-            }
+//            if (this.workers[workerID].toTaskDistance[i] >= lastTermTaskWinnerPackedArray[i].getNoiseEffectiveDistance()) {
+//                // 如果PPCF不占优，则通过设置privacybuget状态为用尽状态来防止接下来被再次选择
+//                this.workers[workerID].budgetIndex[i] = Integer.MAX_VALUE;
+//                continue;
+//            }
 
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -164,6 +177,8 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -224,6 +239,8 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -276,6 +293,8 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -331,6 +350,8 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -383,6 +404,9 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
      * @param newCandidateWorkerIDList 记录每个task候选的worker id列表
      */
     public WorkerIDDistanceBudgetPair[] serverExecute(WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, List<Integer>[] newCandidateWorkerIDList, Set<Integer> newTotalCompetingWorkerIDSet) {
+        if (newTotalCompetingWorkerIDSet.isEmpty()) {
+            return taskCurrentWinnerPackedArray;
+        }
         Integer currentWinnerWorkerID, beforeWinnerWorkerID;
         WorkerIDDistanceBudgetPair[] taskBeforeWinnerPackedArray = taskCurrentWinnerPackedArray;
         // 1. 获取获胜者，并更新胜利列表
@@ -401,6 +425,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
 //            }
             this.workers[currentWinnerWorkerID].successfullyUtilityFunctionValue[i] = this.workers[currentWinnerWorkerID].currentUtilityFunctionValue[i];
             this.workers[currentWinnerWorkerID].currentWinningState = true; // 设置成胜利者，之后在没被竞争掉的情况下不会再竞争其他task
+            newTotalCompetingWorkerIDSet.remove(currentWinnerWorkerID);    // 将竞争胜利者从竞争列表中去掉
             // 3. 设置被竞争下去的worker的当前效用函数值、胜利状态，并将其加入竞争列表
             if (!beforeWinnerWorkerID.equals(-1)) {
                 this.workers[beforeWinnerWorkerID].successfullyUtilityFunctionValue[i] -= this.tasks[i].valuation;
@@ -518,7 +543,7 @@ public class MultiTaskMultiCompetitionSolution extends MultiTaskSingleCompetitio
                     this.workers[tempWorkerID].effectiveNoiseDistance[tempTaskID] = winnerInfoArray[i].getNoiseEffectiveDistance();
                     this.workers[tempWorkerID].effectivePrivacyBudget[tempTaskID] = winnerInfoArray[i].getEffectivePrivacyBudget();
                     this.workers[tempWorkerID].currentUtilityFunctionValue[tempTaskID] = winnerInfoArray[i].getNewUtilityValue();
-                    this.workers[tempWorkerID].budgetIndex[tempTaskID] ++;
+//                    this.workers[tempWorkerID].budgetIndex[tempTaskID] ++;
                     this.workers[tempWorkerID].taskCompetingTimes[tempTaskID] ++;
                     competingTimes[tempTaskID] ++;
 

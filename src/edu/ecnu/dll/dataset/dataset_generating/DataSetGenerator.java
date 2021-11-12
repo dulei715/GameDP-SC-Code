@@ -169,7 +169,8 @@ public class DataSetGenerator {
             bufferedWriter.write(String.valueOf(workerSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(taskSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(budgetGroupSize));
             bufferedWriter.newLine();
             for (int i = 0, j, k; i < workerSize; i++) {
-                taskValue = BasicCalculation.getRandomStringValueTwoDimensionArrayInRange(lowerBound, upperBound, precision, taskSize, budgetGroupSize);
+//                taskValue = BasicCalculation.getRandomStringValueTwoDimensionArrayInRange(lowerBound, upperBound, precision, taskSize, budgetGroupSize);
+                taskValue = BasicCalculation.getSortedRandomStringValueTwoDimensionArrayInRange(lowerBound, upperBound, precision, taskSize, budgetGroupSize);
                 for (j = 0; j < taskValue.length; j++) {
                     for (k = 0; k < taskValue[0].length - 1; k++) {
                         bufferedWriter.write(taskValue[j][k]);
@@ -197,12 +198,14 @@ public class DataSetGenerator {
         String outputTaskValueFileName = "\\task_value.txt";
         String outputWorkerPrivacyBudgetFileName = "\\worker_budget.txt";
 
-        double valueLowerBound = 7000;
-        double valueUpperBound = 15000;
+//        double valueLowerBound = 7000;
+//        double valueUpperBound = 15000;
+        double valueLowerBound = 10;
+        double valueUpperBound = 200;
         int precision = 2;
         int budgetGroupSize = 7;
-        double budgetGroupLowerBound = 0;
-        double budgetGroupUpperBound = 10;
+        double budgetGroupLowerBound = 1;
+        double budgetGroupUpperBound = 20;
 
         Integer taskSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + taskFileName);
         Integer workerSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + workerFileName);

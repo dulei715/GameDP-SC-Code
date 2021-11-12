@@ -2,6 +2,7 @@ package basic;
 
 import org.junit.Test;
 import tools.basic.BasicArray;
+import tools.basic.BasicCalculation;
 import tools.io.print.MyPrint;
 
 import java.util.ArrayList;
@@ -61,6 +62,14 @@ public class BasicTest {
             System.out.println(arr[i]);
         }
 
+    }
+
+    @Test
+    public void fun7() {
+        double[] pointValueA = new double[] {40.81705715, -73.94792318};
+        double[] pointValueB = new double[] {40.96462184, -74.06785745};
+        double result = BasicCalculation.getDistanceFrom2LngLat(pointValueA[1], pointValueA[0], pointValueB[1], pointValueB[0]);
+        System.out.println(result);
     }
 
 }

@@ -42,7 +42,10 @@ public class MultiTaskMultiCompleteRun {
         // 初始化 task 和 workers
         MultiTaskMultiCompetitionSolution multiTaskMultiCompetitionSolution = new MultiTaskMultiCompetitionSolution();
         multiTaskMultiCompetitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerPrivacyBudgetList);
-        multiTaskMultiCompetitionSolution.initializeAgents();
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+        multiTaskMultiCompetitionSolution.initializeAgentsWithLatitudeLongitude();
 
 
         // 执行竞争过程

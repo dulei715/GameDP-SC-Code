@@ -63,6 +63,7 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
         return pcfValue / distance;
     }
     protected DistanceBudgetPair getNewEffectiveNoiseDistanceAndPrivacyBudget(Integer workerID, Integer taskID, double newNoiseDistance, double newPrivacyBudget) {
+        //todo: test maximumLikelihood
         TreeSet<DistanceBudgetPair> tempTreeSet = new TreeSet<>();
         tempTreeSet.addAll(this.workers[workerID].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray[taskID]);
         tempTreeSet.add(new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
@@ -71,7 +72,12 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
     }
     protected Double getNewCostPrivacyBudget(Integer workerID, Integer taskID) {
         Double result;
-        result = this.workers[workerID].privacyBudgetCost[taskID] + this.workers[workerID].privacyBudgetArray[taskID][this.workers[workerID].budgetIndex[taskID]];
+        int index = this.workers[workerID].budgetIndex[taskID];
+//        if (index >= this.workers[workerID].privacyBudgetArray[taskID].length) {
+//            return null;
+//        }
+        result = this.workers[workerID].privacyBudgetCost[taskID] + this.workers[workerID].privacyBudgetArray[taskID][index];
+//        this.workers[workerID].budgetIndex[taskID] ++;
         return result;
     }
 
@@ -121,6 +127,36 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
             }
         }
     }
+
+    public void initializeAgentsWithLatitudeLongitude() {
+        for (int j = 0; j < this.workers.length; j++) {
+            this.workers[j].toTaskDistance = new Double[this.tasks.length];
+            // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
+            this.workers[j].budgetIndex = new int[this.tasks.length];
+            this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray = new TreeSet[this.tasks.length];
+            this.workers[j].effectiveNoiseDistance = new Double[this.tasks.length];
+            this.workers[j].effectivePrivacyBudget = new Double[this.tasks.length];
+            this.workers[j].privacyBudgetCost = new Double[this.tasks.length];
+            this.workers[j].taskCompetingTimes = new Integer[this.tasks.length];
+            this.workers[j].currentUtilityFunctionValue = new Double[this.tasks.length];
+//            this.workers[j].successfullyUtilityFunctionValue = BasicArray.getInitializedArray(0.0, this.tasks.length);
+            this.workers[j].successfullyUtilityFunctionValue = new Double[this.tasks.length];
+            for (int i = 0; i < tasks.length; i++) {
+//                this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[j].location);
+                this.workers[j].toTaskDistance[i] = BasicCalculation.getDistanceFrom2LngLat(this.tasks[i].location[1], this.tasks[i].location[0], this.workers[j].location[1],this.workers[j].location[0]);
+                this.workers[j].budgetIndex[i] = 0;
+                //todo: test maximumLikelihood
+                this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray[i] = new TreeSet<>();
+                this.workers[j].effectiveNoiseDistance[i] = 0.0;
+                this.workers[j].effectivePrivacyBudget[i] = 0.0;
+                this.workers[j].privacyBudgetCost[i] = 0.0;
+                this.workers[j].taskCompetingTimes[i] = 0;
+                this.workers[j].currentUtilityFunctionValue[i] = 0.0;
+                this.workers[j].successfullyUtilityFunctionValue[i] = 0.0;
+            }
+        }
+    }
+
     protected void setCandidateTaskByBudget(List<Integer> tempCandidateTaskList, MultiTaskBasicWorker worker) {
         for (int i = 0; i < worker.privacyBudgetArray.length; i++) {
             if (worker.budgetIndex[i] < worker.privacyBudgetArray[i].length) {
@@ -177,6 +213,8 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -250,6 +288,8 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -304,6 +344,8 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
             Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].privacyBudgetArray[i][this.workers[workerID].budgetIndex[i]];
             Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
+            this.workers[workerID].budgetIndex[i] ++;
+
             DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, i, tempNewNoiseDistance, tempNewPrivacyBudget);
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
@@ -457,7 +499,7 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
                     this.workers[j].effectiveNoiseDistance[winnerInfo.getTaskID()] = winnerInfo.getNoiseEffectiveDistance();
                     this.workers[j].effectivePrivacyBudget[winnerInfo.getTaskID()] = winnerInfo.getEffectivePrivacyBudget();
                     this.workers[j].currentUtilityFunctionValue[winnerInfo.getTaskID()] = winnerInfo.getNewUtilityValue();
-                    this.workers[j].budgetIndex[winnerInfo.getTaskID()] ++;
+//                    this.workers[j].budgetIndex[winnerInfo.getTaskID()] ++;
 
                     this.workers[j].taskCompetingTimes[winnerInfo.getTaskID()] ++;
                     totalCompleteWorkerNumber ++;
