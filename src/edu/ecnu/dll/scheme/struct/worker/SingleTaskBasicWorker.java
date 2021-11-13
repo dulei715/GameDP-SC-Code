@@ -34,5 +34,21 @@ public class SingleTaskBasicWorker extends Worker {
         super(location);
     }
 
+    @Override
+    public Double getToTaskDistance(Integer taskID) {
+        return this.toTaskDistance;
+    }
+
+    @Override
+    public Double getFinalUtility(Integer taskID) {
+        return successfulUtilityFunctionValue;
+    }
+
+    @Override
+    public Integer getTaskCompetingTimes(Integer taskID) {
+        // todo: handle
+        return null;
+    }
+
 
 }

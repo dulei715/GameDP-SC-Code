@@ -2,7 +2,9 @@ package edu.ecnu.dll.dataset.dataset_generating;
 
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
 import tools.basic.BasicCalculation;
+import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.read.PointRead;
+import tools.io.read.TwoDimensionDoubleRead;
 import tools.struct.Point;
 
 import java.io.*;
@@ -11,7 +13,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Random;
 
-public class DataSetGenerator {
+public class MainDataSetGenerator {
 
     public static final String WRITING_SPLIT_TAG_IN_LINE = " ";
 
@@ -156,6 +158,35 @@ public class DataSetGenerator {
 
     }
 
+    public static void generateWorkerRangesDataSet(String outputPath, int workerSize, double lowerBound, double upperBound, int precision) {
+        BufferedWriter bufferedWriter = null;
+        String taskValue = null;
+        try {
+            File outputFile = new File(outputPath);
+            File parentDir = outputFile.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+            bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+            bufferedWriter.write(String.valueOf(workerSize));
+            bufferedWriter.newLine();
+            for (int i = 0; i < workerSize; i++) {
+                taskValue = BasicCalculation.getRandomStringValueInRange(lowerBound, upperBound, precision);
+                bufferedWriter.write(taskValue);
+                bufferedWriter.newLine();
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     public static void generateWorkerPrivacyBudgetDataSet(String outputPath, int workerSize, int taskSize, int budgetGroupSize, double lowerBound, double upperBound, int precision) {
         BufferedWriter bufferedWriter = null;
         String[][] taskValue = null;
@@ -192,10 +223,59 @@ public class DataSetGenerator {
 
     }
 
-    public static void generateTaskValuesAndPrivacyBudgetFromTaskWorkerPoint(String parentDirPath) {
+    public static void generateWorkerNoiseDistanceDataSet(String outputPath, List<Point> workerPointList, List<Point> taskPointList, List<Double[]>[] workerPrivacyBudgetList, boolean isLongitudeLatitude) {
+        BufferedWriter bufferedWriter = null;
+        int workerSize = workerPointList.size();
+        int taskSize = taskPointList.size();
+        int budgetGroupSize = workerPrivacyBudgetList[0].get(0).length;
+        Double tempRealDistance = null;
+        Double[] tempBudget = null;
+        Double[] tempNoiseDistance = null;
+        try {
+            File outputFile = new File(outputPath);
+            File parentDir = outputFile.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+            }
+            bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+            bufferedWriter.write(String.valueOf(workerSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(taskSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(budgetGroupSize));
+            bufferedWriter.newLine();
+            for (int i = 0, j, k; i < workerSize; i++) {
+//                taskValue = BasicCalculation.getSortedRandomStringValueTwoDimensionArrayInRange(lowerBound, upperBound, precision, taskSize, budgetGroupSize);
+                for (j = 0; j < taskSize; j++) {
+                    if (!isLongitudeLatitude) {
+                        tempRealDistance = BasicCalculation.get2Norm(workerPointList.get(i).getIndex(), taskPointList.get(j).getIndex());
+                    } else {
+                        tempRealDistance = BasicCalculation.getDistanceFrom2LngLat(workerPointList.get(i).getyIndex(), workerPointList.get(i).getxIndex(), taskPointList.get(j).getyIndex(), taskPointList.get(j).getxIndex());
+                    }
+                    tempBudget = workerPrivacyBudgetList[i].get(j);
+                    tempNoiseDistance = LaplaceUtils.getLaplaceNoiseWithOriginalValue(tempRealDistance, tempBudget);
+
+                    for (k = 0; k < tempNoiseDistance.length - 1; k++) {
+                        bufferedWriter.write(String.valueOf(tempNoiseDistance[k]));
+                        bufferedWriter.write(WRITING_SPLIT_TAG_IN_LINE);
+                    }
+                    bufferedWriter.write(String.valueOf(tempNoiseDistance[k]));
+                    bufferedWriter.newLine();
+                }
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public static void generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(String parentDirPath) {
         String taskFileName = "\\task_point.txt";
         String workerFileName = "\\worker_point.txt";
         String outputTaskValueFileName = "\\task_value.txt";
+        String outputWorkerRangeFileName = "\\worker_range.txt";
         String outputWorkerPrivacyBudgetFileName = "\\worker_budget.txt";
 
 //        double valueLowerBound = 7000;
@@ -203,6 +283,10 @@ public class DataSetGenerator {
         double valueLowerBound = 10;
         double valueUpperBound = 200;
         int precision = 2;
+
+        double rangeLowerBound = 10;
+        double rangeUpperBound = 100;
+
         int budgetGroupSize = 7;
         double budgetGroupLowerBound = 1;
         double budgetGroupUpperBound = 20;
@@ -212,8 +296,22 @@ public class DataSetGenerator {
 
         generateTaskValuesDataSet(parentDirPath + outputTaskValueFileName, taskSize, valueLowerBound, valueUpperBound, precision);
 
+        generateWorkerRangesDataSet(parentDirPath + outputWorkerRangeFileName, workerSize, rangeLowerBound, rangeUpperBound, precision);
+
         generateWorkerPrivacyBudgetDataSet(parentDirPath + outputWorkerPrivacyBudgetFileName, workerSize, taskSize, budgetGroupSize, budgetGroupLowerBound, budgetGroupUpperBound, precision);
 
+    }
+
+    public static void generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(String parentDirPath, boolean isLongitudeLatitude) {
+        String taskFileName = "\\task_point.txt";
+        String workerFileName = "\\worker_point.txt";
+        String workerPrivacyBudgetFileName = "\\worker_budget.txt";
+        String workerNoiseDistanceFileName = "\\worker_noise_distance.txt";
+
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(parentDirPath + taskFileName);
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(parentDirPath + workerFileName);
+        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(parentDirPath + workerPrivacyBudgetFileName);
+        generateWorkerNoiseDistanceDataSet(parentDirPath + workerNoiseDistanceFileName, workerPointList, taskPointList, workerPrivacyBudgetList, isLongitudeLatitude);
     }
 
 
@@ -235,8 +333,11 @@ public class DataSetGenerator {
 
         String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
         String parentDirTKY = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
-        DataSetGenerator.generateTaskValuesAndPrivacyBudgetFromTaskWorkerPoint(parentDirSYN);
-        DataSetGenerator.generateTaskValuesAndPrivacyBudgetFromTaskWorkerPoint(parentDirTKY);
+        MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirSYN);
+        MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirTKY);
+        boolean isLongitudeLatitude = true;
+        MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirSYN, isLongitudeLatitude);
+        MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirTKY, isLongitudeLatitude);
 
     }
 }

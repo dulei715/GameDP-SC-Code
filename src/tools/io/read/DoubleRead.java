@@ -84,6 +84,34 @@ public class DoubleRead {
         return doubleListArray;
     }
 
+
+    public static List<Double> readDoubleToList(String filePath) {
+        BufferedReader bufferedReader = null;
+        String line;
+        int dataSize;
+        List<Double> doubleList = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
+            dataSize = Integer.valueOf(bufferedReader.readLine());
+            doubleList = new ArrayList<>(dataSize);
+            while ((line = bufferedReader.readLine()) != null) {
+                doubleList.add(Double.valueOf(line));
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return doubleList;
+    }
+
     public static List[] readDoubleList(String workerPrivacyBudgetPath) {
         return readDoubleList(workerPrivacyBudgetPath, 1);
     }

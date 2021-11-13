@@ -1,6 +1,6 @@
 package edu.ecnu.dll.dataset.run;
 
-import edu.ecnu.dll.dataset.dataset_generating.DataSetGenerator;
+import edu.ecnu.dll.dataset.dataset_generating.MainDataSetGenerator;
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
 import edu.ecnu.dll.dataset.dataset_generating.sample.impl.MeanSamplingFunction;
 
@@ -24,7 +24,7 @@ public class GenerateDatasets {
         int shareSize = 10;
         int bias = 3;
         SamplingFunction samplingFunction = new MeanSamplingFunction(groupMemberSize, shareSize, bias);
-        return DataSetGenerator.generateDataSet(inputDatasetPath, outputDatasetPath, samplingFunction);
+        return MainDataSetGenerator.generateDataSet(inputDatasetPath, outputDatasetPath, samplingFunction);
     }
 
     public static int generateWorkerPointDatasetFromDataset() {
@@ -34,7 +34,7 @@ public class GenerateDatasets {
         int shareSize = 10;
         int bias = 6;
         SamplingFunction samplingFunction = new MeanSamplingFunction(groupMemberSize, shareSize, bias);
-        return DataSetGenerator.generateDataSet(inputDatasetPath, outputDatasetPath, samplingFunction);
+        return MainDataSetGenerator.generateDataSet(inputDatasetPath, outputDatasetPath, samplingFunction);
     }
 
     public static void generateTaskValueDataset(Integer taskSize) {
@@ -45,7 +45,7 @@ public class GenerateDatasets {
         int lowerBound = 10000;
         int upperBound = 100000;
         int precision = 2;
-        DataSetGenerator.generateTaskValuesDataSet(outputDatasetPath, taskSize, lowerBound, upperBound, precision);
+        MainDataSetGenerator.generateTaskValuesDataSet(outputDatasetPath, taskSize, lowerBound, upperBound, precision);
     }
 
     public static void generateWorkerBudgetDataset(Integer workerSize, Integer taskSize, Integer budgetSize) {
@@ -62,7 +62,7 @@ public class GenerateDatasets {
         double lowerBound = 0;
         double upperBound = 10;
         int precision = 2;
-        DataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputDatasetPath, workerSize, taskSize, budgetSize, lowerBound, upperBound, precision);
+        MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputDatasetPath, workerSize, taskSize, budgetSize, lowerBound, upperBound, precision);
     }
 
 }

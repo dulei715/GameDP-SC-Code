@@ -33,7 +33,7 @@ public class SingleTaskNonPrivacySolution extends Solution {
      */
     protected double getUtilityValue(double taskValue, double realDistance) {
 //        return taskValue * 2 - alpha * realDistance;
-        return taskValue * 2 - alpha * super.normalizeDistance(realDistance);
+        return taskValue * 2 - alpha * realDistance;
     }
 
 

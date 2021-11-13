@@ -37,7 +37,7 @@ public class SingleTaskSolution extends Solution {
      */
     protected double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
 //        return taskValue + taskValue * effectivePrivacyBudget - alpha * realDistance - beta * privacyBudgetCost;
-        return taskValue + taskValue * super.normalizePrivacybudget(effectivePrivacyBudget) - alpha * super.normalizeDistance(realDistance) - beta * super.normalizePrivacybudget(privacyBudgetCost);
+        return taskValue + taskValue * toNormalValue(effectivePrivacyBudget) - alpha * realDistance - beta * privacyBudgetCost;
     }
     private DistanceBudgetPair getNewEffectiveNoiseDistanceAndPrivacyBudget(Integer workerID, double newNoiseDistance, double newPrivacyBudget) {
         TreeSet<DistanceBudgetPair> tempTreeSet = new TreeSet<>();

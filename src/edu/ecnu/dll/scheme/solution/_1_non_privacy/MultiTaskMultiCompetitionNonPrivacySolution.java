@@ -1,6 +1,5 @@
 package edu.ecnu.dll.scheme.solution._1_non_privacy;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.sub_class.TaskTargetNonPrivacyInfo;
 import edu.ecnu.dll.scheme.solution.Solution;
@@ -9,22 +8,17 @@ import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskNonPrivacyWorker;
 import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
-import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.struct.Point;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
+public class MultiTaskMultiCompetitionNonPrivacySolution extends Solution {
 
-    public static final int DISTANCE_TAG = 0;
-    public static final int BUDGET_TAG = 1;
 
-    public static final double alpha = 1;
-    public static final double beta = 1;
 
-    public List<Integer> tempCandidateTaskList;
+    public List<Integer> tempCandidateTaskList = null;
 
     public Task[] tasks = null;
     public MultiTaskNonPrivacyWorker[] workers = null;
@@ -33,24 +27,30 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
 
     // Task value 保证是[0,1]之间的值
     protected double getUtilityValue(double taskValue, double realDistance) {
-        return taskValue * 2  - alpha * super.normalizeDistance(realDistance);
-    }
-    private double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
-        if (totalCompetingTime <= 0) {
-            throw new RuntimeException("The total competing time is not positive value!");
-        }
-        double taskEntropy = 0;
-        double tempRatio = 0;
-        for (Integer j : competingWorkerIDSet) {
-            tempRatio = this.workers[j].taskCompetingTimes[taskID] / totalCompetingTime;
-            taskEntropy -= tempRatio*Math.log(tempRatio);
-        }
-        return taskEntropy;
+        return taskValue * 2  - alpha * realDistance;
     }
 
 
 
-    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList) {
+
+//    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
+//        Point taskPosition, workerPosition;
+//        this.tasks = new BasicTask[taskPositionList.size()];
+//        for (int i = 0; i < taskPositionList.size(); i++) {
+//            taskPosition = taskPositionList.get(i);
+//            this.tasks[i] = new BasicTask(taskPosition.getIndex());
+//            this.tasks[i].valuation = taskValueArray[i];
+//        }
+//        this.workers = new MultiTaskNonPrivacyWorker[workerPositionList.size()];
+//        for (int j = 0; j < workers.length; j++) {
+//            workerPosition = workerPositionList.get(j);
+//            this.workers[j] = new MultiTaskNonPrivacyWorker(workerPosition.getIndex());
+//            this.workers[j].setMaxRange(workerRangeList.get(j));
+//        }
+//        BasicArray.setIntegerListToContinuousNaturalNumber(this.tempCandidateTaskList, this.tasks.length - 1);
+//    }
+
+    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
         Point taskPosition, workerPosition;
         this.tasks = new BasicTask[taskPositionList.size()];
         for (int i = 0; i < taskPositionList.size(); i++) {
@@ -62,17 +62,75 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
         for (int j = 0; j < workers.length; j++) {
             workerPosition = workerPositionList.get(j);
             this.workers[j] = new MultiTaskNonPrivacyWorker(workerPosition.getIndex());
+//            this.workers[j].privacyBudgetArray = privacyBudgetListArray[j].toArray(new Double[0][0]);
+//            this.workers[j].setPrivacyBudgetArray(privacyBudgetListArray[j].toArray(new Double[0][0]));
+            this.workers[j].setMaxRange(workerRangeList.get(j));
+            this.workers[j].taskIndex = BasicArray.getInitializedArray(-1, this.tasks.length);
+            this.workers[j].currentWinningState = false;
         }
         BasicArray.setIntegerListToContinuousNaturalNumber(this.tempCandidateTaskList, this.tasks.length - 1);
+
     }
+
+//    public void initializeAgents() {
+//        for (int j = 0; j < this.workers.length; j++) {
+//            for (int i = 0; i < tasks.length; i++) {
+//                this.workers[j].setToTaskDistance(i, BasicCalculation.get2Norm(this.tasks[i].location, this.workers[i].location));
+//                this.workers[j].currentUtilityFunctionValue[i] = 0.0;
+//            }
+//        }
+//    }
+
     public void initializeAgents() {
         for (int j = 0; j < this.workers.length; j++) {
+            this.workers[j].reverseIndex = new ArrayList<>();
+            this.workers[j].toTaskDistance = new ArrayList<>();
+            // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
+            this.workers[j].competingTimes = new ArrayList<>();
+            this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
+            this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
+            double tempDistance;
+            int k = 0;
             for (int i = 0; i < tasks.length; i++) {
-                this.workers[j].toTaskDistance[i] = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[i].location);
-                this.workers[j].currentUtilityFunctionValue[i] = 0.0;
+                // todo: 修改为经纬度的
+                tempDistance = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[j].location);
+                if (tempDistance <= this.workers[j].maxRange) {
+                    this.workers[j].taskIndex[i] = k++;
+                    this.workers[j].reverseIndex.add(i);
+                    this.workers[j].toTaskDistance.add(tempDistance);
+                    this.workers[j].competingTimes.add(0);
+                    this.workers[j].currentUtilityFunctionValue.add(0.0);
+                    this.workers[j].successfullyUtilityFunctionValue.add(0.0);
+                }
             }
         }
     }
+
+    public void initializeAgentsWithLatitudeLongitude() {
+        for (int j = 0; j < this.workers.length; j++) {
+            this.workers[j].reverseIndex = new ArrayList<>();
+            this.workers[j].toTaskDistance = new ArrayList<>();
+            // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
+            this.workers[j].competingTimes = new ArrayList<>();
+            this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
+            this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
+            double tempDistance;
+            int k = 0;
+            for (int i = 0; i < tasks.length; i++) {
+                // todo: 修改为经纬度的
+                tempDistance = BasicCalculation.getDistanceFrom2LngLat(this.tasks[i].location[1], this.tasks[i].location[0], this.workers[j].location[1],this.workers[j].location[0]);
+                if (tempDistance <= this.workers[j].maxRange) {
+                    this.workers[j].taskIndex[i] = k++;
+                    this.workers[j].reverseIndex.add(i);
+                    this.workers[j].toTaskDistance.add(tempDistance);
+                    this.workers[j].competingTimes.add(0);
+                    this.workers[j].currentUtilityFunctionValue.add(0.0);
+                    this.workers[j].successfullyUtilityFunctionValue.add(0.0);
+                }
+            }
+        }
+    }
+
     protected void initializeAllocationByFirstTaskAndNullAllocation(List<Integer>[] newCandidateWorkerIDList, WorkerIDDistancePair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
         // 针对每个task，初始化距离为最大距离值
         // 针对每个task，初始化总的被竞争次数为0
@@ -106,7 +164,7 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
                 continue;
             }
             // 距离判断
-            if (this.workers[workerID].toTaskDistance[i] >= lastTermTaskWinnerPackedArray[i].getDistance()) {
+            if (this.workers[workerID].getToTaskDistance(i) >= lastTermTaskWinnerPackedArray[i].getDistance()) {
                 continue;
             }
 
@@ -117,9 +175,9 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
              *
              */
             // Utility 函数判断
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].toTaskDistance[i]);
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i));
 
-            if (tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+            if (tempNewUtilityValue <= this.workers[workerID].getSuccessfullyUtilityFunctionValue(i)) {
                 continue;
             }
 
@@ -127,7 +185,7 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
             if (tempNewUtilityValue > maxUtilityValue) {
                 maxUtilityValue = tempNewUtilityValue;
                 taskID = i;
-                distance = this.workers[workerID].toTaskDistance[i];
+                distance = this.workers[workerID].getToTaskDistance(i);
             }
 
         }
@@ -149,7 +207,7 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
                 continue;
             }
             // 距离 判断
-            if (this.workers[workerID].toTaskDistance[i] >= lastTermTaskWinnerPackedArray[i].getDistance()) {
+            if (this.workers[workerID].getToTaskDistance(i) >= lastTermTaskWinnerPackedArray[i].getDistance()) {
                 continue;
             }
 //            Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
@@ -160,8 +218,8 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
 //            double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
 
             // Utility 函数值判断
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].toTaskDistance[i]);
-            if (tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i));
+            if (tempNewUtilityValue <= this.workers[workerID].getSuccessfullyUtilityFunctionValue(i)) {
                 continue;
             }
 
@@ -170,7 +228,7 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
             if (taskEntropy > candidateTaskEntropy) {
                 candidateTaskEntropy = taskEntropy;
                 taskID = i;
-                distance = this.workers[workerID].toTaskDistance[i];
+                distance = this.workers[workerID].getToTaskDistance(i);
                 newUtilityValue = tempNewUtilityValue;
             }
 
@@ -248,10 +306,11 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
 //                    this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray[winnerInfo.getTaskID()].add(new DistanceBudgetPair(winnerInfo.getNewNoiseDistance(), winnerInfo.getNewPrivacyBudget()));
 //                    this.workers[j].effectiveNoiseDistance[winnerInfo.getTaskID()] = winnerInfo.getNoiseEffectiveDistance();
 //                    this.workers[j].effectivePrivacyBudget[winnerInfo.getTaskID()] = winnerInfo.getEffectivePrivacyBudget();
-                    this.workers[j].successfullyUtilityFunctionValue[winnerInfo.getTaskID()] = winnerInfo.getNewUtilityValue();
+                    this.workers[j].setSuccessfullyUtilityFunctionValue(winnerInfo.getTaskID(), winnerInfo.getNewUtilityValue());
 //                    this.workers[j].budgetIndex[winnerInfo.getTaskID()] ++;
 
-                    this.workers[j].taskCompetingTimes[winnerInfo.getTaskID()] ++;
+//                    this.workers[j].taskCompetingTimes[winnerInfo.getTaskID()] ++;
+                    this.workers[j].increaseTaskCompetingTimes(winnerInfo.getTaskID());
                     totalCompleteWorkerNumber ++;
 
                     competingTimes[winnerInfo.getTaskID()] ++;
@@ -273,19 +332,20 @@ public class MultiTaskSingleCompetitionNonPrivacySolution extends Solution {
             }
             taskBeforeWinnerPackedArray[i] = taskCurrentWinnerPackedArray[i];
             for (Integer j : newCandidateWorkerIDList[i]) {
-                if (this.workers[j].toTaskDistance[i] < taskCurrentWinnerPackedArray[i].getDistance()) {
+                if (this.workers[j].getToTaskDistance(i) < taskCurrentWinnerPackedArray[i].getDistance()) {
                     taskCurrentWinnerPackedArray[i].setWorkerID(j);
-                    taskCurrentWinnerPackedArray[i].setDistance(this.workers[j].toTaskDistance[i]);
+                    taskCurrentWinnerPackedArray[i].setDistance(this.workers[j].getToTaskDistance(i));
                 }
             }
             if (!taskCurrentWinnerPackedArray[i].getWorkerID().equals(taskBeforeWinnerPackedArray[i].getWorkerID())) {
                 if (!taskBeforeWinnerPackedArray[i].getWorkerID().equals(-1)) {
                     // todo: 封装
-                    this.workers[taskBeforeWinnerPackedArray[i].getWorkerID()].currentUtilityFunctionValue[i] -= this.tasks[i].valuation;
+//                    this.workers[taskBeforeWinnerPackedArray[i].getWorkerID()].currentUtilityFunctionValue[i] -= this.tasks[i].valuation;
+                    this.workers[taskBeforeWinnerPackedArray[i].getWorkerID()].increaseSuccessfullyUtilityFunctionValue(i, -this.tasks[i].valuation);
                     // 将被竞争下去的worker加入竞争集合，以便下轮判断是否可以竞争
                     newCandidateWorkerIDList[i].add(taskBeforeWinnerPackedArray[i].getWorkerID());
                 }
-                this.workers[taskCurrentWinnerPackedArray[i].getWorkerID()].currentUtilityFunctionValue[i] = this.workers[taskCurrentWinnerPackedArray[i].getWorkerID()].successfullyUtilityFunctionValue[i];
+                this.workers[taskCurrentWinnerPackedArray[i].getWorkerID()].setCurrentUtilityFunctionValue(i, this.workers[taskCurrentWinnerPackedArray[i].getWorkerID()].getSuccessfullyUtilityFunctionValue(i));
             }
         }
     }

@@ -97,7 +97,8 @@ public class ConflictElimination {
         }
         // 获取该task到下一个候选worker的距离(先获取该task下一个候选worker的ID)
         nextWorkerID = this.taskPreferenceTable[taskID][nextIndex];
-        noiseDistance = this.workers[nextWorkerID].toTaskNoiseDistance[taskID];
+//        noiseDistance = this.workers[nextWorkerID].toTaskNoiseDistance[taskID];
+        noiseDistance = this.workers[nextWorkerID].getToTaskNoiseDistance(taskID);
         budget = this.workers[nextWorkerID].getPrivacyBudget(taskID);
         return new DistanceBudgetPair(noiseDistance, budget);
     }

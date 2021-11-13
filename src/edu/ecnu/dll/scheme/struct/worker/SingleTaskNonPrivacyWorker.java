@@ -28,6 +28,21 @@ public class SingleTaskNonPrivacyWorker extends Worker {
         super(index);
     }
 
+    @Override
+    public Double getToTaskDistance(Integer taskID) {
+        return this.toTaskDistance;
+    }
+
+    @Override
+    public Double getFinalUtility(Integer taskID) {
+        return successfullyUtilityFunctionValue;
+    }
+
+    @Override
+    public Integer getTaskCompetingTimes(Integer taskID) {
+        // todo: handle
+        return null;
+    }
 
 
 }

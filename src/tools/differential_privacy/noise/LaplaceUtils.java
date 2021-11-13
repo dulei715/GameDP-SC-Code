@@ -31,8 +31,16 @@ public class LaplaceUtils {
         return this.laplaceDistribution.sample(number);
     }
 
-    public double getLaplaceNoise() {
+    public Double getLaplaceNoise() {
         return this.laplaceDistribution.sample();
+    }
+
+    public static Double[] getLaplaceNoiseWithOriginalValue(Double originalValue, Double[] privacyBudgets) {
+        Double[] result = new Double[privacyBudgets.length];
+        for (int i = 0; i < privacyBudgets.length; i++) {
+            result[i] = originalValue + getLaplaceNoise(1, privacyBudgets[i]);
+        }
+        return result;
     }
 
     /**

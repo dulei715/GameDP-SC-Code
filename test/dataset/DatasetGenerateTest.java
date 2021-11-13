@@ -1,16 +1,13 @@
 package dataset;
 
-import edu.ecnu.dll.dataset.dataset_generating.DataSetGenerator;
+import edu.ecnu.dll.dataset.dataset_generating.MainDataSetGenerator;
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
 import edu.ecnu.dll.dataset.dataset_generating.sample.impl.MeanSamplingFunction;
-import edu.ecnu.dll.dataset.run.GenerateDatasets;
 import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class DatasetGenerateTest {
     @Test
@@ -18,7 +15,7 @@ public class DatasetGenerateTest {
         String basicPath = "E:\\dataset\\uniform_dataset.txt";
         int dimensionLength = 10000;
         int pointSize = 200000;
-        DataSetGenerator.generateUniformPlaneDataPoint(dimensionLength, pointSize, basicPath);
+        MainDataSetGenerator.generateUniformPlaneDataPoint(dimensionLength, pointSize, basicPath);
 
     }
 
@@ -28,7 +25,7 @@ public class DatasetGenerateTest {
         int pointSize = 200_000;
         double mean = 0;
         double variance = 1_000_000_000;
-        DataSetGenerator.generateNormalPlaneDataPoint(pointSize, mean, variance, basicPath);
+        MainDataSetGenerator.generateNormalPlaneDataPoint(pointSize, mean, variance, basicPath);
     }
 
     @Test
@@ -56,9 +53,9 @@ public class DatasetGenerateTest {
         for (int i = 0; i < totalRealDatasetOutputPathArray.length; i++) {
             groupMemberSize = (int)Math.pow(10, 3 - i);
             samplingFunction = new MeanSamplingFunction(groupMemberSize, shareSize, bias);
-            DataSetGenerator.generateDataSet(totalUniformDatasetPath, totalUniformDatasetOutputPathArray[i], samplingFunction);
-            DataSetGenerator.generateDataSet(totalNormalDatasetPath, totalNormalDatasetOutputPathArray[i], samplingFunction);
-            DataSetGenerator.generateDataSet(totalRealDatasetPath, totalRealDatasetOutputPathArray[i], samplingFunction);
+            MainDataSetGenerator.generateDataSet(totalUniformDatasetPath, totalUniformDatasetOutputPathArray[i], samplingFunction);
+            MainDataSetGenerator.generateDataSet(totalNormalDatasetPath, totalNormalDatasetOutputPathArray[i], samplingFunction);
+            MainDataSetGenerator.generateDataSet(totalRealDatasetPath, totalRealDatasetOutputPathArray[i], samplingFunction);
         }
 
     }
@@ -99,13 +96,13 @@ public class DatasetGenerateTest {
                 workerBudgetOutputPath = tempDirPath + "\\worker_budget.txt";
                 totalSize = getDataSize(tempTotalDatasetPath);
                 // 生成task节点
-                taskSize = DataSetGenerator.generateDataSet(tempTotalDatasetPath, taskPointOutputPath, taskSamplingFunction);
+                taskSize = MainDataSetGenerator.generateDataSet(tempTotalDatasetPath, taskPointOutputPath, taskSamplingFunction);
                 // 生成worker节点
-                workerSize = DataSetGenerator.generateDataSet(tempTotalDatasetPath, workerPointOutputPath, workerSamplingFunction);
+                workerSize = MainDataSetGenerator.generateDataSet(tempTotalDatasetPath, workerPointOutputPath, workerSamplingFunction);
                 // 生成value值
-                DataSetGenerator.generateTaskValuesDataSet(taskValueOutputPath, taskSize, lowerBound, upperBound, 2);
+                MainDataSetGenerator.generateTaskValuesDataSet(taskValueOutputPath, taskSize, lowerBound, upperBound, 2);
                 // 生成budget值
-                DataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerSize, taskSize, budgetGroupSize, 0, 10, 2);
+                MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerSize, taskSize, budgetGroupSize, 0, 10, 2);
             }
         }
     }
@@ -138,13 +135,13 @@ public class DatasetGenerateTest {
                 workerBudgetOutputPath = tempDirPath + "\\worker_budget.txt";
                 totalSize = getDataSize(tempTotalDatasetPath);
                 // 生成task节点
-                taskSize = DataSetGenerator.generateDataSet(tempTotalDatasetPath, taskPointOutputPath, taskSamplingFunction);
+                taskSize = MainDataSetGenerator.generateDataSet(tempTotalDatasetPath, taskPointOutputPath, taskSamplingFunction);
                 // 生成worker节点
-                workerSize = DataSetGenerator.generateDataSet(tempTotalDatasetPath, workerPointOutputPath, workerSamplingFunction);
+                workerSize = MainDataSetGenerator.generateDataSet(tempTotalDatasetPath, workerPointOutputPath, workerSamplingFunction);
                 // 生成value值
-                DataSetGenerator.generateTaskValuesDataSet(taskValueOutputPath, taskSize, lowerBound, upperBound, 2);
+                MainDataSetGenerator.generateTaskValuesDataSet(taskValueOutputPath, taskSize, lowerBound, upperBound, 2);
                 // 生成budget值
-                DataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerSize, taskSize, budgetGroupSize, 0, 10, 2);
+                MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerSize, taskSize, budgetGroupSize, 0, 10, 2);
             }
         }
     }

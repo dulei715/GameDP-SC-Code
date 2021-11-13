@@ -1,13 +1,13 @@
 package tools;
 
-import edu.ecnu.dll.dataset.dataset_generating.DataSetGenerator;
+import edu.ecnu.dll.dataset.dataset_generating.MainDataSetGenerator;
 import edu.ecnu.dll.dataset.dataset_generating.sample.impl.MeanSamplingFunction;
 import org.junit.Test;
 
 public class DataSetGeneratorTest {
     @Test
     public void fun1() {
-        DataSetGenerator dataSetGenerator = new DataSetGenerator();
+        MainDataSetGenerator dataSetGenerator = new MainDataSetGenerator();
         String basicPath = System.getProperty("user.dir") + "\\dataset\\";
         String inputDataSetPath = basicPath + "real_dataset\\chengdu.node";
         String outputDataSetPath = basicPath + "test_dataset\\_2_multiple_task_dataset\\test1\\task_point.txt";
@@ -19,7 +19,7 @@ public class DataSetGeneratorTest {
 
     @Test
     public void fun2() {
-        DataSetGenerator dataSetGenerator = new DataSetGenerator();
+        MainDataSetGenerator dataSetGenerator = new MainDataSetGenerator();
         String basicPath = System.getProperty("user.dir") + "\\dataset\\";
         String inputDataSetPath = basicPath + "real_dataset\\chengdu.node";
         String outputDataSetPath = basicPath + "test_dataset\\_2_multiple_task_dataset\\test1\\worker_point.txt";
@@ -37,7 +37,7 @@ public class DataSetGeneratorTest {
         double lowerBound = 100;
         double upperBound = 200;
         int precision = 2;
-        DataSetGenerator.generateTaskValuesDataSet(outputDataSetPath, taskSize, lowerBound, upperBound, precision);
+        MainDataSetGenerator.generateTaskValuesDataSet(outputDataSetPath, taskSize, lowerBound, upperBound, precision);
     }
 
     @Test
@@ -50,6 +50,6 @@ public class DataSetGeneratorTest {
         double lowerBound = 0;
         double upperBound = 10;
         int precision = 2;
-        DataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputDataSetPath, workerSize, taskSize, budgetGroupSize, lowerBound, upperBound, precision);
+        MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputDataSetPath, workerSize, taskSize, budgetGroupSize, lowerBound, upperBound, precision);
     }
 }

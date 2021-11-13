@@ -160,13 +160,16 @@ public class ConflictElimination {
             Iterator<Integer> iterator = haveSucceedWorkerTaskIDList.iterator();
             //获取其中一个冲突的task的ID
             chosenTaskID = iterator.next();
+            chosenTaskCurrentWorkerInfo = getCurrentWorkerInfo(chosenTaskID);
             chosenTaskNextWorkerInfo = getNextWorkerInfo(chosenTaskID);
 
             while (iterator.hasNext()) {
                 tempTaskID = iterator.next();
+                tempTaskCurrentWorkerInfo = getCurrentWorkerInfo(tempTaskID);
                 tempTaskNextWorkerInfo = getNextWorkerInfo(tempTaskID);
 
-                if (compareFourValuesWithSuccessor(workerID, chosenTaskID, tempTaskID, chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo)) {
+//                if (compareFourValuesWithSuccessor(workerID, chosenTaskID, tempTaskID, chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo)) {
+                if (compareFourValuesWithSuccessor(chosenTaskCurrentWorkerInfo, tempTaskCurrentWorkerInfo, chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo)) {
                     chosenTaskID = tempTaskID;
                     chosenTaskNextWorkerInfo = tempTaskNextWorkerInfo;
                 }
@@ -205,14 +208,13 @@ public class ConflictElimination {
 
     /**
      *
-     * @param workerID
-     * @param taskIDA
-     * @param taskIDB
+     * @param taskIDAWorkerInfo
+     * @param taskIDBWorkerInfo
      * @param taskIDANextWorkerInfo
      * @param taskIDBNextWorkerInfo
      * @return 如果 taskIDB 比 taskIDA 占优，返回true，否则返回false
      */
-    protected boolean compareFourValuesWithSuccessor(Integer workerID, Integer taskIDA, Integer taskIDB, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
+    protected boolean compareFourValuesWithSuccessor(WorkerIDDistanceBudgetPair taskIDAWorkerInfo, WorkerIDDistanceBudgetPair taskIDBWorkerInfo, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
         double tempPCFValue;
 //        if (taskIDANextWorkerInfo == null || taskIDBNextWorkerInfo == null) {
 //            System.out.println("null");
