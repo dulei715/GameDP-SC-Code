@@ -109,9 +109,6 @@ public class Preprocess {
 //        System.out.println(taskPointCollection.size());
 //        System.out.println(workerPointCollection.size());
 
-
-
-
     }
 
     protected static HashSet<Point>[] readAndFilterData(String inputDataParentPath, String dataFileName, String effectiveCharacter, String taskCharacterValue, String workerCharacterValue, String xIndexCharacterName, String yIndexCharacterName) {

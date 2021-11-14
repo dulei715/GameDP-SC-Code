@@ -21,7 +21,7 @@ public class EnhanceConflictElimination extends ConflictElimination {
     protected boolean compareFourValuesWithSuccessor(WorkerIDDistanceBudgetPair taskIDAWorkerInfo, WorkerIDDistanceBudgetPair taskIDBWorkerInfo, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
 //        return super.compareFourValuesWithSuccessor(workerID, taskIDA, taskIDB, taskIDANextWorkerInfo, taskIDBNextWorkerInfo);
         double p_1, p_2;
-        p_1 = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDAWorkerInfo.getNoiseEffectiveDistance(), taskIDBWorkerInfo.getNoiseEffectiveDistance(), taskIDAWorkerInfo.getEffectivePrivacyBudget(), taskIDBWorkerInfo.getEffectivePrivacyBudget());
+        p_1 = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDBWorkerInfo.getNoiseEffectiveDistance(), taskIDAWorkerInfo.getNoiseEffectiveDistance(), taskIDBWorkerInfo.getEffectivePrivacyBudget(), taskIDAWorkerInfo.getEffectivePrivacyBudget());
         p_2 = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDANextWorkerInfo.getNoiseEffectiveDistance(), taskIDBNextWorkerInfo.getNoiseEffectiveDistance(), taskIDANextWorkerInfo.getEffectivePrivacyBudget(), taskIDBNextWorkerInfo.getEffectivePrivacyBudget());
         double p_1_2 = p_1 * p_2;
         if (p_1_2 > 0.5) {

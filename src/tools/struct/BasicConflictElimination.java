@@ -1,56 +1,62 @@
-package edu.ecnu.dll.scheme_compared.solution;
+package tools.struct;
 
 
 import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
+import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistancePairComparator;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import tools.basic.BasicArray;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.struct.table.PrivacyPreferenceTable;
+import tools.struct.table.SimplePreferenceTable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
-public class ConflictElimination {
+public class BasicConflictElimination {
 
-    public static final WorkerIDDistanceBudgetPair DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR = new WorkerIDDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE);
+    public static final WorkerIDDistancePair DEFAULT_WORKER_ID_DISTANCE_PAIR = new WorkerIDDistancePair(-1, Double.MAX_VALUE);
 
     public Integer taskSize;
     public Integer workerSize;
 
     // task的偏好表，其中每个元素记录的是[workerID, 有效噪声距离，有效隐私预算]
 //    public int[][] taskPreferenceListArray = null;
-    public PrivacyPreferenceTable privacyPreferenceTable = null;
+    public SimplePreferenceTable simplePreferenceTable = null;
     // 记录每个task的当前考察到对应的偏好表里的哪个位置了 //TODO: 封装
     public Integer[] taskPreferenceIndex = null;
 
     public LinkedList[] candidateTaskIDListArray = null;
     public LinkedList<Integer> conflictWorkerIDList = null;
 
-    public WorkerIDDistanceBudgetPairComparator workerIDDistanceBudgetPairComparator;
+    public WorkerIDDistancePairComparator workerIDDistancePairComparator;
 
 
-    public ConflictElimination(Integer taskSize, Integer workerSize) {
+    public BasicConflictElimination(Integer taskSize, Integer workerSize) {
         this.taskSize = taskSize;
         this.workerSize = workerSize;
-        this.workerIDDistanceBudgetPairComparator = new WorkerIDDistanceBudgetPairComparator();
+        this.workerIDDistancePairComparator = new WorkerIDDistancePairComparator();
     }
 
-    public ConflictElimination(Integer taskSize, Integer workerSize, WorkerIDDistanceBudgetPairComparator workerIDDistanceBudgetPairComparator) {
+    public BasicConflictElimination(Integer taskSize, Integer workerSize, WorkerIDDistancePairComparator workerIDDistancePairComparator) {
         this.taskSize = taskSize;
         this.workerSize = workerSize;
-        this.workerIDDistanceBudgetPairComparator = workerIDDistanceBudgetPairComparator;
+        this.workerIDDistancePairComparator = workerIDDistancePairComparator;
     }
 
     /**
      * 初始化task的偏好表，并在每个worker中记录到各个task的距离以及扰动距离
      * 需要先初始化task和worker的位置以及worker能付出的隐私预算
      */
-    public void initialize(List<WorkerIDDistanceBudgetPair>[] data) {
+    public void initialize(List<WorkerIDDistancePair>[] data) {
 //        this.taskPreferenceListArray = new int[this.tasks.length][this.workers.length];
         if (data.length != this.taskSize) {
             throw new RuntimeException("The size of data is not equal to the task number!");
         }
-        this.privacyPreferenceTable = new PrivacyPreferenceTable(this.taskSize, this.workerIDDistanceBudgetPairComparator);
-        this.privacyPreferenceTable.setPreferenceTable(data);
+        this.simplePreferenceTable = new SimplePreferenceTable(this.taskSize, this.workerIDDistancePairComparator);
+        this.simplePreferenceTable.setPreferenceTable(data);
         this.taskPreferenceIndex = new Integer[this.taskSize];
         BasicArray.setIntArrayToZero(this.taskPreferenceIndex);
         this.conflictWorkerIDList = new LinkedList();
@@ -65,20 +71,20 @@ public class ConflictElimination {
      * @param taskID
      * @return
      */
-    protected WorkerIDDistanceBudgetPair getNextWorkerInfo(Integer taskID) {
+    protected WorkerIDDistancePair getNextWorkerInfo(Integer taskID) {
         int nextIndex = this.taskPreferenceIndex[taskID] + 1;
-        if (nextIndex >= this.privacyPreferenceTable.table[taskID].size()) {
+        if (nextIndex >= this.simplePreferenceTable.table[taskID].size()) {
             return null;
         }
-        return this.privacyPreferenceTable.table[taskID].get(nextIndex);
+        return this.simplePreferenceTable.table[taskID].get(nextIndex);
     }
 
-    protected WorkerIDDistanceBudgetPair getCurrentWorkerInfo(Integer taskID) {
+    protected WorkerIDDistancePair getCurrentWorkerInfo(Integer taskID) {
         int currentIndex = this.taskPreferenceIndex[taskID];
-        if (currentIndex >= this.privacyPreferenceTable.table[taskID].size()) {
+        if (currentIndex >= this.simplePreferenceTable.table[taskID].size()) {
             return null;
         }
-        return this.privacyPreferenceTable.table[taskID].get(currentIndex);
+        return this.simplePreferenceTable.table[taskID].get(currentIndex);
     }
 
     /**
@@ -95,7 +101,7 @@ public class ConflictElimination {
     }
 
     protected void solveConflict(Integer workerID) {
-        WorkerIDDistanceBudgetPair chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo, chosenTaskCurrentWorkerInfo, tempTaskCurrentWorkerInfo;
+        WorkerIDDistancePair chosenTaskNextWorkerInfo, tempTaskNextWorkerInfo, chosenTaskCurrentWorkerInfo, tempTaskCurrentWorkerInfo;
         Integer chosenTaskID, tempTaskID, tempTaskNextWorkerID;
         int workerTaskSize;
 
@@ -190,11 +196,11 @@ public class ConflictElimination {
             this.taskPreferenceIndex[tempTaskID] ++;    // todo: 解决出界问题
             // 调整冲突集合
             conflictIterator.remove();
-            if (this.taskPreferenceIndex[tempTaskID] >= this.privacyPreferenceTable.table[tempTaskID].size()) {
+            if (this.taskPreferenceIndex[tempTaskID] >= this.simplePreferenceTable.table[tempTaskID].size()) {
                 // task已经没有候选的偏好的worker了
                 continue;
             }
-            tempTaskNextWorkerID =  this.privacyPreferenceTable.table[tempTaskID].get(this.taskPreferenceIndex[tempTaskID]).getWorkerID();
+            tempTaskNextWorkerID =  this.simplePreferenceTable.table[tempTaskID].get(this.taskPreferenceIndex[tempTaskID]).getWorkerID();
             workerTaskSize = addToCandidateTaskIDListArray(tempTaskNextWorkerID, tempTaskID);
             if (workerTaskSize == 2) {
                 this.conflictWorkerIDList.add(tempTaskNextWorkerID);
@@ -214,14 +220,11 @@ public class ConflictElimination {
      * @param taskIDBNextWorkerInfo
      * @return 如果 taskIDB 比 taskIDA 占优，返回true，否则返回false
      */
-    protected boolean compareFourValuesWithSuccessor(WorkerIDDistanceBudgetPair taskIDAWorkerInfo, WorkerIDDistanceBudgetPair taskIDBWorkerInfo, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
+    protected boolean compareFourValuesWithSuccessor(WorkerIDDistancePair taskIDAWorkerInfo, WorkerIDDistancePair taskIDBWorkerInfo, WorkerIDDistancePair taskIDANextWorkerInfo, WorkerIDDistancePair taskIDBNextWorkerInfo) {
         double tempPCFValue;
-//        if (taskIDANextWorkerInfo == null || taskIDBNextWorkerInfo == null) {
-//            System.out.println("null");
-//        }
-        tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDANextWorkerInfo.getNoiseEffectiveDistance(), taskIDBNextWorkerInfo.getNoiseEffectiveDistance(), taskIDANextWorkerInfo.getEffectivePrivacyBudget(), taskIDBNextWorkerInfo.getEffectivePrivacyBudget());
-        if (tempPCFValue > 0.5) {
-            // tempPCFValue 大于 0.5，说明taskIDA的候选距离小于taskIDB的候选距离的概率更大，说明taskIDB的更应该充当被选择的角色，因此taskIDB占优势
+        tempPCFValue = taskIDBWorkerInfo.getDistance() + taskIDANextWorkerInfo.getDistance() - taskIDAWorkerInfo.getDistance() - taskIDBNextWorkerInfo.getDistance();
+
+        if (tempPCFValue < 0) {
             return true;
         }
         return false;
@@ -229,16 +232,14 @@ public class ConflictElimination {
 
     /**
      *
-     * @param taskIDANextWorkerInfo
-     * @param taskIDBNextWorkerInfo
+     * @param taskIDAWorkerInfo
+     * @param taskIDBWorkerInfo
      * @return 如果 taskIDB 比 taskIDA 占优(距离小)，返回true，否则返回false
      */
-    protected boolean compareWithCurrentInfo(WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
+    protected boolean compareWithCurrentInfo(WorkerIDDistancePair taskIDAWorkerInfo, WorkerIDDistancePair taskIDBWorkerInfo) {
         double tempPCFValue;
-        // PCF(B,A,B,A)
-        tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDBNextWorkerInfo.getNoiseEffectiveDistance(), taskIDANextWorkerInfo.getNoiseEffectiveDistance(), taskIDBNextWorkerInfo.getEffectivePrivacyBudget(), taskIDANextWorkerInfo.getEffectivePrivacyBudget());
-        if (tempPCFValue > 0.5) {
-            // tempPCFValue 大于 0.5，说明taskIDA的候选距离小于taskIDB的候选距离的概率更大，说明taskIDB的更应该充当被选择的角色，因此taskIDB占优势
+        tempPCFValue = taskIDBWorkerInfo.getDistance() - taskIDAWorkerInfo.getDistance();
+        if (tempPCFValue < 0) {
             return true;
         }
         return false;
@@ -251,8 +252,8 @@ public class ConflictElimination {
 //        this.conflictWorkerIDList = new LinkedList<>();
         Integer workerID;
         int workerTaskSize;
-        for (int i = 0; i < this.privacyPreferenceTable.taskSize; i++) {
-            workerID = this.privacyPreferenceTable.table[i].get(0).getWorkerID();
+        for (int i = 0; i < this.simplePreferenceTable.taskSize; i++) {
+            workerID = this.simplePreferenceTable.table[i].get(0).getWorkerID();
 
             workerTaskSize = addToCandidateTaskIDListArray(workerID, i);
 
@@ -266,10 +267,10 @@ public class ConflictElimination {
             solveConflict(workerID);
         }
         for (int i = 0; i < this.taskSize; i++) {
-            if (this.taskPreferenceIndex[i] >= this.privacyPreferenceTable.table[i].size()) {
-                result[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID();
+            if (this.taskPreferenceIndex[i] >= this.simplePreferenceTable.table[i].size()) {
+                result[i] = BasicConflictElimination.DEFAULT_WORKER_ID_DISTANCE_PAIR.getWorkerID();
             } else {
-                result[i] = this.privacyPreferenceTable.table[i].get(this.taskPreferenceIndex[i]).getWorkerID();
+                result[i] = this.simplePreferenceTable.table[i].get(this.taskPreferenceIndex[i]).getWorkerID();
             }
         }
         return result;
@@ -298,17 +299,17 @@ public class ConflictElimination {
     }
 
 
-    public WorkerIDDistanceBudgetPair[] assignment(List<WorkerIDDistanceBudgetPair>[] newCandidateWorkerIDList) {
-        WorkerIDDistanceBudgetPair[] result = new WorkerIDDistanceBudgetPair[this.taskSize];
+    public WorkerIDDistancePair[] assignment(List<WorkerIDDistancePair>[] newCandidateWorkerIDList) {
+        WorkerIDDistancePair[] result = new WorkerIDDistancePair[this.taskSize];
         initialize(newCandidateWorkerIDList);
         Integer workerID;
         int workerTaskSize;
-        for (int i = 0; i < this.privacyPreferenceTable.taskSize; i++) {
-            if (this.privacyPreferenceTable.table[i].isEmpty()) {
+        for (int i = 0; i < this.simplePreferenceTable.taskSize; i++) {
+            if (this.simplePreferenceTable.table[i].isEmpty()) {
                 continue;
             }
-            workerID = this.privacyPreferenceTable.table[i].get(0).getWorkerID();
-            if (workerID.equals(DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID())) {
+            workerID = this.simplePreferenceTable.table[i].get(0).getWorkerID();
+            if (workerID.equals(DEFAULT_WORKER_ID_DISTANCE_PAIR.getWorkerID())) {
                 continue;
             }
 
@@ -324,22 +325,22 @@ public class ConflictElimination {
             solveConflict(workerID);
         }
         for (int i = 0; i < this.taskSize; i++) {
-            if (this.taskPreferenceIndex[i] >= this.privacyPreferenceTable.table[i].size()) {
-                result[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR;
+            if (this.taskPreferenceIndex[i] >= this.simplePreferenceTable.table[i].size()) {
+                result[i] = BasicConflictElimination.DEFAULT_WORKER_ID_DISTANCE_PAIR;
             } else {
-                result[i] = this.privacyPreferenceTable.table[i].get(this.taskPreferenceIndex[i]);
+                result[i] = this.simplePreferenceTable.table[i].get(this.taskPreferenceIndex[i]);
             }
         }
         return result;
     }
-    public void assignment(List<WorkerIDDistanceBudgetPair>[] newCandidateWorkerIDList, Integer[] winnerArray) {
+    public void assignment(List<WorkerIDDistancePair>[] newCandidateWorkerIDList, Integer[] winnerArray) {
 //        winnerArray = new Integer[this.taskSize];
         BasicArray.setIntArrayTo(winnerArray, -1);
         initialize(newCandidateWorkerIDList);
         Integer workerID;
         int workerTaskSize;
-        for (int i = 0; i < this.privacyPreferenceTable.taskSize; i++) {
-            workerID = this.privacyPreferenceTable.table[i].get(0).getWorkerID();
+        for (int i = 0; i < this.simplePreferenceTable.taskSize; i++) {
+            workerID = this.simplePreferenceTable.table[i].get(0).getWorkerID();
 
             workerTaskSize = addToCandidateTaskIDListArray(workerID, i);
 
@@ -353,10 +354,10 @@ public class ConflictElimination {
             solveConflict(workerID);
         }
         for (int i = 0; i < this.taskSize; i++) {
-            if (this.taskPreferenceIndex[i] >= this.privacyPreferenceTable.table[i].size()) {
+            if (this.taskPreferenceIndex[i] >= this.simplePreferenceTable.table[i].size()) {
                 winnerArray[i] = null;
             } else {
-                winnerArray[i] = this.privacyPreferenceTable.table[i].get(this.taskPreferenceIndex[i]).getWorkerID();
+                winnerArray[i] = this.simplePreferenceTable.table[i].get(this.taskPreferenceIndex[i]).getWorkerID();
             }
         }
     }

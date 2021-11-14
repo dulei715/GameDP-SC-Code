@@ -5,13 +5,13 @@ import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistan
 import org.junit.Test;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
-import tools.struct.PreferenceTable;
+import tools.struct.table.PrivacyPreferenceTable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PreferenceTableTest {
+public class PrivacyPreferenceTableTest {
     @Test
     public void fun1() {
         List<WorkerIDDistanceBudgetPair>[] listArray = new List[2];
@@ -71,8 +71,8 @@ public class PreferenceTableTest {
 
 
 
-        PreferenceTable preferenceTable = new PreferenceTable(taskSize, comparator);
-        preferenceTable.setPreferenceTable(listArray);
+        PrivacyPreferenceTable privacyPreferenceTable = new PrivacyPreferenceTable(taskSize, comparator);
+        privacyPreferenceTable.setPreferenceTable(listArray);
 
 
 

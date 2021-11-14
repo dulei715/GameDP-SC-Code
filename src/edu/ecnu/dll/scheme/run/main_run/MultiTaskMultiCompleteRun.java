@@ -4,6 +4,7 @@ import edu.ecnu.dll.basic_struct.agent.Worker;
 import edu.ecnu.dll.basic_struct.pack.experiment_result_info.BasicExperimentResult;
 import edu.ecnu.dll.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 import edu.ecnu.dll.basic_struct.pack.TaskWorkerIDPair;
+import edu.ecnu.dll.basic_struct.pack.experiment_result_info.PackNormalExperimentResult;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.scheme.run.common.CommonFunction;
 import edu.ecnu.dll.scheme.run.target_tools.TargetTool;
@@ -12,8 +13,11 @@ import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskMultiCompetitionSo
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
+import tools.io.write.WriteExperimentResult;
 import tools.struct.Point;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,19 +77,77 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
     }
 
     public static void main(String[] args) {
-        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
+        // for dataset
+//        String parentPath = args[0];
+//        String parentPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+
+//        String parentParentPath = args[0];
+        String parentParentPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output";
+
+        File parentParentFile = new File(parentParentPath);
+        File[] parentFilesArray = parentParentFile.listFiles();
+
+        PackNormalExperimentResult tempResult;
+
+        String dataTile = NormalExperimentResult.getTitleNameString(",");
+        NormalExperimentResult tempNEResult;
+
+        String newTitle = PackNormalExperimentResult.getSelfTitle() + "," + dataTile;
+
+
+
+        // for dataset type
+//        String dataType = args[1];
         String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
-        String ppcfState = "false";
+//        String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
+
+        // for
+        Boolean[] ppcfStateArray = new Boolean[]{false, true};
+//        String ppcfState = "false";
 //        String ppcfState = "true";
 
+        Integer[] workerChosenStateArray = new Integer[]{MultiTaskMultiCompetitionSolution.ONLY_UTILITY, MultiTaskMultiCompetitionSolution.UTILITY_WITH_TASK_ENTROPY, MultiTaskMultiCompetitionSolution.UTILITY_WITH_PROPOSING_VALUE};
 //        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionSolution.ONLY_UTILITY);
 //        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionSolution.UTILITY_WITH_TASK_ENTROPY);
-        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionSolution.UTILITY_WITH_PROPOSING_VALUE);
+//        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionSolution.UTILITY_WITH_PROPOSING_VALUE);
 
-        String eceaState = "false";
+        Boolean[] eceaStateArray = new Boolean[]{false, true};
+//        String eceaState = "false";
 //        String eceaState = "true";
-        NormalExperimentResult normalExperimentResult = runningOnSingleDataset(parentPath, dataType, Boolean.valueOf(ppcfState), Integer.valueOf(workerChosenState), Boolean.valueOf(eceaState));
-        System.out.println(normalExperimentResult);
+
+        WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
+
+        for (int i = 0; i < parentFilesArray.length; i++) {
+            File parentFile = parentFilesArray[i];
+            List<String> normalExperimentResultList = new ArrayList<>();
+            for (int j = 0; j < ppcfStateArray.length; j++) {
+                for (int k = 0; k < eceaStateArray.length; k++) {
+                    for (int l = 0; l < workerChosenStateArray.length; l++) {
+                        tempNEResult = runningOnSingleDataset(parentFile.getAbsolutePath(), dataType, ppcfStateArray[j],workerChosenStateArray[l],eceaStateArray[k]);
+                        tempResult = new PackNormalExperimentResult(parentFile.getAbsolutePath(), Integer.valueOf(dataType), ppcfStateArray[j], eceaStateArray[k], workerChosenStateArray[l], tempNEResult);
+                        // String datasetName, Integer dataType, Boolean ppcfState, Boolean eceaState, Integer workerChosenState
+//                        String newTitle = concat(",", parentFile.getName(), dataType, ppcfStateArray[j], eceaStateArray[k], workerChosenStateArray[l]);
+                        normalExperimentResultList.add(tempResult.toString());
+                    }
+                }
+            }
+            String outputPath = parentFile.getAbsolutePath() + File.separator + parentFile.getName() + "_result.txt";
+            writeExperimentResult.writeResultList(outputPath, newTitle, normalExperimentResultList);
+
+        }
+
+//        NormalExperimentResult normalExperimentResult = runningOnSingleDataset(parentPath, dataType, Boolean.valueOf(ppcfState), Integer.valueOf(workerChosenState), Boolean.valueOf(eceaStateArray));
+//        System.out.println(normalExperimentResult);
+    }
+
+    public static String concat(String split, Object ... objects) {
+        int i = 0;
+        String result = "";
+        for (; i < objects.length - 1; i++) {
+            result += objects[i] + split;
+        }
+        result += objects[i];
+        return result;
     }
 
 }

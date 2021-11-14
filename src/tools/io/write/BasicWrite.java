@@ -63,6 +63,46 @@ public class BasicWrite {
         }
     }
 
+    public void writeOneLine(List lineData, String splitSymbol) {
+        int i = 0;
+        Object obj;
+        try {
+            for (; i < lineData.size() - 1; i++) {
+                obj = lineData.get(i);
+                this.bufferedWriter.write(String.valueOf(obj));
+                this.bufferedWriter.write(OUTPUT_SPLIT_SYMBOL);
+            }
+            obj = lineData.get(i);
+            this.bufferedWriter.write(String.valueOf(obj));
+            this.bufferedWriter.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeOneLine(String lineData) {
+        try {
+            this.bufferedWriter.write(lineData);
+            this.bufferedWriter.newLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeListDataWithNewLineSplit(List dataList) {
+        int i = 0;
+        Object obj;
+        try {
+            for (; i < dataList.size(); i++) {
+                obj = dataList.get(i);
+                this.bufferedWriter.write(obj.toString());
+                this.bufferedWriter.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void endWriting() {
         try {
             bufferedWriter.close();

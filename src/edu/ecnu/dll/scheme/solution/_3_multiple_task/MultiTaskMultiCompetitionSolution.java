@@ -15,7 +15,7 @@ import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.struct.Point;
-import tools.struct.PreferenceTable;
+import tools.struct.table.PrivacyPreferenceTable;
 
 import java.util.*;
 
@@ -28,16 +28,14 @@ public class MultiTaskMultiCompetitionSolution extends Solution {
 
     public Task[] tasks = null;
     public MultiTaskBasicWorker[] workers = null;
+    public ConflictElimination conflictElimination = null;
 
-    public static final int budgetSize = 3;
 
-    public static final int proposalSize = 5;
     public static TargetInfoForTaskEntropyComparator targetInfoForTaskEntropyComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForProposingValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForUtilityValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForUtilityAndCompositionValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
 
-    public ConflictElimination conflictElimination = null;
 
     public List<WorkerIDDistanceBudgetPair>[] createTableDataOfPreferenceTableByID(List<Integer>[] workerIDList) {
         List<WorkerIDDistanceBudgetPair>[] table = new ArrayList[workerIDList.length];
@@ -73,7 +71,7 @@ public class MultiTaskMultiCompetitionSolution extends Solution {
             if (!originalWinnerInfo[i].getWorkerID().equals(ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID()) || workerIDList[i].isEmpty()) {
                 table[i].add(originalWinnerInfo[i]);
             }
-            PreferenceTable.sortedPreferenceTable(table[i], this.conflictElimination.workerIDDistanceBudgetPairComparator);
+            PrivacyPreferenceTable.sortedPreferenceTable(table[i], this.conflictElimination.workerIDDistanceBudgetPairComparator);
         }
         return table;
     }
@@ -211,6 +209,7 @@ public class MultiTaskMultiCompetitionSolution extends Solution {
     }
 
     protected void setCandidateTaskByBudget(List<Integer> tempCandidateTaskList, MultiTaskBasicWorker worker) {
+        // 只遍历privacybudget列表，即限制遍历的task为range范围内
         for (int i = 0; i < worker.privacyBudgetArrayList.size(); i++) {
             if (worker.budgetIndex.get(i) < worker.privacyBudgetArrayList.get(i).length) {
                 tempCandidateTaskList.add(worker.reverseIndex.get(i));
@@ -218,7 +217,7 @@ public class MultiTaskMultiCompetitionSolution extends Solution {
         }
     }
 
-    protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
+    protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] competedWorkerIDSet) {
         // 针对每个task，初始化距离为最大距离值
         // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
         // 针对每个task，初始化总的被竞争次数为0
@@ -226,7 +225,7 @@ public class MultiTaskMultiCompetitionSolution extends Solution {
         for (int i = 0; i < this.tasks.length; i++) {
             taskCurrentWinnerPackedArray[i] = ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR;
             competingTimes[i] = 0;
-            completedWorkerIDSet[i] = new HashSet<>();
+            competedWorkerIDSet[i] = new HashSet<>();
         }
     }
 

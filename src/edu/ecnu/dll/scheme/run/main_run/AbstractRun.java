@@ -6,4 +6,5 @@ public abstract class AbstractRun {
 
     protected Integer positionType = null;
 
+
 }

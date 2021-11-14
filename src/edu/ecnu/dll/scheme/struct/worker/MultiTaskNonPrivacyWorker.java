@@ -10,6 +10,8 @@ public class MultiTaskNonPrivacyWorker extends Worker {
     public List<Double> toTaskDistance = null;
     //task number * budget number
 
+    public List<Boolean> taskCompetingState = null;
+
 
 
     public List<Integer> competingTimes = null;
@@ -20,7 +22,7 @@ public class MultiTaskNonPrivacyWorker extends Worker {
     // 记录每次计算的utility函数值
     public List<Double> currentUtilityFunctionValue = null;
 
-    public Boolean currentWinningState = null;
+//    public Boolean currentWinningState = null;
 
 
     public MultiTaskNonPrivacyWorker() {
@@ -131,4 +133,20 @@ public class MultiTaskNonPrivacyWorker extends Worker {
         return 0;
     }
 
+    public Boolean getTaskCompetingState(Integer taskID) {
+        int index = taskIndex[taskID];
+        if (index == -1) {
+            return null;
+        }
+        return taskCompetingState.get(index);
+    }
+
+    public int setTaskCompetingState(Integer taskID, Boolean taskCompetingState) {
+        int index = taskIndex[taskID];
+        if (index == -1) {
+            return -1;
+        }
+        this.taskCompetingState.set(index, taskCompetingState);
+        return 0;
+    }
 }

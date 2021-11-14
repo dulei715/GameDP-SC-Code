@@ -14,6 +14,8 @@ public abstract class Solution {
     // parameter for privacy budget
     public static final double beta = 20;
 
+    public static final int proposalSize = 5;
+
     public Task[] tasks = null;
     public Worker[] workers = null;
 

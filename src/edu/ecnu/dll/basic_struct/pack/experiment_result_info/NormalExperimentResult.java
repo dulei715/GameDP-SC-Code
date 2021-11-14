@@ -18,17 +18,32 @@ public class NormalExperimentResult extends BasicExperimentResult {
         this.competingTime = competingTime;
     }
 
+//    @Override
+//    public String toString() {
+//        return "NormalExperimentResult{" +
+//                "competingTime=" + competingTime +
+//                ", totalTaskSize=" + totalTaskSize +
+//                ", totalWorkerSize=" + totalWorkerSize +
+//                ", totalUnServedTaskSize=" + totalUnServedTaskSize +
+//                ", totalAllocatedWorkerSize=" + totalAllocatedWorkerSize +
+//                ", totalWinnerUtility=" + totalWinnerUtility +
+//                ", totalFailureUtility=" + totalFailureUtility +
+//                ", realTravelDistance=" + realTravelDistance +
+//                '}';
+//    }
+
     @Override
     public String toString() {
-        return "NormalExperimentResult{" +
-                "competingTime=" + competingTime +
-                ", totalTaskSize=" + totalTaskSize +
-                ", totalWorkerSize=" + totalWorkerSize +
-                ", totalUnServedTaskSize=" + totalUnServedTaskSize +
-                ", totalAllocatedWorkerSize=" + totalAllocatedWorkerSize +
-                ", totalWinnerUtility=" + totalWinnerUtility +
-                ", totalFailureUtility=" + totalFailureUtility +
-                ", realTravelDistance=" + realTravelDistance +
-                '}';
+        return  competingTime + "," + totalTaskSize + ","
+                + totalWorkerSize + "," + totalUnServedTaskSize + ","
+                + totalAllocatedWorkerSize + "," + totalWinnerUtility + ","
+                + totalFailureUtility + "," + realTravelDistance;
     }
+
+    public static String getTitleNameString(String split) {
+        return "CompetingTime" + split + "TotalTaskSize" + split + "TotalWorkerSize" + split + "TotalUnServedTaskSize" + split
+                + "TotalAllocatedWorkerSize" + split + "TotalWinnerUtility" + split + "TotalFailureUtility" + split + "RealTravelDistance";
+    }
+
+
 }

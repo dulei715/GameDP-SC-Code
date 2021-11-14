@@ -1,16 +1,16 @@
-package tools.struct;
+package tools.struct.table;
 
 import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 
 import java.util.*;
 
-public class PreferenceTable {
+public class PrivacyPreferenceTable {
     public Integer taskSize = null;
     public WorkerIDDistanceBudgetPairComparator comparator = null;
     public List<WorkerIDDistanceBudgetPair>[] table = null;
 
-    public PreferenceTable(Integer taskSize, WorkerIDDistanceBudgetPairComparator comparator) {
+    public PrivacyPreferenceTable(Integer taskSize, WorkerIDDistanceBudgetPairComparator comparator) {
         this.taskSize = taskSize;
         this.comparator = comparator;
         this.table = new ArrayList[this.taskSize];

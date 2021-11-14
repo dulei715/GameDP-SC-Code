@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MultiTaskMultiCompleteNonPrivacyRun extends AbstractRun {
-    public static NormalExperimentResult runningOnSingleDataset(String parentPath, String dataType) {
+    public static NormalExperimentResult runningOnSingleDataset(String parentPath, String dataType, Integer workerChosenState) {
         // 从数据库读数据
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
         String basicDatasetPath = parentPath;
@@ -57,7 +57,7 @@ public class MultiTaskMultiCompleteNonPrivacyRun extends AbstractRun {
 
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
-        WorkerIDDistancePair[] winner = competitionSolution.complete();
+        WorkerIDDistancePair[] winner = competitionSolution.complete(workerChosenState);
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
@@ -69,7 +69,10 @@ public class MultiTaskMultiCompleteNonPrivacyRun extends AbstractRun {
     public static void main(String[] args) {
         String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
         String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
-        NormalExperimentResult normalExperimentResult = runningOnSingleDataset(parentPath, dataType);
+        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionNonPrivacySolution.ONLY_UTILITY);
+//        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionNonPrivacySolution.UTILITY_WITH_TASK_ENTROPY);
+
+        NormalExperimentResult normalExperimentResult = runningOnSingleDataset(parentPath, dataType, Integer.valueOf(workerChosenState));
         System.out.println(normalExperimentResult);
     }
 
