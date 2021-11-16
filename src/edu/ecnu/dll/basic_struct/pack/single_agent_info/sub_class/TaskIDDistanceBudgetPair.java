@@ -7,7 +7,7 @@ import edu.ecnu.dll.basic_struct.pack.single_agent_info.SingleInfoPack;
  */
 public class TaskIDDistanceBudgetPair extends SingleInfoPack {
     private Integer taskID = null;
-    private Double noiseEffectiveDistance = null;
+    private Double effectiveNoiseDistance = null;
     private Double effectivePrivacyBudget = null;
 
     public TaskIDDistanceBudgetPair() {
@@ -21,12 +21,12 @@ public class TaskIDDistanceBudgetPair extends SingleInfoPack {
         this.taskID = taskID;
     }
 
-    public Double getNoiseEffectiveDistance() {
-        return this.noiseEffectiveDistance;
+    public Double getEffectiveNoiseDistance() {
+        return this.effectiveNoiseDistance;
     }
 
-    public void setNoiseEffectiveDistance(Double noiseEffectiveDistance) {
-        this.noiseEffectiveDistance = noiseEffectiveDistance;
+    public void setEffectiveNoiseDistance(Double effectiveNoiseDistance) {
+        this.effectiveNoiseDistance = effectiveNoiseDistance;
     }
 
     public Double getEffectivePrivacyBudget() {
@@ -37,9 +37,9 @@ public class TaskIDDistanceBudgetPair extends SingleInfoPack {
         this.effectivePrivacyBudget = effectivePrivacyBudget;
     }
 
-    public TaskIDDistanceBudgetPair(Integer taskID, Double noiseEffectiveDistance, Double effectivePrivacyBudget) {
+    public TaskIDDistanceBudgetPair(Integer taskID, Double effectiveNoiseDistance, Double effectivePrivacyBudget) {
         this.taskID = taskID;
-        this.noiseEffectiveDistance = noiseEffectiveDistance;
+        this.effectiveNoiseDistance = effectiveNoiseDistance;
         this.effectivePrivacyBudget = effectivePrivacyBudget;
     }
 }

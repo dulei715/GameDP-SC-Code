@@ -1,8 +1,8 @@
 package edu.ecnu.dll.scheme.solution._2_single_task;
 
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
-import edu.ecnu.dll.scheme.solution.Solution;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
+import edu.ecnu.dll.scheme.solution._0_basic.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.SingleTaskBasicWorker;
@@ -90,7 +90,7 @@ public class SingleTaskSolution extends Solution {
 
 
 
-    public WorkerIDDistanceBudgetPair compete() {
+    public WorkerIDNoiseDistanceBudgetPair compete() {
 
 
         // 记录worker竞争时临时效用函数值
@@ -102,7 +102,7 @@ public class SingleTaskSolution extends Solution {
         // 针对该task，记录当前竞争成功的worker的ID，初始化为-1
         // 针对该task，初始化距离为最大距离值
         // 针对该task，初始化对应距离的隐私预算为最大隐私预算
-        WorkerIDDistanceBudgetPair taskWinnerInfo = new WorkerIDDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE);
+        WorkerIDNoiseDistanceBudgetPair taskWinnerInfo = new WorkerIDNoiseDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE);
 
         // 针对该task，本轮提出竞争的worker的ID（每轮需要清空）
         List<Integer> candidateWorkerIDList;
@@ -128,7 +128,7 @@ public class SingleTaskSolution extends Solution {
 
                 // 进行是否竞争判断3：如果PPCF函数计算出来的距离大于之前胜利者的距离，不作为
                 //todo: 假设扰动距离的均值精度更高
-                if (this.workers[j].toTaskDistance >= taskWinnerInfo.getNoiseEffectiveDistance()) {
+                if (this.workers[j].toTaskDistance >= taskWinnerInfo.getEffectiveNoiseDistance()) {
                     continue;
                 }
 
@@ -153,7 +153,7 @@ public class SingleTaskSolution extends Solution {
 //                DistanceBudgetPair newEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(i, newNoiseDistance, this.workers[i].privacyBudgetArray[this.workers[i].budgetIndex]);
                 double competeDistance = newEffectiveDistanceBudgetPair.distance;
                 double effectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
-                double competeValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(competeDistance, taskWinnerInfo.getNoiseEffectiveDistance(), effectivePrivacyBudget, taskWinnerInfo.getEffectivePrivacyBudget());
+                double competeValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(competeDistance, taskWinnerInfo.getEffectiveNoiseDistance(), effectivePrivacyBudget, taskWinnerInfo.getEffectivePrivacyBudget());
                 if (competeValue <= 0.5) {
 //                    competeState[i] = false;
                     continue;
@@ -183,11 +183,11 @@ public class SingleTaskSolution extends Solution {
             Integer taskWinnerIDBefore = taskWinnerInfo.getWorkerID();
             for (Integer j : candidateWorkerIDArray) {
 //                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[i].toCompetePublishEverageNoiseDistance, taskTempWinnerInfo[0], this.workers[i].toCompetePublishTotalPrivacyBudget, taskTempWinnerInfo[1]);
-                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[j].effectiveNoiseDistance, taskWinnerInfo.getNoiseEffectiveDistance(), this.workers[j].effectivePrivacyBudget, taskWinnerInfo.getEffectivePrivacyBudget());
+                competeTemp = LaplaceProbabilityDensityFunction.probabilityDensityFunction(this.workers[j].effectiveNoiseDistance, taskWinnerInfo.getEffectiveNoiseDistance(), this.workers[j].effectivePrivacyBudget, taskWinnerInfo.getEffectivePrivacyBudget());
 
                 if (competeTemp > 0.5) {
                     taskWinnerInfo.setWorkerID(j);
-                    taskWinnerInfo.setNoiseEffectiveDistance(this.workers[j].effectiveNoiseDistance);
+                    taskWinnerInfo.setEffectiveNoiseDistance(this.workers[j].effectiveNoiseDistance);
                     taskWinnerInfo.setEffectivePrivacyBudget(this.workers[j].effectivePrivacyBudget);
                 }
             }
@@ -205,7 +205,7 @@ public class SingleTaskSolution extends Solution {
 
         }
         System.out.println("The winner worker's id is " + taskWinnerInfo.getWorkerID());
-        System.out.println("The winner worker's noise distance is " + taskWinnerInfo.getNoiseEffectiveDistance());
+        System.out.println("The winner worker's noise distance is " + taskWinnerInfo.getEffectiveNoiseDistance());
         System.out.println("The winner worker's real distance is " + this.workers[taskWinnerInfo.getWorkerID()].toTaskDistance);
         System.out.println("The winner worker's budget is " + taskWinnerInfo.getEffectivePrivacyBudget());
 

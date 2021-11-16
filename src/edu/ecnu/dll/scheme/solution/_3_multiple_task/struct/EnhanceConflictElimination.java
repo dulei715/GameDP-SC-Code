@@ -1,6 +1,6 @@
 package edu.ecnu.dll.scheme.solution._3_multiple_task.struct;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
 import edu.ecnu.dll.scheme_compared.solution.ConflictElimination;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 
@@ -18,11 +18,11 @@ public class EnhanceConflictElimination extends ConflictElimination {
      * @return 如果 taskIDB 比 taskIDA 占优，返回true，否则返回false
      */
     @Override
-    protected boolean compareFourValuesWithSuccessor(WorkerIDDistanceBudgetPair taskIDAWorkerInfo, WorkerIDDistanceBudgetPair taskIDBWorkerInfo, WorkerIDDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDDistanceBudgetPair taskIDBNextWorkerInfo) {
+    protected boolean compareFourValuesWithSuccessor(WorkerIDNoiseDistanceBudgetPair taskIDAWorkerInfo, WorkerIDNoiseDistanceBudgetPair taskIDBWorkerInfo, WorkerIDNoiseDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDNoiseDistanceBudgetPair taskIDBNextWorkerInfo) {
 //        return super.compareFourValuesWithSuccessor(workerID, taskIDA, taskIDB, taskIDANextWorkerInfo, taskIDBNextWorkerInfo);
         double p_1, p_2;
-        p_1 = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDBWorkerInfo.getNoiseEffectiveDistance(), taskIDAWorkerInfo.getNoiseEffectiveDistance(), taskIDBWorkerInfo.getEffectivePrivacyBudget(), taskIDAWorkerInfo.getEffectivePrivacyBudget());
-        p_2 = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDANextWorkerInfo.getNoiseEffectiveDistance(), taskIDBNextWorkerInfo.getNoiseEffectiveDistance(), taskIDANextWorkerInfo.getEffectivePrivacyBudget(), taskIDBNextWorkerInfo.getEffectivePrivacyBudget());
+        p_1 = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDBWorkerInfo.getEffectiveNoiseDistance(), taskIDAWorkerInfo.getEffectiveNoiseDistance(), taskIDBWorkerInfo.getEffectivePrivacyBudget(), taskIDAWorkerInfo.getEffectivePrivacyBudget());
+        p_2 = LaplaceProbabilityDensityFunction.probabilityDensityFunction(taskIDANextWorkerInfo.getEffectiveNoiseDistance(), taskIDBNextWorkerInfo.getEffectiveNoiseDistance(), taskIDANextWorkerInfo.getEffectivePrivacyBudget(), taskIDBNextWorkerInfo.getEffectivePrivacyBudget());
         double p_1_2 = p_1 * p_2;
         if (p_1_2 > 0.5) {
             return true;

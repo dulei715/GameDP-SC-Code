@@ -5,6 +5,7 @@ import tools.io.read.DoubleRead;
 import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 public class MyPrint {
 
@@ -223,5 +224,11 @@ public class MyPrint {
 
     public static void showListDoubleArray(List<Double[]>[] data) {
         showListDoubleArray(data, ", ", "; ");
+    }
+
+    public static void showMap(Map<Double, Integer> resultMap) {
+        for (Map.Entry<Double, Integer> entry : resultMap.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
     }
 }

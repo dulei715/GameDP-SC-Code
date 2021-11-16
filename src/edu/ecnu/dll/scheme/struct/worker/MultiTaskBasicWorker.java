@@ -185,6 +185,7 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
         return 0;
     }
 
+
     public Double getCurrentUtilityFunctionValue(Integer taskID) {
         int index = taskIndex[taskID];
         if (index == -1) {

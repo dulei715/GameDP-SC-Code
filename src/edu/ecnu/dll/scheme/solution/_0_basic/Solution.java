@@ -1,9 +1,10 @@
-package edu.ecnu.dll.scheme.solution;
+package edu.ecnu.dll.scheme.solution._0_basic;
 
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.basic_struct.agent.Worker;
 
 import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Solution {
     public static final int DISTANCE_TAG = 0;
@@ -12,12 +13,22 @@ public abstract class Solution {
     // parameter for distance
     public static final double alpha = 1;
     // parameter for privacy budget
-    public static final double beta = 20;
+    public static final double beta = 1;
 
-    public static final int proposalSize = 5;
+//    public static int proposalSize = Integer.MAX_VALUE;
+    public Integer proposalSize = null;
 
     public Task[] tasks = null;
     public Worker[] workers = null;
+
+    public static double transformDistanceToValue(double distance) {
+        return alpha * distance;
+    }
+
+    public static double transformPrivacyBudgetToValue(double privacyBudget) {
+        // 要求该函数必须是线性函数，即满足 f(x+y) = f(x) + f(y)
+        return beta * privacyBudget;
+    }
 
 
     public double toNormalValue(double privacyBudget) {
@@ -25,18 +36,11 @@ public abstract class Solution {
         return (1 - expValue) / (1 + expValue);
     }
 
-//    protected double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
-//        if (totalCompetingTime <= 0) {
-//            throw new RuntimeException("The total competing time is not positive value!");
-//        }
-//        double taskEntropy = 0;
-//        double tempRatio = 0;
-//        for (Integer j : competingWorkerIDSet) {
-//            tempRatio = this.workers[j].getTaskCompetingTimes(taskID) / totalCompetingTime;
-//            taskEntropy -= tempRatio*Math.log(tempRatio);
-//        }
-//        return taskEntropy;
-//    }
+    public void addAllWorkerIDToSet(Set<Integer> set) {
+        for (int i = 0; i < this.workers.length; i++) {
+            set.add(i);
+        }
+    }
 
     protected double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
         if (totalCompetingTime <= 0) {

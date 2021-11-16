@@ -2,7 +2,7 @@ package edu.ecnu.dll.scheme.solution._1_non_privacy;
 
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
-import edu.ecnu.dll.scheme.solution.Solution;
+import edu.ecnu.dll.scheme.solution._0_basic.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.scheme.struct.worker.SingleTaskNonPrivacyWorker;
 import tools.basic.BasicCalculation;

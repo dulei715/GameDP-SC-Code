@@ -1,22 +1,11 @@
 package edu.ecnu.dll.scheme.solution._3_multiple_task;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.sub_class.TaskTargetInfo;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
-import edu.ecnu.dll.scheme.solution.Solution;
-import edu.ecnu.dll.scheme.struct.task.BasicTask;
-import edu.ecnu.dll.basic_struct.agent.Task;
-import edu.ecnu.dll.scheme.struct.worker.MultiTaskBasicWorker;
-import tools.basic.BasicArray;
-import tools.basic.BasicCalculation;
-import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
-import tools.differential_privacy.noise.LaplaceUtils;
-import tools.struct.Point;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
+import edu.ecnu.dll.scheme.solution._0_basic.Solution;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
 
 @Deprecated
 public class MultiTaskSingleCompetitionSolution extends Solution {
@@ -34,16 +23,16 @@ public class MultiTaskSingleCompetitionSolution extends Solution {
 
 
 
-    protected void initializeAllocationByFirstTaskAndNullAllocation(List<Integer>[] newCandidateWorkerIDList, WorkerIDDistanceBudgetPair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
+    protected void initializeAllocationByFirstTaskAndNullAllocation(List<Integer>[] newCandidateWorkerIDList, WorkerIDNoiseDistanceBudgetPair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] completedWorkerIDSet) {
         // 针对每个task，初始化距离为最大距离值
         // 针对每个task，初始化对应距离的隐私预算为最大隐私预算
         // 针对每个task，初始化总的被竞争次数为0
         // 针对每个task，初始化访问过被访问worker集合为空集合
         for (int i = 0; i < this.tasks.length; i++) {
             newCandidateWorkerIDList[i] = new ArrayList<>();
-            taskCurrentWinnerPackedArray[i] = new WorkerIDDistanceBudgetPair();
+            taskCurrentWinnerPackedArray[i] = new WorkerIDNoiseDistanceBudgetPair();
             taskCurrentWinnerPackedArray[i].setWorkerID(-1);
-            taskCurrentWinnerPackedArray[i].setNoiseEffectiveDistance(Double.MAX_VALUE);
+            taskCurrentWinnerPackedArray[i].setEffectiveNoiseDistance(Double.MAX_VALUE);
             taskCurrentWinnerPackedArray[i].setEffectivePrivacyBudget(Double.MAX_VALUE);
             competingTimes[i] = 0;
             completedWorkerIDSet[i] = new HashSet<>();

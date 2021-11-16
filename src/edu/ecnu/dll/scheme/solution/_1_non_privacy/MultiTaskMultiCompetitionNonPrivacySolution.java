@@ -1,25 +1,24 @@
 package edu.ecnu.dll.scheme.solution._1_non_privacy;
 
 import edu.ecnu.dll.basic_struct.comparator.TargetInfoForTaskEntropyComparator;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.sub_class.TaskTargetInfo;
-import edu.ecnu.dll.scheme.solution.Solution;
+import edu.ecnu.dll.scheme.solution._0_basic.NonPrivacySolution;
+import edu.ecnu.dll.scheme.solution._0_basic.PrivacySolution;
+import edu.ecnu.dll.scheme.solution._0_basic.Solution;
 import edu.ecnu.dll.scheme.struct.task.BasicTask;
 import edu.ecnu.dll.basic_struct.agent.Task;
 import edu.ecnu.dll.scheme.struct.worker.MultiTaskNonPrivacyWorker;
 import edu.ecnu.dll.scheme_compared.solution.ConflictElimination;
 import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
-import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.struct.BasicConflictElimination;
 import tools.struct.Point;
 import tools.struct.table.SimplePreferenceTable;
 
 import java.util.*;
 
-public class MultiTaskMultiCompetitionNonPrivacySolution extends Solution {
+public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolution {
 
     public static final Integer ONLY_UTILITY = 0;
     public static final Integer UTILITY_WITH_TASK_ENTROPY = 1;
@@ -36,10 +35,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends Solution {
 
 
 
-    // Task value 保证是[0,1]之间的值
-    protected double getUtilityValue(double taskValue, double realDistance) {
-        return taskValue * 2  - alpha * realDistance;
-    }
+
 
     public List<WorkerIDDistancePair>[] createTableDataOfPreferenceTableByID(WorkerIDDistancePair[] originalWinnerInfo, List<Integer>[] workerIDList) {
         List<WorkerIDDistancePair>[] table = new ArrayList[workerIDList.length];
@@ -54,7 +50,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends Solution {
                 tempPair = new WorkerIDDistancePair(workerID, this.workers[workerID].getToTaskDistance(i));
                 table[i].add(tempPair);
             }
-            if (!originalWinnerInfo[i].getWorkerID().equals(ConflictElimination.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID()) || workerIDList[i].isEmpty()) {
+            if (!originalWinnerInfo[i].getWorkerID().equals(PrivacySolution.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID()) || workerIDList[i].isEmpty()) {
                 table[i].add(originalWinnerInfo[i]);
             }
             SimplePreferenceTable.sortedPreferenceTable(table[i], this.basicConflictElimination.workerIDDistancePairComparator);
@@ -244,11 +240,6 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends Solution {
     }
 
 
-    private void addAllWorkerIDToSet(Set<Integer> set) {
-        for (int i = 0; i < this.workers.length; i++) {
-            set.add(i);
-        }
-    }
 
     protected void setAbleToCompetingCandidateTaskInRange(List<Integer> tempCandidateTaskList, MultiTaskNonPrivacyWorker worker) {
         // 只遍历privacybudget列表，即限制遍历的task为range范围内

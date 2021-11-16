@@ -1,6 +1,6 @@
 package edu.ecnu.dll.scheme.run.main_run;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
 import edu.ecnu.dll.scheme.run.target_tools.TargetTool;
 import edu.ecnu.dll.scheme.solution._2_single_task.SingleTaskSolution;
 import tools.io.print.MyPrint;
@@ -42,7 +42,7 @@ public class SingleTaskRun {
 
         long startTime = System.currentTimeMillis();
         // 执行竞争过程
-        WorkerIDDistanceBudgetPair competeResult = singleTaskSolution.compete();
+        WorkerIDNoiseDistanceBudgetPair competeResult = singleTaskSolution.compete();
         long endTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startTime, endTime);
 

@@ -36,13 +36,13 @@ public class NormalExperimentResult extends BasicExperimentResult {
     public String toString() {
         return  competingTime + "," + totalTaskSize + ","
                 + totalWorkerSize + "," + totalUnServedTaskSize + ","
-                + totalAllocatedWorkerSize + "," + totalWinnerUtility + ","
+                + totalAllocatedWorkerSize + "," + totalUtility + "," + totalWinnerUtility + ","
                 + totalFailureUtility + "," + realTravelDistance;
     }
 
     public static String getTitleNameString(String split) {
         return "CompetingTime" + split + "TotalTaskSize" + split + "TotalWorkerSize" + split + "TotalUnServedTaskSize" + split
-                + "TotalAllocatedWorkerSize" + split + "TotalWinnerUtility" + split + "TotalFailureUtility" + split + "RealTravelDistance";
+                + "TotalAllocatedWorkerSize" + split + "TotalUtility" + split + "TotalWinnerUtility" + split + "TotalFailureUtility" + split + "RealTravelDistance";
     }
 
 

@@ -1,8 +1,6 @@
 package tools.struct.table;
 
-import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
 import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistancePairComparator;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 
 import java.util.ArrayList;

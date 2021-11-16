@@ -4,7 +4,7 @@ import edu.ecnu.dll.basic_struct.agent.Worker;
 import edu.ecnu.dll.basic_struct.comparator.TaskWorkerIDComparator;
 import edu.ecnu.dll.basic_struct.pack.TaskWorkerIDPair;
 import edu.ecnu.dll.basic_struct.pack.experiment_result_info.BasicExperimentResult;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
+import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import tools.io.print.MyPrint;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class CommonFunction {
 
     // for privacy
-    public static BasicExperimentResult getResultData(WorkerIDDistanceBudgetPair[] winnerTaskWorkerPackedArray, Worker[] workers) {
+    public static BasicExperimentResult getResultData(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray, Worker[] workers) {
         TaskWorkerIDPair[] taskWorkerIDPairArray;
         List<TaskWorkerIDPair> taskWorkerIDPairList = new ArrayList<>();
 
@@ -107,7 +107,7 @@ public class CommonFunction {
 
     }
 
-    private static void showResultA(WorkerIDDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
+    private static void showResultA(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
         int serveredTaskSize = 0;
         for (int i = 0; i < winnerTaskWorkerPackedArray.length; i++) {
 //        for (int i = 0; i < 10; i++) {
@@ -116,14 +116,14 @@ public class CommonFunction {
             }
             ++ serveredTaskSize;
             System.out.println("Task ID: " + i + "; Winner worker ID: " + winnerTaskWorkerPackedArray[i].getWorkerID() + "; Effective noise distance: "
-                    + winnerTaskWorkerPackedArray[i].getNoiseEffectiveDistance() + "; Effective privacy budget: "
+                    + winnerTaskWorkerPackedArray[i].getEffectiveNoiseDistance() + "; Effective privacy budget: "
                     + winnerTaskWorkerPackedArray[i].getEffectivePrivacyBudget());
         }
 
         System.out.println(serveredTaskSize);
     }
 
-    private static void showResultB(WorkerIDDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
+    private static void showResultB(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
         int serveredTaskSize = 0;
         TaskWorkerIDPair[] taskWorkerIDPairArray;
         List<TaskWorkerIDPair> taskWorkerIDPairList = new ArrayList<>();
@@ -151,7 +151,7 @@ public class CommonFunction {
             tempTaskID = taskWorkerIDPairArray[i].getTaskID();
             tempWorkerID = taskWorkerIDPairArray[i].getWorkerID();
             System.out.println("Winner worker ID: " + tempWorkerID + "; Task ID: " + tempTaskID + "; Effective noise distance: "
-                    + winnerTaskWorkerPackedArray[tempTaskID].getNoiseEffectiveDistance() + "; Effective privacy budget: "
+                    + winnerTaskWorkerPackedArray[tempTaskID].getEffectiveNoiseDistance() + "; Effective privacy budget: "
                     + winnerTaskWorkerPackedArray[tempTaskID].getEffectivePrivacyBudget());
         }
 

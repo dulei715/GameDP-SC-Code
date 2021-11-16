@@ -5,18 +5,18 @@ import edu.ecnu.dll.basic_struct.pack.single_agent_info.SingleInfoPack;
 /**
  * 用于记录竞争该task成功的worker的有效噪声距离和有效隐私预算
  */
-public class WorkerIDDistanceBudgetPair extends WorkerIDDistancePair {
+public class WorkerIDNoiseDistanceBudgetPair extends WorkerIDDistancePair {
 //    private Integer workerID = null;
 //    private Double noiseEffectiveDistance = null;
     private Double effectivePrivacyBudget = null;
 
-    public WorkerIDDistanceBudgetPair() {
+    public WorkerIDNoiseDistanceBudgetPair() {
     }
 
-    public WorkerIDDistanceBudgetPair(Integer workerID, Double noiseEffectiveDistance, Double effectivePrivacyBudget) {
+    public WorkerIDNoiseDistanceBudgetPair(Integer workerID, Double effectiveNoiseDistance, Double effectivePrivacyBudget) {
 //        this.workerID = workerID;
 //        this.noiseEffectiveDistance = noiseEffectiveDistance;
-        super(workerID, noiseEffectiveDistance);
+        super(workerID, effectiveNoiseDistance);
         this.effectivePrivacyBudget = effectivePrivacyBudget;
     }
 
@@ -30,14 +30,14 @@ public class WorkerIDDistanceBudgetPair extends WorkerIDDistancePair {
         super.setWorkerID(workerID);
     }
 
-    public Double getNoiseEffectiveDistance() {
+    public Double getEffectiveNoiseDistance() {
 //        return noiseEffectiveDistance;
         return super.getDistance();
     }
 
-    public void setNoiseEffectiveDistance(Double noiseEffectiveDistance) {
+    public void setEffectiveNoiseDistance(Double effectiveNoiseDistance) {
 //        this.noiseEffectiveDistance = noiseEffectiveDistance;
-        super.setDistance(noiseEffectiveDistance);
+        super.setDistance(effectiveNoiseDistance);
     }
 
     public Double getEffectivePrivacyBudget() {

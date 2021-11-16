@@ -1,6 +1,5 @@
 package edu.ecnu.dll.scheme.run.target_tools;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistanceBudgetPair;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 
 import java.util.HashSet;

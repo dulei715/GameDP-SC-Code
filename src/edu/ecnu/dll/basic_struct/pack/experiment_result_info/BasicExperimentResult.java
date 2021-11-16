@@ -18,6 +18,7 @@ public class BasicExperimentResult {
 //    public Double utilityValue = null;
     public Double totalWinnerUtility = null;
     public Double totalFailureUtility = null;
+    public Double totalUtility = null;
 
 //    public Integer totalFailureNumber = null;
 
@@ -33,6 +34,8 @@ public class BasicExperimentResult {
         this.totalFailureUtility = totalFailureUtility;
 //        this.totalFailureNumber = totalFailureNumber;
         this.realTravelDistance = realTravelDistance;
+
+        this.totalUtility = this.totalWinnerUtility + this.totalFailureUtility;
     }
 
     public BasicExperimentResult() {
@@ -47,6 +50,7 @@ public class BasicExperimentResult {
                 ", totalAllocatedWorkerSize=" + totalAllocatedWorkerSize +
                 ", totalWinnerUtility=" + totalWinnerUtility +
                 ", totalFailureUtility=" + totalFailureUtility +
+                ", totalUtility=" + totalUtility +
                 ", realTravelDistance=" + realTravelDistance +
                 '}';
     }
