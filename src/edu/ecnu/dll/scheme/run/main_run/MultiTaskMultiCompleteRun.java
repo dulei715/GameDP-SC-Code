@@ -66,23 +66,40 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
         }
 
 
+        /**
+         * 自变量：
+         * 1. task 数量变化 (数据集)
+         * 2. worker 数量变化 (数据集)
+         * 3. privacy group size 变化(数据集)
+         *
+         * 4. task value 变化范围
+         * 5. worker range 变化范围
+         * 6. α 变化范围
+         * 7. β 变化范围
+         *
+         *
+         *
+         * 因变量：
+         * 1. competing time
+         * 2. utility value
+         * 3. real travel distance
+         *
+         */
+
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
         WorkerIDNoiseDistanceBudgetPair[] winner = competitionSolution.compete(ppcfState, workerChosenState, eceaState);
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
-//        showResultA(winner);
         BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, competitionSolution.workers);
-
-//        showResultB(winner);
 
         NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
         ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, proposalSize, taskValue, workerRange);
 
-//        System.out.println(normalExperimentResult);
         return extendedExperimentResult;
     }
+
 
     public static void main(String[] args) {
         // for dataset
@@ -125,7 +142,7 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 
         WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
 
-        Integer[] proposalValues = new Integer[] {1, 4, 7, 10, 13, 16, 19, 21, Integer.MAX_VALUE};
+        Integer[] proposalValues = new Integer[] {1, 4, 7, 10, 13, 16, 19, 22, Integer.MAX_VALUE};
 //        double[] fixedTaskValueAndWorkerRange = new double[]{15, 1.1};
         double[] fixedTaskValueAndWorkerRange = new double[]{20, 2};
 
@@ -155,14 +172,6 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 //        System.out.println(normalExperimentResult);
     }
 
-    public static String concat(String split, Object ... objects) {
-        int i = 0;
-        String result = "";
-        for (; i < objects.length - 1; i++) {
-            result += objects[i] + split;
-        }
-        result += objects[i];
-        return result;
-    }
+
 
 }

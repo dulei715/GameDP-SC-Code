@@ -11,7 +11,7 @@ import java.util.TreeSet;
 public class MultiTaskBasicWorker extends PrivacyWorker {
 
 
-    public List<Double> toTaskDistance = null;
+//    public List<Double> toTaskDistance = null;
     //task number * budget number
     public List<Double[]> privacyBudgetArrayList = null;
     public List<Double[]> noiseDistanceArrayList = null;
@@ -28,7 +28,7 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
 
     public List<Double> effectiveNoiseDistance = null;
     public List<Double> effectivePrivacyBudget = null;
-    public List<Double> privacyBudgetCost = null;
+    public List<Double> totalPrivacyBudgetCost = null;
 
 
 
@@ -77,9 +77,10 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
     }
 
     @Override
-    public Double getToTaskNoiseDistance(Integer taskID) {
+    public Double getToTaskEffectiveNoiseDistance(Integer taskID) {
         return getEffectiveNoiseDistance(taskID);
     }
+
 
     public Double[] getPrivacyBudgetArray(Integer taskID) {
         int index = taskIndex[taskID];
@@ -105,6 +106,8 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
         }
         return noiseDistanceArrayList.get(index);
     }
+
+
 
     public int setNoiseDistanceArray(Integer taskID, Double[] noiseDistanceArray) {
         int index = taskIndex[taskID];
@@ -263,20 +266,21 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
         return 0;
     }
 
-    public Double getPrivacyBudgetCost(Integer taskID) {
+    @Override
+    public Double getTotalPrivacyBudgetCost(Integer taskID) {
         int index = taskIndex[taskID];
         if (index == -1) {
             return null;
         }
-        return privacyBudgetCost.get(index);
+        return totalPrivacyBudgetCost.get(index);
     }
 
-    public int setPrivacyBudgetCost(Integer taskID, Double privacyBudgetCost) {
+    public int setTotalPrivacyBudgetCost(Integer taskID, Double privacyBudgetCost) {
         int index = taskIndex[taskID];
         if (index == -1) {
             return -1;
         }
-        this.privacyBudgetCost.set(index, privacyBudgetCost);
+        this.totalPrivacyBudgetCost.set(index, privacyBudgetCost);
         return 0;
     }
 

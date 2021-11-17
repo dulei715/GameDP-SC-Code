@@ -107,7 +107,7 @@ public class CommonFunction {
 
     }
 
-    private static void showResultA(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
+    public static void showResultA(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
         int serveredTaskSize = 0;
         for (int i = 0; i < winnerTaskWorkerPackedArray.length; i++) {
 //        for (int i = 0; i < 10; i++) {
@@ -123,7 +123,7 @@ public class CommonFunction {
         System.out.println(serveredTaskSize);
     }
 
-    private static void showResultB(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
+    public static void showResultB(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
         int serveredTaskSize = 0;
         TaskWorkerIDPair[] taskWorkerIDPairArray;
         List<TaskWorkerIDPair> taskWorkerIDPairList = new ArrayList<>();

@@ -4,7 +4,7 @@ import edu.ecnu.dll.basic_struct.agent.PrivacyWorker;
 import edu.ecnu.dll.basic_struct.agent.Worker;
 
 import java.util.List;
-
+@Deprecated
 public class PPPWorker extends PrivacyWorker {
     public List<Double> privacyBudget = null;
 
@@ -29,12 +29,18 @@ public class PPPWorker extends PrivacyWorker {
     }
 
     @Override
-    public Double getToTaskNoiseDistance(Integer taskID) {
-        int index = taskIndex[taskID];
-        if (index == -1) {
-            return null;
-        }
-        return toTaskNoiseDistance.get(index);
+    public Double getToTaskEffectiveNoiseDistance(Integer taskID) {
+//        int index = taskIndex[taskID];
+//        if (index == -1) {
+//            return null;
+//        }
+//        return toTaskNoiseDistance.get(index);
+        return null;
+    }
+
+    @Override
+    public Double getTotalPrivacyBudgetCost(Integer taskID) {
+        return null;
     }
 
     public PPPWorker() {

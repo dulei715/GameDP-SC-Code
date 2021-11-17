@@ -17,14 +17,18 @@ import java.util.TreeSet;
 public abstract class PrivacySolution extends Solution {
 
     public static final WorkerIDNoiseDistanceBudgetPair DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR = new WorkerIDNoiseDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE);
+    public static final Integer DEFAULT_WORKER_WINNING_STATE = -1;
     public Task[] tasks = null;
     public MultiTaskBasicWorker[] workers = null;
 
 
 
 
-    protected double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
-//        return taskValue + taskValue * toNormalValue(effectivePrivacyBudget) - alpha * realDistance - beta * privacyBudgetCost;
+//    protected double getUtilityValue(double taskValue, double effectivePrivacyBudget, double realDistance, double privacyBudgetCost) {
+////        return taskValue + taskValue * toNormalValue(effectivePrivacyBudget) - alpha * realDistance - beta * privacyBudgetCost;
+//        return taskValue - transformDistanceToValue(realDistance) - transformPrivacyBudgetToValue(privacyBudgetCost);
+//    }
+    protected double getUtilityValue(double taskValue, double realDistance, double privacyBudgetCost) {
         return taskValue - transformDistanceToValue(realDistance) - transformPrivacyBudgetToValue(privacyBudgetCost);
     }
 
@@ -86,11 +90,11 @@ public abstract class PrivacySolution extends Solution {
             this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray = new ArrayList<>();
             this.workers[j].effectiveNoiseDistance = new ArrayList<>();
             this.workers[j].effectivePrivacyBudget = new ArrayList<>();
-            this.workers[j].privacyBudgetCost = new ArrayList<>();
+            this.workers[j].totalPrivacyBudgetCost = new ArrayList<>();
             this.workers[j].taskCompetingTimes = new ArrayList<>();
             this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
             this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
-            this.workers[j].currentWinningState = -1;
+            this.workers[j].currentWinningState = DEFAULT_WORKER_WINNING_STATE;
             double tempDistance;
             int k = 0;
             for (int i = 0; i < tasks.length; i++) {
@@ -107,7 +111,7 @@ public abstract class PrivacySolution extends Solution {
                     this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray.add(new TreeSet<>());
                     this.workers[j].effectiveNoiseDistance.add(0.0);
                     this.workers[j].effectivePrivacyBudget.add(0.0);
-                    this.workers[j].privacyBudgetCost.add(0.0);
+                    this.workers[j].totalPrivacyBudgetCost.add(0.0);
                     this.workers[j].taskCompetingTimes.add(0);
                     this.workers[j].currentUtilityFunctionValue.add(0.0);
                     this.workers[j].successfullyUtilityFunctionValue.add(0.0);
@@ -127,11 +131,11 @@ public abstract class PrivacySolution extends Solution {
             this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray = new ArrayList<>();
             this.workers[j].effectiveNoiseDistance = new ArrayList<>();
             this.workers[j].effectivePrivacyBudget = new ArrayList<>();
-            this.workers[j].privacyBudgetCost = new ArrayList<>();
+            this.workers[j].totalPrivacyBudgetCost = new ArrayList<>();
             this.workers[j].taskCompetingTimes = new ArrayList<>();
             this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
             this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
-            this.workers[j].currentWinningState = -1;
+            this.workers[j].currentWinningState = DEFAULT_WORKER_WINNING_STATE;
             double tempDistance;
             int k = 0;
             for (int i = 0; i < tasks.length; i++) {
@@ -148,7 +152,7 @@ public abstract class PrivacySolution extends Solution {
                     this.workers[j].alreadyPublishedNoiseDistanceAndBudgetTreeSetArray.add(new TreeSet<>());
                     this.workers[j].effectiveNoiseDistance.add(0.0);
                     this.workers[j].effectivePrivacyBudget.add(0.0);
-                    this.workers[j].privacyBudgetCost.add(0.0);
+                    this.workers[j].totalPrivacyBudgetCost.add(0.0);
                     this.workers[j].taskCompetingTimes.add(0);
                     this.workers[j].currentUtilityFunctionValue.add(0.0);
                     this.workers[j].successfullyUtilityFunctionValue.add(0.0);
@@ -168,12 +172,53 @@ public abstract class PrivacySolution extends Solution {
         double[] distanceBudget = LaplaceUtils.getMaximumLikelihoodEstimationInGivenPoint(tempTreeSet);
         return new DistanceBudgetPair(distanceBudget[0], distanceBudget[1]);
     }
-    protected Double getNewCostPrivacyBudget(Integer workerID, Integer taskID) {
+    protected Double getNewTotalCostPrivacyBudget(Integer workerID, Integer taskID) {
         Double result;
 //        int index = this.workers[workerID].budgetIndex[taskID];
         int index = this.workers[workerID].getBudgetIndex(taskID);
+        if (index >= this.workers[workerID].getPrivacyBudgetArray(taskID).length) {
+            return null;
+        }
 //        result = this.workers[workerID].privacyBudgetCost[taskID] + this.workers[workerID].privacyBudgetArray[taskID][index];
-        result = this.workers[workerID].getPrivacyBudgetCost(taskID) + this.workers[workerID].getPrivacyBudgetArray(taskID)[index];
+        result = this.workers[workerID].getTotalPrivacyBudgetCost(taskID) + this.workers[workerID].getPrivacyBudgetArray(taskID)[index];
+        return result;
+    }
+
+    protected Double getNewNoiseDistance(Integer workerID, Integer taskID) {
+        Double result;
+        int index = this.workers[workerID].getBudgetIndex(taskID);
+        if (index >= this.workers[workerID].getPrivacyBudgetArray(taskID).length) {
+            return null;
+        }
+        result = this.workers[workerID].getNoiseDistanceArray(taskID)[index];
+
+        return result;
+    }
+
+    protected Double getNewPrivacyBudget(Integer workerID, Integer taskID) {
+        Double result;
+        int index = this.workers[workerID].getBudgetIndex(taskID);
+        if (index >= this.workers[workerID].getPrivacyBudgetArray(taskID).length) {
+            return null;
+        }
+        result = this.workers[workerID].getPrivacyBudgetArray(taskID)[index];
+
+        return result;
+    }
+
+    /**
+     * 封装前三个函数
+     * @return
+     */
+    protected Double[] getNewNoiseDistancePrivacyBudgetTotalPrivacyBudgetCost(Integer workerID, Integer taskID) {
+        int index = this.workers[workerID].getBudgetIndex(taskID);
+        if (index >= this.workers[workerID].getPrivacyBudgetArray(taskID).length) {
+            return null;
+        }
+        Double[] result = new Double[3];
+        result[0] = this.workers[workerID].getNoiseDistanceArray(taskID)[index];
+        result[1] = this.workers[workerID].getPrivacyBudgetArray(taskID)[index];
+        result[2] = this.workers[workerID].getTotalPrivacyBudgetCost(taskID) + result[1];
         return result;
     }
 

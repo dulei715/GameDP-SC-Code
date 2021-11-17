@@ -5,7 +5,6 @@ import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudget
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.sub_class.TaskTargetInfo;
 import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
 import edu.ecnu.dll.scheme.solution._0_basic.PrivacySolution;
-import edu.ecnu.dll.scheme.solution._1_non_privacy.MultiTaskMultiCompetitionNonPrivacySolution;
 import edu.ecnu.dll.scheme.solution._3_multiple_task.struct.EnhanceConflictElimination;
 import edu.ecnu.dll.scheme_compared.solution.ConflictElimination;
 import tools.basic.BasicArray;
@@ -102,7 +101,7 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
                 }
             }
 
-            Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
+            Double tempNewCostPrivacyBudget = getNewTotalCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(i)[this.workers[workerID].getBudgetIndex(i)];
             Double tempNewNoiseDistance = this.workers[workerID].getNoiseDistanceArray(i)[this.workers[workerID].getBudgetIndex(i)];
             this.workers[workerID].increaseBudgetIndex(i);
@@ -119,7 +118,8 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
 
 
             // Utility 函数判断
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+//            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
 //            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
 //                continue;
 //            }
@@ -163,7 +163,7 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
                 }
             }
 
-            Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
+            Double tempNewCostPrivacyBudget = getNewTotalCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(i)[this.workers[workerID].getBudgetIndex(i)];
 //            Double tempNewNoiseDistance = this.workers[workerID].getToTaskDistance(i) + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
             Double tempNewNoiseDistance = this.workers[workerID].getNoiseDistanceArray(i)[this.workers[workerID].getBudgetIndex(i)];
@@ -181,7 +181,8 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
 
 
             // Utility 函数判断
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+//            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
 //            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
 //                continue;
 //            }
@@ -228,7 +229,7 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
                 }
             }
 
-            Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
+            Double tempNewCostPrivacyBudget = getNewTotalCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(i)[this.workers[workerID].getBudgetIndex(i)];
             Double tempNewNoiseDistance = this.workers[workerID].getNoiseDistanceArray(i)[this.workers[workerID].getBudgetIndex(i)];
             this.workers[workerID].increaseBudgetIndex(i);
@@ -244,7 +245,8 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
             if (pcfValue <= 0.5) {
                 continue;
             }
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+//            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
 //            if (tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
             if (tempNewUtilityValue <= 0) {
                 continue;
@@ -295,7 +297,7 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
                 }
             }
 
-            Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
+            Double tempNewCostPrivacyBudget = getNewTotalCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(i)[this.workers[workerID].getBudgetIndex(i)];
 //            Double tempNewNoiseDistance = this.workers[workerID].toTaskDistance[i] + LaplaceUtils.getLaplaceNoise(1, tempNewPrivacyBudget);
             Double tempNewNoiseDistance = this.workers[workerID].getNoiseDistanceArray(i)[this.workers[workerID].getBudgetIndex(i)];
@@ -307,7 +309,8 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
 
             // Utility 函数值判断
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+//            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
             if (tempNewUtilityValue <= this.workers[workerID].getSuccessfullyUtilityFunctionValue(i)) {
                 continue;
             }
@@ -353,7 +356,7 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
                 continue;
             }
 
-            Double tempNewCostPrivacyBudget = getNewCostPrivacyBudget(workerID, i);
+            Double tempNewCostPrivacyBudget = getNewTotalCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(i)[this.workers[workerID].getBudgetIndex(i)];
             Double tempNewNoiseDistance = this.workers[workerID].getNoiseDistanceArray(i)[this.workers[workerID].getBudgetIndex(i)];
             this.workers[workerID].increaseBudgetIndex(i);
@@ -363,7 +366,8 @@ public class ConflictEliminationBasedSolution extends PrivacySolution {
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
 
             // Utility 函数判断
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+//            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
             if (tempNewUtilityValue <= this.workers[workerID].getSuccessfullyUtilityFunctionValue(i)) {
                 continue;
             }

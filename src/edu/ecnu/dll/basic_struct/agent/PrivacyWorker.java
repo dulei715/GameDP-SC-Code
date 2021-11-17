@@ -9,7 +9,7 @@ public abstract class PrivacyWorker extends Worker {
 //    public Double[] toTaskDistance = null;
 //    public Double[] toTaskNoiseDistance = null;
     public List<Double> toTaskDistance = null;
-    public List<Double> toTaskNoiseDistance = null;
+//    public List<Double> toTaskNoiseDistance = null;
 
     public abstract Double getPrivacyBudget(Integer taskID);
 
@@ -38,7 +38,7 @@ public abstract class PrivacyWorker extends Worker {
         return 0;
     }
 
-    public abstract Double getToTaskNoiseDistance(Integer taskID);
+    public abstract Double getToTaskEffectiveNoiseDistance(Integer taskID);
 //    {
 //        int index = taskIndex[taskID];
 //        if (index == -1) {
@@ -47,12 +47,14 @@ public abstract class PrivacyWorker extends Worker {
 //        return toTaskNoiseDistance.get(index);
 //    }
 
-    public int setToTaskNoiseDistance(Integer taskID, Double toTaskNoiseDistance) {
-        int index = taskIndex[taskID];
-        if (index == -1) {
-            return -1;
-        }
-        this.toTaskNoiseDistance.set(index, toTaskNoiseDistance);
-        return 0;
-    }
+//    public int setToTaskNoiseDistance(Integer taskID, Double toTaskNoiseDistance) {
+//        int index = taskIndex[taskID];
+//        if (index == -1) {
+//            return -1;
+//        }
+//        this.toTaskNoiseDistance.set(index, toTaskNoiseDistance);
+//        return 0;
+//    }
+
+    public abstract Double getTotalPrivacyBudgetCost(Integer taskID);
 }

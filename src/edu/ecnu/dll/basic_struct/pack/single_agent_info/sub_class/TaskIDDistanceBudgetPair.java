@@ -6,9 +6,9 @@ import edu.ecnu.dll.basic_struct.pack.single_agent_info.SingleInfoPack;
  * 用于记录竞争该task成功的worker的有效噪声距离和有效隐私预算
  */
 public class TaskIDDistanceBudgetPair extends SingleInfoPack {
-    private Integer taskID = null;
-    private Double effectiveNoiseDistance = null;
-    private Double effectivePrivacyBudget = null;
+    protected Integer taskID = null;
+    protected Double effectiveNoiseDistance = null;
+    protected Double effectivePrivacyBudget = null;
 
     public TaskIDDistanceBudgetPair() {
     }
