@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-public class MultiTaskBasicWorker extends PrivacyWorker {
+@Deprecated
+public class MultiTaskBasicWorkerBefore extends PrivacyWorker {
 
 
 //    public List<Double> toTaskDistance = null;
@@ -32,15 +33,20 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
 
 
 
+    // 用于记录该worker对所有task的竞争次数 // todo: 竞争次数怎么定义有待考究，他会影响任务熵的定义
+    public List<Integer> taskCompetingTimes = null;
+
+
+
 
 
 //    public Double toCompetePublishAverageNoiseDistance = null;
 //    public Double toCompetePublishTotalPrivacyBudget = null;
 
-    public MultiTaskBasicWorker() {
+    public MultiTaskBasicWorkerBefore() {
     }
 
-    public MultiTaskBasicWorker(double[] location) {
+    public MultiTaskBasicWorkerBefore(double[] location) {
         super(location);
     }
 
@@ -279,6 +285,32 @@ public class MultiTaskBasicWorker extends PrivacyWorker {
         return 0;
     }
 
+    public Integer getTaskCompetingTimes(Integer taskID) {
+        int index = taskIndex[taskID];
+        if (index == -1) {
+            return null;
+        }
+        return taskCompetingTimes.get(index);
+    }
+
+    public int setTaskCompetingTimes(Integer taskID, Integer taskCompetingTimes) {
+        int index = taskIndex[taskID];
+        if (index == -1) {
+            return -1;
+        }
+        this.taskCompetingTimes.set(index, taskCompetingTimes);
+        return 0;
+    }
+
+    public int increaseTaskCompetingTimes(Integer taskID) {
+        int index = taskIndex[taskID];
+        if (index == -1) {
+            return -1;
+        }
+        int increaseTime = this.taskCompetingTimes.get(index);
+        this.taskCompetingTimes.set(index, increaseTime + 1);
+        return 0;
+    }
 
 
 }

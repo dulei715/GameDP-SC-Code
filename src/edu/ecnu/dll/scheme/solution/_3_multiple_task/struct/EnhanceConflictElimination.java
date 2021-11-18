@@ -4,6 +4,7 @@ import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseD
 import edu.ecnu.dll.scheme_compared.solution.ConflictElimination;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 
+@Deprecated
 public class EnhanceConflictElimination extends ConflictElimination {
     public EnhanceConflictElimination(Integer taskSize, Integer workerSize) {
         super(taskSize, workerSize);

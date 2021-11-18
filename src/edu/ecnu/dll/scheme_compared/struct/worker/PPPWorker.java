@@ -23,10 +23,6 @@ public class PPPWorker extends PrivacyWorker {
         return null;
     }
 
-    @Override
-    public Integer getTaskCompetingTimes(Integer taskID) {
-        return null;
-    }
 
     @Override
     public Double getToTaskEffectiveNoiseDistance(Integer taskID) {

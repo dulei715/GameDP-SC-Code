@@ -42,24 +42,24 @@ public abstract class Solution {
         }
     }
 
-    protected double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
-        if (totalCompetingTime <= 0) {
-//            throw new RuntimeException("The total competing time is not positive value!");
-            return 0;
-        }
-        double taskEntropy = 0;
-        double tempRatio;
-        Integer competingTimes = null;
-        for (Integer j : competingWorkerIDSet) {
-            competingTimes = this.workers[j].getTaskCompetingTimes(taskID);
-            if (competingTimes == null) {
-                continue;
-            }
-            tempRatio = competingTimes / totalCompetingTime;
-            taskEntropy -= tempRatio * Math.log(tempRatio);
-        }
-        return taskEntropy;
-    }
+//    protected double getTaskEntropy(Integer taskID, Integer totalCompetingTime, HashSet<Integer> competingWorkerIDSet) {
+//        if (totalCompetingTime <= 0) {
+////            throw new RuntimeException("The total competing time is not positive value!");
+//            return 0;
+//        }
+//        double taskEntropy = 0;
+//        double tempRatio;
+//        Integer competingTimes = null;
+//        for (Integer j : competingWorkerIDSet) {
+//            competingTimes = this.workers[j].getTaskCompetingTimes(taskID);
+//            if (competingTimes == null) {
+//                continue;
+//            }
+//            tempRatio = competingTimes / totalCompetingTime;
+//            taskEntropy -= tempRatio * Math.log(tempRatio);
+//        }
+//        return taskEntropy;
+//    }
 
     protected  double getProposingValue(Double pcfValue, Double distance) {
         return pcfValue / distance;

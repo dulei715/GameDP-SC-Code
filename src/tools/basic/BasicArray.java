@@ -112,5 +112,24 @@ public class BasicArray {
     }
 
 
+    public static int getFirstFindValueIndex(int[] data, int value) {
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == value) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public static List<Integer> getDeclaredValueIndexList(int[] data, int value) {
+        List<Integer> resultList = new ArrayList<>();
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] == value) {
+                resultList.add(i);
+            }
+        }
+        return resultList;
+    }
+
 
 }

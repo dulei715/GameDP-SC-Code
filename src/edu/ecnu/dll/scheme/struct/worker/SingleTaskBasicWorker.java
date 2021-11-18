@@ -44,11 +44,6 @@ public class SingleTaskBasicWorker extends Worker {
         return successfulUtilityFunctionValue;
     }
 
-    @Override
-    public Integer getTaskCompetingTimes(Integer taskID) {
-        // todo: handle
-        return null;
-    }
 
 
 }

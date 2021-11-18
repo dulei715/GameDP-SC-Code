@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiTaskMultiCompleteRun extends AbstractRun {
-    public static NormalExperimentResult runningOnSingleDataset(String parentPath, String dataType, boolean ppcfState, Integer workerChosenState, boolean eceaState, double[] fixedTaskValueAndWorkerRange, Integer proposalSize) {
+    public static NormalExperimentResult runningOnSingleDataset(String parentPath, String dataType, boolean ppcfState, double[] fixedTaskValueAndWorkerRange, Integer proposalSize) {
         // 从数据库读数据
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
         String basicDatasetPath = parentPath;
@@ -78,6 +78,10 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
          * 7. β 变化范围
          *
          *
+         * 对比方案
+         * 1. NonPrivacyBestSolution
+         * 2. ConflictBasedSolution
+         * 3. GameTheoryBasedSolution
          *
          * 因变量：
          * 1. competing time
@@ -88,7 +92,7 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
-        WorkerIDNoiseDistanceBudgetPair[] winner = competitionSolution.compete(ppcfState, workerChosenState, eceaState);
+        WorkerIDNoiseDistanceBudgetPair[] winner = competitionSolution.compete(ppcfState);
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
@@ -131,14 +135,7 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 //        String ppcfState = "false";
 //        String ppcfState = "true";
 
-        Integer[] workerChosenStateArray = new Integer[]{ConflictEliminationBasedSolution.ONLY_UTILITY, ConflictEliminationBasedSolution.UTILITY_WITH_TASK_ENTROPY, ConflictEliminationBasedSolution.UTILITY_WITH_PROPOSING_VALUE};
-//        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionSolution.ONLY_UTILITY);
-//        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionSolution.UTILITY_WITH_TASK_ENTROPY);
-//        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionSolution.UTILITY_WITH_PROPOSING_VALUE);
 
-        Boolean[] eceaStateArray = new Boolean[]{false, true};
-//        String eceaState = "false";
-//        String eceaState = "true";
 
         WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
 
@@ -152,15 +149,11 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
             List<String> stringExperimentResultList = new ArrayList<>();
             for (int a = 0; a < proposalValues.length; a++) {
                 for (int j = 0; j < ppcfStateArray.length; j++) {
-                    for (int k = 0; k < eceaStateArray.length; k++) {
-                        for (int l = 0; l < workerChosenStateArray.length; l++) {
-                            tempNEResult = runningOnSingleDataset(parentFile.getAbsolutePath(), dataType, ppcfStateArray[j],workerChosenStateArray[l],eceaStateArray[k], fixedTaskValueAndWorkerRange, proposalValues[a]);
-                            tempResult = new PackNormalExperimentResult(parentFile.getName(), Integer.valueOf(dataType), ppcfStateArray[j], eceaStateArray[k], workerChosenStateArray[l], tempNEResult);
-                            // String datasetName, Integer dataType, Boolean ppcfState, Boolean eceaState, Integer workerChosenState
+                    tempNEResult = runningOnSingleDataset(parentFile.getAbsolutePath(), dataType, ppcfStateArray[j],fixedTaskValueAndWorkerRange, proposalValues[a]);
+                    tempResult = new PackNormalExperimentResult(parentFile.getName(), Integer.valueOf(dataType), ppcfStateArray[j], tempNEResult);
+                    // String datasetName, Integer dataType, Boolean ppcfState, Boolean eceaState, Integer workerChosenState
 //                        String newTitle = concat(",", parentFile.getName(), dataType, ppcfStateArray[j], eceaStateArray[k], workerChosenStateArray[l]);
-                            stringExperimentResultList.add(tempResult.toString());
-                        }
-                    }
+                    stringExperimentResultList.add(tempResult.toString());
                 }
             }
             String outputPath = parentFile.getAbsolutePath() + File.separator + parentFile.getName() + "_result.csv";

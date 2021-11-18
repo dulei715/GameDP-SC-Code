@@ -50,6 +50,6 @@ public abstract class Worker extends Agent {
 
     public abstract Double getFinalUtility(Integer taskID);
 
-    public abstract Integer getTaskCompetingTimes(Integer taskID);
+//    public abstract Integer getTaskCompetingTimes(Integer taskID);
 
 }

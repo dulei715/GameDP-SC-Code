@@ -38,11 +38,5 @@ public class SingleTaskNonPrivacyWorker extends Worker {
         return successfullyUtilityFunctionValue;
     }
 
-    @Override
-    public Integer getTaskCompetingTimes(Integer taskID) {
-        // todo: handle
-        return null;
-    }
-
 
 }

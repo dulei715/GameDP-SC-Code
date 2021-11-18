@@ -86,7 +86,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
             this.workers[j].reverseIndex = new ArrayList<>();
             this.workers[j].toTaskDistance = new ArrayList<>();
             // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
-            this.workers[j].competingTimes = new ArrayList<>();
+//            this.workers[j].competingTimes = new ArrayList<>();
             this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
             this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
             this.workers[j].currentWinningState = -1;
@@ -100,7 +100,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
                     this.workers[j].taskIndex[i] = k++;
                     this.workers[j].reverseIndex.add(i);
                     this.workers[j].toTaskDistance.add(tempDistance);
-                    this.workers[j].competingTimes.add(0);
+//                    this.workers[j].competingTimes.add(0);
                     this.workers[j].currentUtilityFunctionValue.add(0.0);
                     this.workers[j].successfullyUtilityFunctionValue.add(0.0);
                     this.workers[j].taskCompetingState.add(true);
@@ -114,7 +114,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
             this.workers[j].reverseIndex = new ArrayList<>();
             this.workers[j].toTaskDistance = new ArrayList<>();
             // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
-            this.workers[j].competingTimes = new ArrayList<>();
+//            this.workers[j].competingTimes = new ArrayList<>();
             this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
             this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
             this.workers[j].currentWinningState = -1;
@@ -128,7 +128,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
                     this.workers[j].taskIndex[i] = k++;
                     this.workers[j].reverseIndex.add(i);
                     this.workers[j].toTaskDistance.add(tempDistance);
-                    this.workers[j].competingTimes.add(0);
+//                    this.workers[j].competingTimes.add(0);
                     this.workers[j].currentUtilityFunctionValue.add(0.0);
                     this.workers[j].successfullyUtilityFunctionValue.add(0.0);
                     this.workers[j].taskCompetingState.add(true);
@@ -137,7 +137,8 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
         }
     }
 
-    protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistancePair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] competedWorkerIDSet) {
+//    protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistancePair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] competedWorkerIDSet) {
+    protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistancePair[] taskCurrentWinnerPackedArray, HashSet<Integer>[] competedWorkerIDSet) {
         // 针对每个task，初始化距离为最大距离值
         // 针对每个task，初始化总的被竞争次数为0
         // 针对每个task，初始化访问过被访问worker集合为空集合
@@ -145,7 +146,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
             taskCurrentWinnerPackedArray[i] = new WorkerIDDistancePair();
             taskCurrentWinnerPackedArray[i].setWorkerID(-1);
             taskCurrentWinnerPackedArray[i].setDistance(Double.MAX_VALUE);
-            competingTimes[i] = 0;
+//            competingTimes[i] = 0;
             competedWorkerIDSet[i] = new HashSet<>();
         }
     }
@@ -193,51 +194,51 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
         return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
     }
 
-    protected TaskTargetInfo[] chooseArrayByUtilityFunctionInfluencedByTaskEntropy(List<Integer> taskIDList, Integer workerID, Integer[] totalCompetingTimeArray, WorkerIDDistancePair[] lastTermTaskWinnerPackedArray, HashSet<Integer>[] competingWorkerIDSetArray, int topK) {
-        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForUtilityAndCompositionValueComparator);
-        for (Integer i : taskIDList) {
-            if (lastTermTaskWinnerPackedArray[i].getWorkerID().equals(workerID)) {
-                continue;
-            }
-            double tempCompeteDistance = this.workers[workerID].getToTaskDistance(i);
-
-            if (tempCompeteDistance >= lastTermTaskWinnerPackedArray[i].getDistance()) {
-                this.workers[workerID].setTaskCompetingState(i, false);
-                continue;
-            }
-
-
-            // Utility 函数判断
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i));
-//            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+//    protected TaskTargetInfo[] chooseArrayByUtilityFunctionInfluencedByTaskEntropy(List<Integer> taskIDList, Integer workerID, Integer[] totalCompetingTimeArray, WorkerIDDistancePair[] lastTermTaskWinnerPackedArray, HashSet<Integer>[] competingWorkerIDSetArray, int topK) {
+//        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForUtilityAndCompositionValueComparator);
+//        for (Integer i : taskIDList) {
+//            if (lastTermTaskWinnerPackedArray[i].getWorkerID().equals(workerID)) {
 //                continue;
 //            }
-            if (tempNewUtilityValue <= 0) {
-                continue;
-            }
-
-            double tempTaskEntropy = super.getTaskEntropy(i, totalCompetingTimeArray[i], competingWorkerIDSetArray[i]);
-            Double compositionQuantity = tempNewUtilityValue * tempTaskEntropy;
-
-
-            TaskTargetInfo taskTargetInfo = null;
-
-            if (candidateTaskTargetInfoSet.size() < topK) {
-                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, compositionQuantity, null, null, null, tempNewUtilityValue));
-            } else {
-                taskTargetInfo = candidateTaskTargetInfoSet.last();
-                if (tempNewUtilityValue > taskTargetInfo.getTarget()) {
-                    candidateTaskTargetInfoSet.remove(taskTargetInfo); //todo: 测试是否能够真的删除
-                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, compositionQuantity, null, null, null, tempNewUtilityValue));
-                }
-            }
-
-        }
-        if (candidateTaskTargetInfoSet.isEmpty()) {
-            return null;
-        }
-        return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
-    }
+//            double tempCompeteDistance = this.workers[workerID].getToTaskDistance(i);
+//
+//            if (tempCompeteDistance >= lastTermTaskWinnerPackedArray[i].getDistance()) {
+//                this.workers[workerID].setTaskCompetingState(i, false);
+//                continue;
+//            }
+//
+//
+//            // Utility 函数判断
+//            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i));
+////            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
+////                continue;
+////            }
+//            if (tempNewUtilityValue <= 0) {
+//                continue;
+//            }
+//
+//            double tempTaskEntropy = super.getTaskEntropy(i, totalCompetingTimeArray[i], competingWorkerIDSetArray[i]);
+//            Double compositionQuantity = tempNewUtilityValue * tempTaskEntropy;
+//
+//
+//            TaskTargetInfo taskTargetInfo = null;
+//
+//            if (candidateTaskTargetInfoSet.size() < topK) {
+//                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, compositionQuantity, null, null, null, tempNewUtilityValue));
+//            } else {
+//                taskTargetInfo = candidateTaskTargetInfoSet.last();
+//                if (tempNewUtilityValue > taskTargetInfo.getTarget()) {
+//                    candidateTaskTargetInfoSet.remove(taskTargetInfo); //todo: 测试是否能够真的删除
+//                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, compositionQuantity, null, null, null, tempNewUtilityValue));
+//                }
+//            }
+//
+//        }
+//        if (candidateTaskTargetInfoSet.isEmpty()) {
+//            return null;
+//        }
+//        return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
+//    }
 
 
 
@@ -257,7 +258,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
         this.basicConflictElimination = new BasicConflictElimination(this.tasks.length, this.workers.length);
 
         // 记录每个task的被竞争的总次数
-        Integer[] competingTimes = new Integer[this.tasks.length];
+//        Integer[] competingTimes = new Integer[this.tasks.length];
         // 记录每个task被竞争过的worker id的集合
         HashSet<Integer>[] competedWorkerIDSet = new HashSet[this.tasks.length];
 
@@ -277,7 +278,8 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
         List<Integer>[] newCandidateWorkerIDList, oldCandidateWorkerIDList;
         newCandidateWorkerIDList = new ArrayList[this.tasks.length];
 //        BasicArray.setListArrayToEmptyList(newCandidateWorkerIDList);
-        initializeAllocationByFirstTaskAndNullAllocation(taskCurrentWinnerPackedArray, competingTimes, competedWorkerIDSet);
+//        initializeAllocationByFirstTaskAndNullAllocation(taskCurrentWinnerPackedArray, competingTimes, competedWorkerIDSet);
+        initializeAllocationByFirstTaskAndNullAllocation(taskCurrentWinnerPackedArray, competedWorkerIDSet);
 
 
         double competeTemp;
@@ -324,15 +326,7 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
                 // 进行是否竞争判断3： 考察 utility函数、PPCF函数、PCF函数、任务熵
 
                 TaskTargetInfo[] winnerInfoArray = null;
-                if (ONLY_UTILITY.equals(workerChosenState)) {
-                    winnerInfoArray = chooseArrayByUtilityFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
-                } else if (UTILITY_WITH_TASK_ENTROPY.equals(workerChosenState)) {
-                    winnerInfoArray = chooseArrayByUtilityFunctionInfluencedByTaskEntropy(tempCandidateTaskList, tempWorkerID, competingTimes, taskCurrentWinnerPackedArray, competedWorkerIDSet, proposalSize);
-                } else {
-                    throw new RuntimeException("The worker chosen state is error!");
-                }
-//                winnerInfoArray = chooseArrayByTaskEntropy(tempCandidateTaskList, tempWorkerID, competingTimes, taskCurrentWinnerPackedArray, completedWorkerIDSet, proposalSize);
-//                winnerInfoArray = chooseArrayByProposingValue(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
+                winnerInfoArray = chooseArrayByUtilityFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
                 if (winnerInfoArray == null) {
                     continue;
                 }
@@ -357,8 +351,8 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
                     newCandidateWorkerIDList[tempTaskID].add(tempWorkerID);
                     competedWorkerIDSet[tempTaskID].add(tempWorkerID);
                     this.workers[tempWorkerID].setCurrentUtilityFunctionValue(tempTaskID, winnerInfoArray[i].getNewUtilityValue());
-                    this.workers[tempWorkerID].increaseTaskCompetingTimes(tempTaskID);
-                    competingTimes[tempTaskID] ++;
+//                    this.workers[tempWorkerID].increaseTaskCompetingTimes(tempTaskID);
+//                    competingTimes[tempTaskID] ++;
 
                 }
 

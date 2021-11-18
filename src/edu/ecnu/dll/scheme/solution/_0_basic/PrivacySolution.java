@@ -91,7 +91,7 @@ public abstract class PrivacySolution extends Solution {
             this.workers[j].effectiveNoiseDistance = new ArrayList<>();
             this.workers[j].effectivePrivacyBudget = new ArrayList<>();
             this.workers[j].totalPrivacyBudgetCost = new ArrayList<>();
-            this.workers[j].taskCompetingTimes = new ArrayList<>();
+//            this.workers[j].taskCompetingTimes = new ArrayList<>();
             this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
             this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
             this.workers[j].currentWinningState = DEFAULT_WORKER_WINNING_STATE;
@@ -112,7 +112,7 @@ public abstract class PrivacySolution extends Solution {
                     this.workers[j].effectiveNoiseDistance.add(0.0);
                     this.workers[j].effectivePrivacyBudget.add(0.0);
                     this.workers[j].totalPrivacyBudgetCost.add(0.0);
-                    this.workers[j].taskCompetingTimes.add(0);
+//                    this.workers[j].taskCompetingTimes.add(0);
                     this.workers[j].currentUtilityFunctionValue.add(0.0);
                     this.workers[j].successfullyUtilityFunctionValue.add(0.0);
                 }
@@ -132,7 +132,7 @@ public abstract class PrivacySolution extends Solution {
             this.workers[j].effectiveNoiseDistance = new ArrayList<>();
             this.workers[j].effectivePrivacyBudget = new ArrayList<>();
             this.workers[j].totalPrivacyBudgetCost = new ArrayList<>();
-            this.workers[j].taskCompetingTimes = new ArrayList<>();
+//            this.workers[j].taskCompetingTimes = new ArrayList<>();
             this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
             this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
             this.workers[j].currentWinningState = DEFAULT_WORKER_WINNING_STATE;
@@ -153,7 +153,7 @@ public abstract class PrivacySolution extends Solution {
                     this.workers[j].effectiveNoiseDistance.add(0.0);
                     this.workers[j].effectivePrivacyBudget.add(0.0);
                     this.workers[j].totalPrivacyBudgetCost.add(0.0);
-                    this.workers[j].taskCompetingTimes.add(0);
+//                    this.workers[j].taskCompetingTimes.add(0);
                     this.workers[j].currentUtilityFunctionValue.add(0.0);
                     this.workers[j].successfullyUtilityFunctionValue.add(0.0);
                 }

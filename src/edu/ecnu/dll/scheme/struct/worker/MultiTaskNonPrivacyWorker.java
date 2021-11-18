@@ -14,7 +14,7 @@ public class MultiTaskNonPrivacyWorker extends Worker {
 
 
 
-    public List<Integer> competingTimes = null;
+//    public List<Integer> competingTimes = null;
 
 
     // 记录成功进入候选的utility函数值
@@ -61,33 +61,33 @@ public class MultiTaskNonPrivacyWorker extends Worker {
     }
 
 
-    @Override
-    public Integer getTaskCompetingTimes(Integer taskID) {
-        int index = taskIndex[taskID];
-        if (index == -1) {
-            return null;
-        }
-        return competingTimes.get(index);
-    }
-
-    public int setTaskCompetingTimes(Integer taskID, Integer taskCompetingTimes) {
-        int index = taskIndex[taskID];
-        if (index == -1) {
-            return -1;
-        }
-        this.competingTimes.set(index, taskCompetingTimes);
-        return 0;
-    }
-
-    public int increaseTaskCompetingTimes(Integer taskID) {
-        int index = taskIndex[taskID];
-        if (index == -1) {
-            return -1;
-        }
-        int increaseTime = this.competingTimes.get(index);
-        this.competingTimes.set(index, increaseTime + 1);
-        return 0;
-    }
+//    @Override
+//    public Integer getTaskCompetingTimes(Integer taskID) {
+//        int index = taskIndex[taskID];
+//        if (index == -1) {
+//            return null;
+//        }
+//        return competingTimes.get(index);
+//    }
+//
+//    public int setTaskCompetingTimes(Integer taskID, Integer taskCompetingTimes) {
+//        int index = taskIndex[taskID];
+//        if (index == -1) {
+//            return -1;
+//        }
+//        this.competingTimes.set(index, taskCompetingTimes);
+//        return 0;
+//    }
+//
+//    public int increaseTaskCompetingTimes(Integer taskID) {
+//        int index = taskIndex[taskID];
+//        if (index == -1) {
+//            return -1;
+//        }
+//        int increaseTime = this.competingTimes.get(index);
+//        this.competingTimes.set(index, increaseTime + 1);
+//        return 0;
+//    }
 
     public Double getSuccessfullyUtilityFunctionValue(Integer taskID) {
         int index = taskIndex[taskID];
