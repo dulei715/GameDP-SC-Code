@@ -33,9 +33,21 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
     public static TargetInfoForTaskEntropyComparator targetInfoForUtilityValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
     public static TargetInfoForTaskEntropyComparator targetInfoForUtilityAndCompositionValueComparator = new TargetInfoForTaskEntropyComparator(TargetInfoForTaskEntropyComparator.DESCENDING);
 
+    @Override
+    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
+        super.initializeBasicInformation(taskPositionList, taskValueArray, workerPositionList, workerRangeList);
+        for (int j = 0; j < this.workers.length; j++) {
+            this.workers[j].taskIndex = BasicArray.getInitializedArray(-1, this.tasks.length);
+        }
+    }
 
-
-
+    @Override
+    public void initializeBasicInformation(List<Point> taskPositionList, Double taskValue, List<Point> workerPositionList, Double workerRange) {
+        super.initializeBasicInformation(taskPositionList, taskValue, workerPositionList, workerRange);
+        for (int j = 0; j < this.workers.length; j++) {
+            this.workers[j].taskIndex = BasicArray.getInitializedArray(-1, this.tasks.length);
+        }
+    }
 
     public List<WorkerIDDistancePair>[] createTableDataOfPreferenceTableByID(WorkerIDDistancePair[] originalWinnerInfo, List<Integer>[] workerIDList) {
         List<WorkerIDDistancePair>[] table = new ArrayList[workerIDList.length];
@@ -59,26 +71,26 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
     }
 
 
-    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
-        Point taskPosition, workerPosition;
-        super.tasks = this.tasks = new BasicTask[taskPositionList.size()];
-        for (int i = 0; i < taskPositionList.size(); i++) {
-            taskPosition = taskPositionList.get(i);
-            this.tasks[i] = new BasicTask(taskPosition.getIndex());
-            this.tasks[i].valuation = taskValueArray[i];
-        }
-        super.workers = this.workers = new MultiTaskNonPrivacyWorker[workerPositionList.size()];
-        for (int j = 0; j < workers.length; j++) {
-            workerPosition = workerPositionList.get(j);
-            this.workers[j] = new MultiTaskNonPrivacyWorker(workerPosition.getIndex());
-//            this.workers[j].privacyBudgetArray = privacyBudgetListArray[j].toArray(new Double[0][0]);
-//            this.workers[j].setPrivacyBudgetArray(privacyBudgetListArray[j].toArray(new Double[0][0]));
-            this.workers[j].setMaxRange(workerRangeList.get(j));
-            this.workers[j].taskIndex = BasicArray.getInitializedArray(-1, this.tasks.length);
-        }
-//        BasicArray.setIntegerListToContinuousNaturalNumber(this.tempCandidateTaskList, this.tasks.length - 1);
-
-    }
+//    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
+//        Point taskPosition, workerPosition;
+//        super.tasks = this.tasks = new BasicTask[taskPositionList.size()];
+//        for (int i = 0; i < taskPositionList.size(); i++) {
+//            taskPosition = taskPositionList.get(i);
+//            this.tasks[i] = new BasicTask(taskPosition.getIndex());
+//            this.tasks[i].valuation = taskValueArray[i];
+//        }
+//        super.workers = this.workers = new MultiTaskNonPrivacyWorker[workerPositionList.size()];
+//        for (int j = 0; j < workers.length; j++) {
+//            workerPosition = workerPositionList.get(j);
+//            this.workers[j] = new MultiTaskNonPrivacyWorker(workerPosition.getIndex());
+////            this.workers[j].privacyBudgetArray = privacyBudgetListArray[j].toArray(new Double[0][0]);
+////            this.workers[j].setPrivacyBudgetArray(privacyBudgetListArray[j].toArray(new Double[0][0]));
+//            this.workers[j].setMaxRange(workerRangeList.get(j));
+//            this.workers[j].taskIndex = BasicArray.getInitializedArray(-1, this.tasks.length);
+//        }
+////        BasicArray.setIntegerListToContinuousNaturalNumber(this.tempCandidateTaskList, this.tasks.length - 1);
+//
+//    }
 
 
     public void initializeAgents() {

@@ -15,13 +15,20 @@ public class HungarianAlgorithmTest {
     public void test1() {
 
       // the problem is written in the form of a matrix
-      int[][] dataMatrix = {
-      //col0  col1  col2  col3
-        {70,  40,   20,   55},  //row0
-        {65,  60,   45,   90},  //row1
-        {30,  45,   50,   75},  //row2
-        {25,  30,   55,   40}   //row3
-      };
+//      int[][] dataMatrix = {
+//      //col0  col1  col2  col3
+//        {70,  40,   20,   55},  //row0
+//        {65,  60,   45,   90},  //row1
+//        {30,  45,   50,   75},  //row2
+//        {25,  30,   55,   40}   //row3
+//      };
+        int[][] dataMatrix = new int[][] {
+                {10, 5, 9, 18, 11},
+                {13, 19, 6, 12, 14},
+                {3, 2, 4, 4, 5},
+                {18, 9, 12,	17,	15},
+                {11, 6,	14,	19,	10}
+        };
 
       //find optimal assignment
       HungarianAlgorithm ha = new HungarianAlgorithm(dataMatrix);

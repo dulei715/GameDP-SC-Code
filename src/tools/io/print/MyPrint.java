@@ -1,11 +1,9 @@
 package tools.io.print;
 
-import tools.io.read.DoubleRead;
+import edu.ecnu.dll.basic_struct.pack.UtilityDistanceIDPair;
 
-import java.lang.reflect.Array;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MyPrint {
 
@@ -259,6 +257,14 @@ public class MyPrint {
     public static void showMap(Map<Double, Integer> resultMap) {
         for (Map.Entry<Double, Integer> entry : resultMap.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
+    public static void showSet(Set set) {
+        Iterator iterator = set.iterator();
+        while (iterator.hasNext()) {
+            Object obj = iterator.next();
+            System.out.println(obj);
         }
     }
 }
