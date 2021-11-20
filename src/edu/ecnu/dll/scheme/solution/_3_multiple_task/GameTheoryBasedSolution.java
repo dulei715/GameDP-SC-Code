@@ -259,7 +259,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
 
 
     public WorkerIDNoiseDistanceBudgetPair[] compete() {
-//        int k = 0;
+        int k = 0;
         WorkerIDNoiseDistanceBudgetPair[] winnerPackedArray = new WorkerIDNoiseDistanceBudgetPair[this.tasks.length];
         initializeAllocation(winnerPackedArray);
         boolean strategyChangeState = true;
@@ -268,7 +268,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
         while (strategyChangeState) {
             strategyChangeState = false;
             // 重复迭代所有worker
-//            ++k;
+            ++k;
             for (int workerID = 0; workerID < workers.length; workerID++) {
                 /**
                  *  针对每个worker，选出使其GTUtility最大的task
@@ -293,14 +293,15 @@ public class GameTheoryBasedSolution extends PrivacySolution {
             }
         }
 
-//        System.out.println(k);
+        System.out.println(k);
         return winnerPackedArray;
 
     }
 
     public static void main(String[] args) {
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test\\test1";
         double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
         Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
 

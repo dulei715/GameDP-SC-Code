@@ -111,7 +111,8 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 //        String parentPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
 
 //        String parentParentPath = args[0];
-        String parentParentPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output";
+//        String parentParentPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output";
+        String parentParentPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
 
         File parentParentFile = new File(parentParentPath);
         File[] parentFilesArray = parentParentFile.listFiles();

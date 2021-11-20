@@ -77,7 +77,8 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
 
 
     public static void main(String[] args) {
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
 
         String workerPointPath = basicDatasetPath + "\\worker_point.txt";
         String taskPointPath = basicDatasetPath + "\\task_point.txt";

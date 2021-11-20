@@ -93,62 +93,6 @@ public class MultiTaskMultiCompetitionNonPrivacySolution extends NonPrivacySolut
 //    }
 
 
-    public void initializeAgents() {
-        for (int j = 0; j < this.workers.length; j++) {
-            this.workers[j].reverseIndex = new ArrayList<>();
-            this.workers[j].toTaskDistance = new ArrayList<>();
-            // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
-//            this.workers[j].competingTimes = new ArrayList<>();
-            this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
-            this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
-            this.workers[j].currentWinningState = -1;
-            this.workers[j].taskCompetingState = new ArrayList<>();
-            double tempDistance;
-            int k = 0;
-            for (int i = 0; i < tasks.length; i++) {
-                // todo: 修改为经纬度的
-                tempDistance = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[j].location);
-                if (tempDistance <= this.workers[j].maxRange) {
-                    this.workers[j].taskIndex[i] = k++;
-                    this.workers[j].reverseIndex.add(i);
-                    this.workers[j].toTaskDistance.add(tempDistance);
-//                    this.workers[j].competingTimes.add(0);
-                    this.workers[j].currentUtilityFunctionValue.add(0.0);
-                    this.workers[j].successfullyUtilityFunctionValue.add(0.0);
-                    this.workers[j].taskCompetingState.add(true);
-                }
-            }
-        }
-    }
-
-    public void initializeAgentsWithLatitudeLongitude() {
-        for (int j = 0; j < this.workers.length; j++) {
-            this.workers[j].reverseIndex = new ArrayList<>();
-            this.workers[j].toTaskDistance = new ArrayList<>();
-            // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
-//            this.workers[j].competingTimes = new ArrayList<>();
-            this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
-            this.workers[j].successfullyUtilityFunctionValue = new ArrayList<>();
-            this.workers[j].currentWinningState = -1;
-            this.workers[j].taskCompetingState = new ArrayList<>();
-            double tempDistance;
-            int k = 0;
-            for (int i = 0; i < tasks.length; i++) {
-                // todo: 修改为经纬度的
-                tempDistance = BasicCalculation.getDistanceFrom2LngLat(this.tasks[i].location[1], this.tasks[i].location[0], this.workers[j].location[1],this.workers[j].location[0]);
-                if (tempDistance <= this.workers[j].maxRange) {
-                    this.workers[j].taskIndex[i] = k++;
-                    this.workers[j].reverseIndex.add(i);
-                    this.workers[j].toTaskDistance.add(tempDistance);
-//                    this.workers[j].competingTimes.add(0);
-                    this.workers[j].currentUtilityFunctionValue.add(0.0);
-                    this.workers[j].successfullyUtilityFunctionValue.add(0.0);
-                    this.workers[j].taskCompetingState.add(true);
-                }
-            }
-        }
-    }
-
 //    protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistancePair[] taskCurrentWinnerPackedArray, Integer[] competingTimes, HashSet<Integer>[] competedWorkerIDSet) {
     protected void initializeAllocationByFirstTaskAndNullAllocation(WorkerIDDistancePair[] taskCurrentWinnerPackedArray, HashSet<Integer>[] competedWorkerIDSet) {
         // 针对每个task，初始化距离为最大距离值

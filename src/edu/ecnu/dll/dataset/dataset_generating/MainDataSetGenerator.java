@@ -331,13 +331,21 @@ public class MainDataSetGenerator {
 //        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_privacy_budget.txt";
 //        DataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputPath, 28029, 1286, 5, 0, 10, 6);
 
-        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
-        String parentDirTKY = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
+
+
+//        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+//        String parentDirTKY = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
+//        MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirSYN);
+//        MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirTKY);
+//        boolean isLongitudeLatitude = true;
+//        MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirSYN, isLongitudeLatitude);
+//        MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirTKY, isLongitudeLatitude);
+
+
+        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
         MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirSYN);
-        MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirTKY);
         boolean isLongitudeLatitude = true;
         MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirSYN, isLongitudeLatitude);
-        MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirTKY, isLongitudeLatitude);
 
     }
 }

@@ -1,16 +1,88 @@
 package edu.ecnu.dll.scheme.solution._1_non_privacy;
 
 import edu.ecnu.dll.basic_struct.pack.CostMatchingInfo;
+import edu.ecnu.dll.basic_struct.pack.UtilityDistanceIDPair;
+import edu.ecnu.dll.scheme.run.common.CommonFunction;
+import edu.ecnu.dll.scheme.run.target_tools.TargetTool;
 import edu.ecnu.dll.scheme.solution._0_basic.NonPrivacySolution;
 import tools.basic.BasicArray;
+import tools.basic.BasicCalculation;
 import tools.basic.MatrixArray;
 import tools.io.print.MyPrint;
+import tools.io.read.DoubleRead;
+import tools.io.read.PointRead;
+import tools.struct.Point;
 
 import java.util.*;
 
 public class BestNonePrivacySolution extends NonPrivacySolution {
 
+    private double[][] utilityMatrix = null;
 
+    @Override
+    public void initializeAgents() {
+        this.utilityMatrix = new double[this.tasks.length][this.workers.length];
+        for (int j = 0; j < this.workers.length; j++) {
+            this.workers[j].reverseIndex = new ArrayList<>();
+            this.workers[j].toTaskDistance = new ArrayList<>();
+            // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
+            this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
+            double tempDistance, utility;
+            int k = 0;
+            for (int i = 0; i < tasks.length; i++) {
+                // todo: 修改为经纬度的
+                tempDistance = BasicCalculation.get2Norm(this.tasks[i].location, this.workers[j].location);
+                if (tempDistance <= this.workers[j].maxRange) {
+                    this.workers[j].taskIndex[i] = k++;
+                    this.workers[j].reverseIndex.add(i);
+                    this.workers[j].toTaskDistance.add(tempDistance);
+                    utility = getUtilityValue(this.tasks[i].valuation, tempDistance);
+                    if (utility > 0) {
+                        this.workers[j].currentUtilityFunctionValue.add(utility);
+                        utilityMatrix[i][j] = utility;
+                    } else {
+                        this.workers[j].currentUtilityFunctionValue.add(0.0);
+                        utilityMatrix[i][j] = 0;
+                    }
+                } else {
+                    utilityMatrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public void initializeAgentsWithLatitudeLongitude() {
+        this.utilityMatrix = new double[this.tasks.length][this.workers.length];
+        for (int j = 0; j < this.workers.length; j++) {
+            this.workers[j].reverseIndex = new ArrayList<>();
+            this.workers[j].toTaskDistance = new ArrayList<>();
+            // 此处没有初始化privacyBudgetArray，因为会在initialize basic function 中初始化
+            this.workers[j].currentUtilityFunctionValue = new ArrayList<>();
+            double tempDistance, utility;
+            int k = 0;
+            for (int i = 0; i < tasks.length; i++) {
+                // todo: 修改为经纬度的
+                tempDistance = BasicCalculation.getDistanceFrom2LngLat(this.tasks[i].location[1], this.tasks[i].location[0], this.workers[j].location[1],this.workers[j].location[0]);
+                if (tempDistance <= this.workers[j].maxRange) {
+                    this.workers[j].taskIndex[i] = k++;
+                    this.workers[j].reverseIndex.add(i);
+                    this.workers[j].toTaskDistance.add(tempDistance);
+                    utility = getUtilityValue(this.tasks[i].valuation, tempDistance);
+                    if (utility > 0) {
+                        this.workers[j].currentUtilityFunctionValue.add(utility);
+                        utilityMatrix[i][j] = utility;
+                    } else {
+                        this.workers[j].currentUtilityFunctionValue.add(0.0);
+                        utilityMatrix[i][j] = 0;
+                    }
+                } else {
+                    utilityMatrix[i][j] = 0;
+                }
+            }
+        }
+    }
 
     private static double[][] getPreHandledMatrix(double[][] matrix, boolean isMinimized, Double maxMatrixValue) {
         double[][] resultMatrix;
@@ -273,6 +345,27 @@ public class BestNonePrivacySolution extends NonPrivacySolution {
         return new CostMatchingInfo(cost, resultStateMatrix);
     }
 
+//    public double[][] getUtilityMatrix() {
+//
+//    }
+
+    public UtilityDistanceIDPair[] bestResponse(){
+        CostMatchingInfo costMatchingInfo = hungarianEnhanced(this.utilityMatrix, false);
+        Double utility = costMatchingInfo.getCost();
+        int[][] matching = costMatchingInfo.getMatching();
+        UtilityDistanceIDPair[] response = new UtilityDistanceIDPair[this.tasks.length];
+        for (int i = 0; i < matching.length; i++) {
+            for (int j = 0; j < matching[i].length; j++) {
+                if (matching[i][j] == 1) {
+                    response[i] = new UtilityDistanceIDPair(this.workers[j].getCurrentUtilityFunctionValue(i),this.workers[j].getToTaskDistance(i),j);
+                    break;
+                }
+            }
+        }
+        System.out.println(utility);
+        return response;
+    }
+
 
 
 
@@ -280,25 +373,66 @@ public class BestNonePrivacySolution extends NonPrivacySolution {
 
 
     public static void main(String[] args) {
+////        double[][] data = new double[][] {
+////                {10, 5, 9, 18, 11},
+////                {13, 19, 6, 12, 14},
+////                {3, 2, 4, 4, 5},
+////                {18, 9, 12,	17,	15},
+////                {11, 6,	14,	19,	10}
+////        };
 //        double[][] data = new double[][] {
-//                {10, 5, 9, 18, 11},
-//                {13, 19, 6, 12, 14},
-//                {3, 2, 4, 4, 5},
-//                {18, 9, 12,	17,	15},
-//                {11, 6,	14,	19,	10}
+//                {10, 5, 9, 18, 11, 6},
+//                {13, 19, 6, 12, 14, 7},
+//                {3, 2, 4, 4, 5, 5},
+//                {18, 9, 12,	17,	15, 9},
+//                {11, 6,	14,	19,	10, 10}
 //        };
-        double[][] data = new double[][] {
-                {10, 5, 9, 18, 11, 6},
-                {13, 19, 6, 12, 14, 7},
-                {3, 2, 4, 4, 5, 5},
-                {18, 9, 12,	17,	15, 9},
-                {11, 6,	14,	19,	10, 10}
-        };
+//
+//        CostMatchingInfo result = BestNonePrivacySolution.hungarianEnhanced(data, true);
+////        CostMatchingInfo result = BestNoPrivacySolution.hungarianEnhanced(data, false);
+//        System.out.println(result.getCost());
+//        MyPrint.show2DimensionIntegerArray(result.getMatching());
 
-        CostMatchingInfo result = BestNonePrivacySolution.hungarianEnhanced(data, true);
-//        CostMatchingInfo result = BestNoPrivacySolution.hungarianEnhanced(data, false);
-        System.out.println(result.getCost());
-        MyPrint.show2DimensionIntegerArray(result.getMatching());
+
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
+
+        String workerPointPath = basicDatasetPath + "\\worker_point.txt";
+        String taskPointPath = basicDatasetPath + "\\task_point.txt";
+        String taskValuePath = basicDatasetPath + "\\task_value.txt";
+        String workerRangePath = basicDatasetPath + "\\worker_range.txt";
+//        String workerPrivacyBudgetPath = basicDatasetPath + "\\worker_budget.txt";
+//        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
+
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
+        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
+        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+//        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
+//        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
+
+
+        // 初始化 task 和 workers
+        Double taskValue = 20.0, workerRange = 2.0;
+        BestNonePrivacySolution competitionSolution = new BestNonePrivacySolution();
+        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+//        Integer dataTypeValue = Integer.valueOf(dataType);
+        competitionSolution.initializeAgentsWithLatitudeLongitude();
+
+        long startCompetingTime = System.currentTimeMillis();
+        UtilityDistanceIDPair[] winner = competitionSolution.bestResponse();
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        System.out.println(runningTime);
+
+        CommonFunction.showResultB(winner);
+
     }
 
 

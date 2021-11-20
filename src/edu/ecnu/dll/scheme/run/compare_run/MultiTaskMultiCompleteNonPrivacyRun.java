@@ -58,7 +58,8 @@ public class MultiTaskMultiCompleteNonPrivacyRun extends AbstractRun {
     }
 
     public static void main(String[] args) {
-        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
+//        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
+        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\test";
         String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
         String workerChosenState = String.valueOf(MultiTaskMultiCompetitionNonPrivacySolution.ONLY_UTILITY);
 //        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionNonPrivacySolution.UTILITY_WITH_TASK_ENTROPY);
