@@ -1,11 +1,11 @@
 package struct;
 
-import edu.ecnu.dll.basic_struct.comparator.WorkerIDDistanceBudgetPairComparator;
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
+import edu.ecnu.dll.basic.basic_struct.comparator.WorkerIDNoiseDistanceBudgetPairComparator;
+import edu.ecnu.dll.basic.basic_struct.data_structure.PreferenceTable;
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
 import org.junit.Test;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
-import tools.struct.table.PrivacyPreferenceTable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +34,7 @@ public class PrivacyPreferenceTableTest {
             dataList.add(workerIDNoiseDistanceBudgetPair);
         }
         MyPrint.showList(dataList, "\r\n");
-        Collections.sort(dataList, new WorkerIDDistanceBudgetPairComparator());
+        Collections.sort(dataList, new WorkerIDNoiseDistanceBudgetPairComparator());
         MyPrint.showSplitLine("*", 100);
         MyPrint.showList(dataList, "\r\n");
     }
@@ -66,12 +66,12 @@ public class PrivacyPreferenceTableTest {
         }
 
 
-        WorkerIDDistanceBudgetPairComparator comparator = new WorkerIDDistanceBudgetPairComparator();
+        WorkerIDNoiseDistanceBudgetPairComparator comparator = new WorkerIDNoiseDistanceBudgetPairComparator();
 
 
 
 
-        PrivacyPreferenceTable privacyPreferenceTable = new PrivacyPreferenceTable(taskSize, comparator);
+        PreferenceTable<WorkerIDNoiseDistanceBudgetPair, WorkerIDNoiseDistanceBudgetPairComparator> privacyPreferenceTable = new PreferenceTable(taskSize, comparator);
         privacyPreferenceTable.setPreferenceTable(listArray);
 
 
@@ -79,7 +79,7 @@ public class PrivacyPreferenceTableTest {
 //        double[] tempNoiseDistance = new double[]{9.12, 21.97, 0.65};
 
         MyPrint.showList(dataList, "\r\n");
-        Collections.sort(dataList, new WorkerIDDistanceBudgetPairComparator());
+        Collections.sort(dataList, new WorkerIDNoiseDistanceBudgetPairComparator());
         MyPrint.showSplitLine("*", 100);
         MyPrint.showList(dataList, "\r\n");
     }
@@ -105,7 +105,7 @@ public class PrivacyPreferenceTableTest {
             dataList.add(workerIDNoiseDistanceBudgetPair);
         }
         MyPrint.showList(dataList, "\r\n");
-        Collections.sort(dataList, new WorkerIDDistanceBudgetPairComparator());
+        Collections.sort(dataList, new WorkerIDNoiseDistanceBudgetPairComparator());
         MyPrint.showSplitLine("*", 100);
         MyPrint.showList(dataList, "\r\n");
     }

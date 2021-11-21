@@ -1,8 +1,8 @@
-package edu.ecnu.dll.scheme.solution._0_before;
+package edu.ecnu.dll.scheme.scheme_main.solution._0_before;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.TaskIDDistanceBudgetPair;
-import edu.ecnu.dll.basic_struct.pack.Winner;
-import edu.ecnu.dll.scheme.solution._3_multiple_task.MultiTaskSingleCompetitionSolution;
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.TaskIDDistanceBudgetPair;
+import edu.ecnu.dll.basic.basic_struct.pack.Winner;
+import edu.ecnu.dll._deprecated.MultiTaskSingleCompetitionSolution;
 import tools.basic.BasicArray;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.io.print.MyPrint;

@@ -1,6 +1,6 @@
 package tools.differential_privacy.noise;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import org.apache.commons.math3.distribution.LaplaceDistribution;
 import tools.basic.BasicCalculation;
 

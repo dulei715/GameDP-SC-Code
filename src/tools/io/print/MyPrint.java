@@ -1,7 +1,5 @@
 package tools.io.print;
 
-import edu.ecnu.dll.basic_struct.pack.UtilityDistanceIDPair;
-
 import java.text.DecimalFormat;
 import java.util.*;
 

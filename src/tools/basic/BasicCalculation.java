@@ -1,6 +1,6 @@
 package tools.basic;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import tools.io.print.MyPrint;
 
 import java.text.DecimalFormat;

@@ -1,6 +1,6 @@
 package function;
 
-import edu.ecnu.dll.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import org.junit.Test;
 import tools.basic.BasicCalculation;
 import tools.differential_privacy.noise.LaplaceUtils;

@@ -1,6 +1,6 @@
 package tools.io.write;
 
-import edu.ecnu.dll.basic_struct.pack.experiment_result_info.NormalExperimentResult;
+import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 
 import java.util.List;
 
