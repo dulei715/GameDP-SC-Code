@@ -289,6 +289,8 @@ public class NoiseDistanceConflictEliminationBasedSolution extends PrivacySoluti
 //                    this.workers[tempWorkerID].effectiveNoiseDistance[tempTaskID] = winnerInfoArray[i].getNoiseEffectiveDistance();
                     this.workers[tempWorkerID].setEffectiveNoiseDistance(tempTaskID, winnerInfoArray[i].getEffectiveNoiseDistance());
                     this.workers[tempWorkerID].setEffectivePrivacyBudget(tempTaskID, winnerInfoArray[i].getEffectivePrivacyBudget());
+                    //todo: 其他不用的方法忘记实现这一步了
+                    this.workers[tempWorkerID].setTotalPrivacyBudgetCost(tempTaskID, winnerInfoArray[i].getNewTotalCostPrivacyBudget());
                     this.workers[tempWorkerID].setCurrentUtilityFunctionValue(tempTaskID, winnerInfoArray[i].getNewUtilityValue());
 //                    this.workers[tempWorkerID].increaseTaskCompetingTimes(tempTaskID);
                     competingTimes[tempTaskID] ++;

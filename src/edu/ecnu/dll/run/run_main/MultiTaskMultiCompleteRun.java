@@ -105,7 +105,7 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
     }
 
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         // for dataset
 //        String parentPath = args[0];
 //        String parentPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
@@ -166,6 +166,26 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 //        System.out.println(normalExperimentResult);
     }
 
+    public static void main(String[] args) {
+        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
+//        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\test";
+        String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
+        int proposalSizeNumber = 60;
+        List<Integer> proposalSizeList = new ArrayList<>();
+        for (int i = 0; i < proposalSizeNumber; i++) {
+            proposalSizeList.add(i*3+1);
+        }
+        proposalSizeList.add(Integer.MAX_VALUE);
+//        Integer[] proposalSize = new Integer[]{1, 4, 7, 10, 13, 16, 19, 22, 25, 28, Integer.MAX_VALUE};
+        Integer[] proposalSize = proposalSizeList.toArray(new Integer[0]);
+//        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionNonPrivacySolution.UTILITY_WITH_TASK_ENTROPY);
+        double[] valueRange = new double[]{10,100};
 
+        for (int i = 0; i < proposalSize.length; i++) {
+            NormalExperimentResult normalExperimentResult = runningOnSingleDataset(parentPath, dataType, false, valueRange, proposalSize[i]);
+            System.out.println(normalExperimentResult);
+        }
+
+    }
 
 }

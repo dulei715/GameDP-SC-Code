@@ -3,10 +3,13 @@ package basic;
 import org.junit.Test;
 import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
+import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
+import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeSet;
 
 public class BasicTest {
@@ -70,6 +73,31 @@ public class BasicTest {
         double[] pointValueB = new double[] {40.96462184, -74.06785745};
         double result = BasicCalculation.getDistanceFrom2LngLat(pointValueA[1], pointValueA[0], pointValueB[1], pointValueB[0]);
         System.out.println(result);
+    }
+
+    @Test
+    public void fun8() {
+        int size = 20;
+//        double distance = 10;
+        Random random = new Random();
+        double[] noiseDistances = new double[size];
+        double[] epsilons = new double[size];
+        for (int i = 0; i < epsilons.length; i++) {
+            epsilons[i] = Math.random();
+            noiseDistances[i] = random.nextInt(100) + LaplaceUtils.getLaplaceNoise(1, epsilons[i]);
+        }
+
+        for (int i = 0; i < epsilons.length; i++) {
+            for (int j = i + 1; j < epsilons.length; j++) {
+                Double differ = noiseDistances[i] - noiseDistances[j];
+                double pcfResult = LaplaceProbabilityDensityFunction.probabilityDensityFunction(noiseDistances[i], noiseDistances[j], epsilons[i], epsilons[j]);
+                System.out.println(differ + "; " + pcfResult);
+                if (differ < 0 && pcfResult < 0.5 || differ > 0 && pcfResult > 0.5) {
+                    System.out.println("haha");
+                }
+            }
+        }
+
     }
 
 }

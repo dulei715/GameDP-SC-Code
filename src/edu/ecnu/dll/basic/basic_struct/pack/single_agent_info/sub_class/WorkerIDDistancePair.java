@@ -3,8 +3,8 @@ package edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.SingleInfoPack;
 
 public class WorkerIDDistancePair extends SingleInfoPack {
-    private Integer workerID = null;
-    private Double distance = null;
+    protected Integer workerID = null;
+    protected Double distance = null;
 
     public WorkerIDDistancePair() {
     }

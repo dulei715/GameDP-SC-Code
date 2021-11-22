@@ -86,7 +86,8 @@ public class UtilityConflictEliminationBasedSolution extends PrivacySolution {
                 }
             }
 
-            Double tempNewCostPrivacyBudget = getNewTotalCostPrivacyBudget(workerID, i);
+            // 上层的通过budget的剩余选择函数已经保证了这个不会返回空值
+            Double tempNewTotalCostPrivacyBudget = getNewTotalCostPrivacyBudget(workerID, i);
             Double tempNewPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(i)[this.workers[workerID].getBudgetIndex(i)];
             Double tempNewNoiseDistance = this.workers[workerID].getNoiseDistanceArray(i)[this.workers[workerID].getBudgetIndex(i)];
             this.workers[workerID].increaseBudgetIndex(i);
@@ -104,7 +105,7 @@ public class UtilityConflictEliminationBasedSolution extends PrivacySolution {
 
             // Utility 函数判断
 //            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewTotalCostPrivacyBudget);
 //            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
 //                continue;
 //            }
@@ -117,12 +118,12 @@ public class UtilityConflictEliminationBasedSolution extends PrivacySolution {
             TaskTargetInfo taskTargetInfo = null;
 
             if (candidateTaskTargetInfoSet.size() < topK) {
-                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
             } else {
                 taskTargetInfo = candidateTaskTargetInfoSet.last();
                 if (tempNewUtilityValue > taskTargetInfo.getTarget()) {
                     candidateTaskTargetInfoSet.remove(taskTargetInfo); //todo: 测试是否能够真的删除
-                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
                 }
             }
 
@@ -287,6 +288,7 @@ public class UtilityConflictEliminationBasedSolution extends PrivacySolution {
                     this.workers[tempWorkerID].setEffectiveNoiseDistance(tempTaskID, winnerInfoArray[i].getEffectiveNoiseDistance());
                     this.workers[tempWorkerID].setEffectivePrivacyBudget(tempTaskID, winnerInfoArray[i].getEffectivePrivacyBudget());
                     this.workers[tempWorkerID].setCurrentUtilityFunctionValue(tempTaskID, winnerInfoArray[i].getNewUtilityValue());
+                    this.workers[tempWorkerID].setTotalPrivacyBudgetCost(tempTaskID, winnerInfoArray[i].getNewTotalCostPrivacyBudget());
 //                    this.workers[tempWorkerID].increaseTaskCompetingTimes(tempTaskID);
                     competingTimes[tempTaskID] ++;
 

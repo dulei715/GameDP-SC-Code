@@ -18,7 +18,7 @@ import tools.struct.Point;
 
 import java.util.*;
 
-public class ConflictEliminationBasedNonPrivacySolution extends NonPrivacySolution {
+public class DistanceConflictEliminationBasedNonPrivacySolution extends NonPrivacySolution {
 
     public static final Integer ONLY_UTILITY = 0;
     public static final Integer UTILITY_WITH_TASK_ENTROPY = 1;
@@ -426,7 +426,7 @@ public class ConflictEliminationBasedNonPrivacySolution extends NonPrivacySoluti
 
         // 初始化 task 和 workers
         Double taskValue = 20.0, workerRange = 2.0;
-        ConflictEliminationBasedNonPrivacySolution competitionSolution = new ConflictEliminationBasedNonPrivacySolution();
+        DistanceConflictEliminationBasedNonPrivacySolution competitionSolution = new DistanceConflictEliminationBasedNonPrivacySolution();
         competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         competitionSolution.proposalSize = 20;
 

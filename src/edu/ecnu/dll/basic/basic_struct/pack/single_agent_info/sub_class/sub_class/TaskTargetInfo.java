@@ -4,7 +4,7 @@ import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.TaskIDDi
 
 public class TaskTargetInfo extends TaskIDDistanceBudgetPair {
     protected Double target;
-    protected Double newCostPrivacyBudget;
+    protected Double newTotalCostPrivacyBudget;
     protected Double newPrivacyBudget;
     protected Double newNoiseDistance;
     protected Double newUtilityValue;
@@ -21,12 +21,12 @@ public class TaskTargetInfo extends TaskIDDistanceBudgetPair {
         this.target = target;
     }
 
-    public Double getNewCostPrivacyBudget() {
-        return newCostPrivacyBudget;
+    public Double getNewTotalCostPrivacyBudget() {
+        return newTotalCostPrivacyBudget;
     }
 
-    public void setNewCostPrivacyBudget(Double newCostPrivacyBudget) {
-        this.newCostPrivacyBudget = newCostPrivacyBudget;
+    public void setNewTotalCostPrivacyBudget(Double newTotalCostPrivacyBudget) {
+        this.newTotalCostPrivacyBudget = newTotalCostPrivacyBudget;
     }
 
     public Double getNewPrivacyBudget() {
@@ -59,10 +59,10 @@ public class TaskTargetInfo extends TaskIDDistanceBudgetPair {
     }
 
 
-    public TaskTargetInfo(Integer taskID, Double noiseEffectiveDistance, Double effectivePrivacyBudget, Double target, Double newCostPrivacyBudget, Double newPrivacyBudget, Double newNoiseDistance, Double newUtilityValue) {
+    public TaskTargetInfo(Integer taskID, Double noiseEffectiveDistance, Double effectivePrivacyBudget, Double target, Double newTotalCostPrivacyBudget, Double newPrivacyBudget, Double newNoiseDistance, Double newUtilityValue) {
         super(taskID, noiseEffectiveDistance, effectivePrivacyBudget);
         this.target = target;
-        this.newCostPrivacyBudget = newCostPrivacyBudget;
+        this.newTotalCostPrivacyBudget = newTotalCostPrivacyBudget;
         this.newPrivacyBudget = newPrivacyBudget;
         this.newNoiseDistance = newNoiseDistance;
         this.newUtilityValue = newUtilityValue;

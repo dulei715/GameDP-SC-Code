@@ -16,6 +16,7 @@ public class MultiTaskPrivacyBasicWorker extends PrivacyWorker {
     public List<Double[]> privacyBudgetArrayList = null;
     public List<Double[]> noiseDistanceArrayList = null;
 
+    // 总是指向下一个budget的位置
     public List<Integer> budgetIndex = null;
 
     // 记录成功进入候选的utility函数值

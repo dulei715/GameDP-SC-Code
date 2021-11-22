@@ -18,7 +18,7 @@ import java.util.TreeSet;
 public abstract class PrivacySolution extends Solution {
 
     public static final WorkerIDNoiseDistanceBudgetPair DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR = new WorkerIDNoiseDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE);
-    public static final WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair DEFAULT_WORKER_ID_NO_DISTANCE_DISTANCE_BUDGET_PAIR = new WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE, Double.MIN_VALUE);
+    public static final WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair DEFAULT_WORKER_ID_NO_DISTANCE_DISTANCE_BUDGET_PAIR = new WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair(-1, Double.MAX_VALUE, Double.MAX_VALUE, 0.0);
     public static final Integer DEFAULT_WORKER_WINNING_STATE = -1;
     public Task[] tasks = null;
     public MultiTaskPrivacyBasicWorker[] workers = null;
@@ -31,9 +31,6 @@ public abstract class PrivacySolution extends Solution {
 //        return taskValue - transformDistanceToValue(realDistance) - transformPrivacyBudgetToValue(privacyBudgetCost);
 //    }
     protected double getUtilityValue(double taskValue, double realDistance, double privacyBudgetCost) {
-        if (privacyBudgetCost != 0) {
-            System.out.println("haha");
-        }
         return taskValue - transformDistanceToValue(realDistance) - transformPrivacyBudgetToValue(privacyBudgetCost);
     }
 
@@ -42,9 +39,9 @@ public abstract class PrivacySolution extends Solution {
     }
 
     public double getUtilityWithoutDistance(Integer taskID, Integer workerID){
-        if (this.workers[workerID].getTotalPrivacyBudgetCost(taskID) != 0.0) {
-            System.out.println("haha");
-        }
+//        if (this.workers[workerID].getTotalPrivacyBudgetCost(taskID) != 0.0) {
+//            System.out.println("haha");
+//        }
         return this.tasks[taskID].valuation - transformPrivacyBudgetToValue(this.workers[workerID].getTotalPrivacyBudgetCost(taskID));
     }
 

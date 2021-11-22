@@ -106,4 +106,9 @@ public abstract class NonPrivacySolution extends Solution { // Task value 保证
     protected double getUtilityValue(double taskValue, double realDistance) {
         return taskValue  - transformDistanceToValue(realDistance);
     }
+
+    protected double getNonDistanceUtilityValue(Integer taskID, Integer workerID) {
+        return tasks[taskID].valuation;
+    }
+
 }

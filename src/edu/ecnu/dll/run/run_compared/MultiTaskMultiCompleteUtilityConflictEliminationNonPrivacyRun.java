@@ -4,9 +4,9 @@ import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.BasicExperime
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
-import edu.ecnu.dll.run.run_main.AbstractRun;
 import edu.ecnu.dll.run.result_tools.TargetTool;
-import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.ConflictEliminationBasedNonPrivacySolution;
+import edu.ecnu.dll.run.run_main.AbstractRun;
+import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.UtilityConflictEliminationBasedNonPrivacySolution;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
 import tools.struct.Point;
@@ -14,7 +14,7 @@ import tools.struct.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiTaskMultiCompleteNonPrivacyRun extends AbstractRun {
+public class MultiTaskMultiCompleteUtilityConflictEliminationNonPrivacyRun extends AbstractRun {
     public static NormalExperimentResult runningOnSingleDataset(String parentPath, String dataType, double[] fixedTaskValueAndWorkerRange, Integer proposalSize) {
         // 从数据库读数据
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
@@ -33,7 +33,7 @@ public class MultiTaskMultiCompleteNonPrivacyRun extends AbstractRun {
 
 
         // 初始化 task 和 workers
-        ConflictEliminationBasedNonPrivacySolution competitionSolution = new ConflictEliminationBasedNonPrivacySolution();
+        UtilityConflictEliminationBasedNonPrivacySolution competitionSolution = new UtilityConflictEliminationBasedNonPrivacySolution();
 //        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         competitionSolution.proposalSize = proposalSize;
         Double taskValue = null, workerRange = null;
@@ -72,7 +72,7 @@ public class MultiTaskMultiCompleteNonPrivacyRun extends AbstractRun {
         String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
 //        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\test";
         String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
-        int proposalSizeNumber = 20;
+        int proposalSizeNumber = 60;
         List<Integer> proposalSizeList = new ArrayList<>();
         for (int i = 0; i < proposalSizeNumber; i++) {
             proposalSizeList.add(i*3+1);
