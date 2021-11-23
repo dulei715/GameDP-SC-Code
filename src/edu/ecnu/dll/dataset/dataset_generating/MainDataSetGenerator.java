@@ -310,7 +310,7 @@ public class MainDataSetGenerator {
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(parentDirPath + taskFileName);
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(parentDirPath + workerFileName);
-        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(parentDirPath + workerPrivacyBudgetFileName);
+        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(parentDirPath + workerPrivacyBudgetFileName, 1);
         generateWorkerNoiseDistanceDataSet(parentDirPath + workerNoiseDistanceFileName, workerPointList, taskPointList, workerPrivacyBudgetList, isLongitudeLatitude);
     }
 
@@ -342,9 +342,12 @@ public class MainDataSetGenerator {
 //        MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirTKY, isLongitudeLatitude);
 
 
-        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
+//        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
+        String parentDirSYN = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
         MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirSYN);
-        boolean isLongitudeLatitude = true;
+//        boolean isLongitudeLatitude = true;
+        boolean isLongitudeLatitude = false;
+//        double factor = 0.001;
         MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirSYN, isLongitudeLatitude);
 
     }

@@ -131,15 +131,36 @@ public class Preprocess {
         return new HashSet[]{taskPointCollection, workerPointCollection};
     }
 
+    public static void extractRandomPointByGivenSize(String inputPath, String outputPath, int size) {
+        List<Point> points = PointRead.readPointWithFirstLineCount(inputPath);
+        int pointSize = points.size();
+        int interval = pointSize / size;
+        List<Point> newPoints = new ArrayList<>(size);
+        for (int i = 0, k = 0; i < pointSize && k < size; i+=interval, ++k) {
+            newPoints.add(points.get(i));
+        }
+        PointWrite pointWrite = new PointWrite();
+        pointWrite.startWriting(outputPath);
+        pointWrite.writePoint(newPoints);
+        pointWrite.endWriting();
+    }
+
 
     public static void main(String[] args) {
 //        String inputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original";
 //        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
 //        extractChengduDataToDataset(inputParentPath, outputParentPath);
-        String parentInputPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins";
-        String parentOutputPath = parentInputPath + "\\output";
-        Preprocess.extractTSMCNYCAndTKYToDataset(parentInputPath, parentOutputPath);
 
+//        String parentInputPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins";
+//        String parentOutputPath = parentInputPath + "\\output";
+//        Preprocess.extractTSMCNYCAndTKYToDataset(parentInputPath, parentOutputPath);
+
+        String inputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_point.txt";
+        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default\\worker_point.txt";
+        int taskSize = 1286;
+        int workerSize = (int)(taskSize*3.5);
+        System.out.println(workerSize);
+        extractRandomPointByGivenSize(inputPath, outputPath, workerSize);
     }
 
 }

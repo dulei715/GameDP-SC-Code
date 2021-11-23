@@ -36,8 +36,8 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
         List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
-        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
-        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
+        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath, 1);
+        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 1);
 
 
         // 初始化 task 和 workers

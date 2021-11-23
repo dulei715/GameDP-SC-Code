@@ -299,11 +299,15 @@ public class GameTheoryBasedSolution extends PrivacySolution {
     }
 
     public static void main(String[] args) {
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test\\test1";
-        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
-        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
+//        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
+        double[] fixedTaskValueAndWorkerRange = new double[]{400.0, 400};
+//        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
+        Integer dataType = AbstractRun.COORDINATE;
 
 
         String workerPointPath = basicDatasetPath + "\\worker_point.txt";
@@ -314,12 +318,12 @@ public class GameTheoryBasedSolution extends PrivacySolution {
         String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        Double[] taskValueArray;
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
-        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
-        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
+        List<Double> workerRangeList;
+        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath, 1);
+        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 0.001);
 
 
         // 初始化 task 和 workers
@@ -328,6 +332,8 @@ public class GameTheoryBasedSolution extends PrivacySolution {
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
+            taskValueArray = DoubleRead.readDouble(taskValuePath);
+            workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
             gameTheoryBasedSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];

@@ -6,6 +6,9 @@ import tools.basic.BasicCalculation;
 import tools.differential_privacy.compare.impl.LaplaceProbabilityDensityFunction;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.print.MyPrint;
+import tools.io.read.PointRead;
+import tools.io.read.TwoDimensionDoubleRead;
+import tools.struct.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,5 +102,45 @@ public class BasicTest {
         }
 
     }
+
+
+    @Test
+    public void fun9(){
+//        String path = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_budget.txt";
+        String path = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default\\worker_noise_distance.txt";
+        List<Double[]>[] lists = TwoDimensionDoubleRead.readTopKDouble(path, 10);
+        for (int i = 0; i < lists.length; i++) {
+            for (Double[] doubles : lists[i]) {
+                for (int j = 0; j < doubles.length; j++) {
+                    System.out.print(doubles[j] + " ");
+                }
+                System.out.println();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

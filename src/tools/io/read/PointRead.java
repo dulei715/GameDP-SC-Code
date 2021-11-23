@@ -111,6 +111,40 @@ public class PointRead {
         return pointList;
     }
 
+    public static List<Point> readTopKPointWithFirstLineCount(String filePath, int k) {
+        BufferedReader bufferedReader = null;
+        String line = null;
+        String[] dataElement;
+        int dataSize;
+        List<Point> pointList = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
+            dataSize = Integer.valueOf(bufferedReader.readLine());
+            pointList = new ArrayList<>(dataSize);
+            int i = 0;
+            while ((line = bufferedReader.readLine()) != null && i < k) {
+                dataElement = line.split(SPLIT_TAG);
+                pointList.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
+                ++i;
+            }
+            if (dataSize != pointList.size()) {
+                throw new RuntimeException("The size of dataset is not inconsistent!");
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return pointList;
+    }
+
     public List<Point> getPointList() {
         return pointList;
     }
