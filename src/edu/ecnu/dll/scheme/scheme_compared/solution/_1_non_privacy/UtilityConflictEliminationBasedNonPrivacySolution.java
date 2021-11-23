@@ -273,6 +273,7 @@ public class UtilityConflictEliminationBasedNonPrivacySolution extends NonPrivac
         // 用来临时记录每个worker经过对budget使用情况考察后，能够去进行竞争的tasks
         List<Integer> tempCandidateTaskList = new ArrayList<>();
 
+        //todo: 改成未被分配的worker集合
         while (!newTotalCompetingWorkerIDSet.isEmpty()) {
             oldTotalCompetingWorkerIDSet = newTotalCompetingWorkerIDSet;
             newTotalCompetingWorkerIDSet = new HashSet<>();
