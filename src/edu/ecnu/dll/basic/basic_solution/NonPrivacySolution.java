@@ -1,5 +1,6 @@
 package edu.ecnu.dll.basic.basic_solution;
 
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
 import edu.ecnu.dll.scheme.scheme_compared.struct.agent.task.NonPrivacyTask;
 import edu.ecnu.dll.scheme.scheme_compared.struct.agent.worker.MultiTaskNonPrivacyWorker;
 import tools.basic.BasicArray;
@@ -13,6 +14,8 @@ public abstract class NonPrivacySolution extends Solution { // Task value 保证
 
     public NonPrivacyTask[] tasks = null;
     public MultiTaskNonPrivacyWorker[] workers = null;
+
+    public static WorkerIDDistancePair DEFAULT_WORKER_ID_DISTANCE_PAIR = new WorkerIDDistancePair(-1, Double.MAX_VALUE);
 
     public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
         Point taskPosition, workerPosition;
