@@ -7,11 +7,9 @@ import edu.ecnu.dll.basic.basic_struct.pack.TaskWorkerIDSuccessfulValuationPair;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.BasicExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.ExtendedExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
+import edu.ecnu.dll.basic.basic_struct.pack.multi_agent_info.ResponseNonPrivacyWorkerTaskInfo;
 import edu.ecnu.dll.basic.basic_struct.pack.multi_agent_info.ResponseWorkerTaskInfo;
-import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
-import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
-import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
-import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerTaskUpdateInfo;
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.*;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.result_tools.TargetTool;
 import edu.ecnu.dll.run.run_main.AbstractRun;
@@ -31,14 +29,10 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
     public static TargetInfoComparator targetInfoForUtilityAndCompositionValueComparator = new TargetInfoComparator(TargetInfoComparator.DESCENDING);
 
 
-    @Override
-    protected double getUtilityValue(double taskValue, double effectiveNoiseDistance) {
-        return taskValue - transformDistanceToValue(effectiveNoiseDistance);
-    }
 
-    public static double getValueAndDistancePartOfUtilityValue(double taskValue, double realDistance) {
-        return taskValue - transformDistanceToValue(realDistance);
-    }
+//    public static double getValueAndDistancePartOfUtilityValue(double taskValue, double realDistance) {
+//        return taskValue - transformDistanceToValue(realDistance);
+//    }
 
     public void initializeAllocation(WorkerIDDistancePair[] winnerPackedArray) {
         for (int i = 0; i < this.tasks.length; i++) {
@@ -50,28 +44,27 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
      * 返回game theory迭代中的utility函数值
      * 假设 worker w_j 原来是 task t_i_1 的获胜者(没有则相应的距离值和隐私值为0)，现在要竞争 task t_i_2, 原来 task t_i_2 的获胜者是 worker w_j_w (没有则相应的距离值和隐私值为0). 当前轮数是 k.
      * @param proposalValue t_i_2 的价值
-     * @param nowEffectiveNoiseDistance 第 k 轮 w_j 到 t_i_2 的有效距离
-     * @param nowNewPrivacyBudget 第 k 轮 w_j 新发布的关于t_i_2的因私损失(假设因私损失是线性增长的)
+     * @param nowDistance 第 k 轮 w_j 到 t_i_2 的有效距离
      * @param beforeWinnerTaskValue t_i_2 的值 (正常情况下回合 proposalValue 相等)
-     * @param beforeWinnerEffectiveNoiseDistance 第 k-1 轮 t_i_2 到 w_j_w 的有效距离
+     * @param beforeWinnerDistance 第 k-1 轮 t_i_2 到 w_j_w 的有效距离
      * @param abandonedBeforeValue t_i_1 的价值
-     * @param abandonedBeforeEffectiveNoiseDistance 第 k-1 轮 w_j 到 t_i_1 的有效距离
+     * @param abandonedBeforeDistance 第 k-1 轮 w_j 到 t_i_1 的有效距离
      * @return 效用函数值
      */
     // TODO: ALTER
-    public Double getGTUtilityValue(Double proposalValue, Double distance, Double beforeWinnerTaskValue , Double beforeWinnerEffectiveNoiseDistance, Double abandonedBeforeValue, Double abandonedBeforeEffectiveNoiseDistance) {
-        return proposalValue - transformDistanceToValue(nowEffectiveNoiseDistance) - transformPrivacyBudgetToValue(nowNewPrivacyBudget)
-                - beforeWinnerTaskValue + transformDistanceToValue(beforeWinnerEffectiveNoiseDistance)
-                - abandonedBeforeValue + transformDistanceToValue(abandonedBeforeEffectiveNoiseDistance);
+    public Double getGTUtilityValue(Double proposalValue, Double nowDistance, Double beforeWinnerTaskValue , Double beforeWinnerDistance, Double abandonedBeforeValue, Double abandonedBeforeDistance) {
+        return proposalValue - transformDistanceToValue(nowDistance)
+                - beforeWinnerTaskValue + transformDistanceToValue(beforeWinnerDistance)
+                - abandonedBeforeValue + transformDistanceToValue(abandonedBeforeDistance);
     }
 
-    public ResponseWorkerTaskInfo getBestResponseTaskPackedInfo(Integer workerID, WorkerIDNoiseDistanceBudgetPair[] winnerPackedArray) {
+    public ResponseNonPrivacyWorkerTaskInfo getBestResponseTaskPackedInfo(Integer workerID, WorkerIDDistancePair[] winnerPackedArray) {
         Integer budgetIndex;
         Double newPrivacyBudget, newNoiseDistance;
-        DistanceBudgetPair tempEffectiveDistanceBudgetPair, chosenEffectiveDistanceBudgetPair = null;
+        Double tempDistance, chosenDistance = Double.MAX_VALUE;
         Integer chosenTaskID = DEFAULT_WORKER_WINNING_STATE, abandonedTaskID;
         Double chosenUtilityValue = Double.MIN_VALUE, tempUtilityValue;
-        Double beforeWinnerEffectiveNoiseDistance, beforeWinnerTaskValue, abandonedBeforeValue, abandonedBeforeEffectiveNoiseDistance;
+        Double beforeWinnerDistance, beforeWinnerTaskValue, abandonedBeforeValue, abandonedBeforeDistance;
         Double abandonedSuccessfulValue, defeatSuccessfulValue, winSuccessfulValue;
 
         // 记录即将放弃的task相关信息
@@ -79,14 +72,17 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
         if (abandonedTaskID < 0) {
             // 判断当前worker是否未占用某个task(不是某个task的获胜者)
             abandonedBeforeValue = 0.0;
-            abandonedBeforeEffectiveNoiseDistance = 0.0;
+            abandonedBeforeDistance = 0.0;
             abandonedSuccessfulValue = 0.0;
         } else {
             abandonedBeforeValue = this.tasks[abandonedTaskID].valuation;
             // todo: 记得更新 effective noise distance
-            abandonedBeforeEffectiveNoiseDistance = this.workers[workerID].getEffectiveNoiseDistance(abandonedTaskID);
-            Double decreaseValuation = GameTheoryNonPrivacyBasedSolution.getValueAndDistancePartOfUtilityValue(abandonedBeforeValue, abandonedBeforeEffectiveNoiseDistance);
+            abandonedBeforeDistance = this.workers[workerID].getToTaskDistance(abandonedTaskID);
+//            Double decreaseValuation = GameTheoryNonPrivacyBasedSolution.getValueAndDistancePartOfUtilityValue(abandonedBeforeValue, abandonedBeforeDistance);
+            Double decreaseValuation = NonPrivacySolution.getUtilityValue(abandonedBeforeValue, abandonedBeforeDistance);
+            // 非隐私下该值一定为0
             abandonedSuccessfulValue = this.workers[workerID].getSuccessfullyUtilityFunctionValue(abandonedTaskID) - decreaseValuation;
+
         }
 
         for (Integer tempTaskID : this.workers[workerID].reverseIndex) {
@@ -94,32 +90,35 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
                 // 不能响应已经获胜的task
                 continue;
             }
-            budgetIndex = this.workers[workerID].getBudgetIndex(tempTaskID);
-            if (budgetIndex >= this.workers[workerID].getPrivacyBudgetArray(tempTaskID).length) {
-                continue;
-            }
+//            budgetIndex = this.workers[workerID].getBudgetIndex(tempTaskID);
+//            if (budgetIndex >= this.workers[workerID].getPrivacyBudgetArray(tempTaskID).length) {
+//                continue;
+//            }
 
-            newPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(tempTaskID)[budgetIndex];
+//            newPrivacyBudget =  this.workers[workerID].getPrivacyBudgetArray(tempTaskID)[budgetIndex];
             // 默认隐私花费是线性的，每次就是多了一个新的privacyBudget
-            newNoiseDistance = this.workers[workerID].getNoiseDistanceArray(tempTaskID)[budgetIndex];
+//            newNoiseDistance = this.workers[workerID].getNoiseDistanceArray(tempTaskID)[budgetIndex];
+//            newNoiseDistance = this.workers[workerID].getToTaskDistance(tempTaskID);
 
-            if (winnerPackedArray[tempTaskID] == null || winnerPackedArray[tempTaskID].getWorkerID().equals(PrivacySolution.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID())) {
+            if (winnerPackedArray[tempTaskID] == null || winnerPackedArray[tempTaskID].getWorkerID().equals(NonPrivacySolution.DEFAULT_WORKER_ID_DISTANCE_PAIR.getWorkerID())) {
                 // 判断要竞争的 task 是否未被占有
                 beforeWinnerTaskValue = 0.0;
-                beforeWinnerEffectiveNoiseDistance = 0.0;
+                beforeWinnerDistance = 0.0;
             } else {
                 beforeWinnerTaskValue = this.tasks[tempTaskID].valuation;
-                beforeWinnerEffectiveNoiseDistance = winnerPackedArray[tempTaskID].getEffectiveNoiseDistance();
+                beforeWinnerDistance = winnerPackedArray[tempTaskID].getDistance();
             }
 
 
             // todo: 记得更新worker的Already published noise distance
-            tempEffectiveDistanceBudgetPair = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, tempTaskID, newNoiseDistance, newPrivacyBudget);
-            tempUtilityValue = getGTUtilityValue(this.tasks[tempTaskID].valuation, tempEffectiveDistanceBudgetPair.distance, tempEffectiveDistanceBudgetPair.budget, beforeWinnerTaskValue, beforeWinnerEffectiveNoiseDistance, abandonedBeforeValue, abandonedBeforeEffectiveNoiseDistance);
+//            tempDistance = getNewEffectiveNoiseDistanceAndPrivacyBudget(workerID, tempTaskID, newNoiseDistance, newPrivacyBudget);
+            tempDistance = this.workers[workerID].getToTaskDistance(tempTaskID);
+//            tempUtilityValue = getGTUtilityValue(this.tasks[tempTaskID].valuation, tempDistance.distance, tempDistance.budget, beforeWinnerTaskValue, beforeWinnerDistance, abandonedBeforeValue, abandonedBeforeDistance);
+            tempUtilityValue = getGTUtilityValue(this.tasks[tempTaskID].valuation, tempDistance, beforeWinnerTaskValue, beforeWinnerDistance, abandonedBeforeValue, abandonedBeforeDistance);
             if (tempUtilityValue > chosenUtilityValue) {
                 chosenTaskID = tempTaskID;
                 chosenUtilityValue = tempUtilityValue;
-                chosenEffectiveDistanceBudgetPair = tempEffectiveDistanceBudgetPair;
+                chosenDistance = tempDistance;
             }
         }
 
@@ -152,19 +151,14 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
 
 
         Double chosenTaskValue = this.tasks[chosenTaskID].valuation;
-        Integer budgetIncrement = 1;
         // 包含了新的 noise distance, new privacy budget, new total privacy cost
-        Double[] newBasicInfo = getNewNoiseDistancePrivacyBudgetTotalPrivacyBudgetCost(workerID, chosenTaskID);
+//        Double[] newBasicInfo = getNewNoiseDistancePrivacyBudgetTotalPrivacyBudgetCost(workerID, chosenTaskID);
 
-        Double chosenNewNoiseDistance = newBasicInfo[0];
-        Double chosenNewPrivacyBudget = newBasicInfo[1];
+        chosenDistance = this.workers[workerID].getToTaskDistance(chosenTaskID);
         // 默认隐私花费是线性的，每次就是多了一个新的privacyBudget
-        Double chosenNewTotalPrivacyCost = newBasicInfo[2];
-        Double chosenEffectiveNoiseDistance = chosenEffectiveDistanceBudgetPair.distance;
-        Double chosenEffectivePrivacyBudget = chosenEffectiveDistanceBudgetPair.budget;
-        winSuccessfulValue = getUtilityValue(chosenTaskValue, chosenEffectiveNoiseDistance, chosenNewTotalPrivacyCost);
+        winSuccessfulValue = getUtilityValue(chosenTaskValue, chosenDistance);
 
-        WorkerTaskUpdateInfo winnerInfo = new WorkerTaskUpdateInfo(chosenTaskID, chosenEffectiveNoiseDistance, chosenEffectivePrivacyBudget, workerID, budgetIncrement, chosenNewTotalPrivacyCost, chosenNewPrivacyBudget, chosenNewNoiseDistance, winSuccessfulValue);
+        WorkerTaskNonPrivacyUpdateInfo winnerInfo = new WorkerTaskNonPrivacyUpdateInfo(chosenTaskID, chosenDistance, workerID, winSuccessfulValue);
 
 
 
@@ -179,46 +173,32 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
         TaskWorkerIDSuccessfulValuationPair abandonedInfo = new TaskWorkerIDSuccessfulValuationPair(abandonedTaskID, workerID, abandonedSuccessfulValue);
 
 
-        Integer defeatedWorkerID = PrivacySolution.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID();
+        Integer defeatedWorkerID = NonPrivacySolution.DEFAULT_WORKER_ID_DISTANCE_PAIR.getWorkerID();
         if (winnerPackedArray[chosenTaskID] == null || (defeatedWorkerID = winnerPackedArray[chosenTaskID].getWorkerID()).equals(PrivacySolution.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID())) {
             // 判断要竞争的 task 是否未被占有
             defeatSuccessfulValue = 0.0;
         } else {
             beforeWinnerTaskValue = chosenTaskValue;
-            beforeWinnerEffectiveNoiseDistance = winnerPackedArray[chosenTaskID].getEffectiveNoiseDistance();
-            defeatSuccessfulValue = this.workers[defeatedWorkerID].getSuccessfullyUtilityFunctionValue(chosenTaskID) - GameTheoryNonPrivacyBasedSolution.getValueAndDistancePartOfUtilityValue(beforeWinnerTaskValue, beforeWinnerEffectiveNoiseDistance);
+            beforeWinnerDistance = winnerPackedArray[chosenTaskID].getDistance();
+            defeatSuccessfulValue = this.workers[defeatedWorkerID].getSuccessfullyUtilityFunctionValue(chosenTaskID) - GameTheoryNonPrivacyBasedSolution.getUtilityValue(beforeWinnerTaskValue, beforeWinnerDistance);
         }
 
         TaskWorkerIDSuccessfulValuationPair defeatedInfo = new TaskWorkerIDSuccessfulValuationPair(chosenTaskID, defeatedWorkerID, defeatSuccessfulValue);
 
-        return new ResponseWorkerTaskInfo(chosenUtilityValue, winnerInfo, abandonedInfo, defeatedInfo);
+        return new ResponseNonPrivacyWorkerTaskInfo(chosenUtilityValue, winnerInfo, abandonedInfo, defeatedInfo);
 
     }
 
-    protected void updateSuccessfulWorkerInfo(WorkerTaskUpdateInfo workerTaskUpdateInfo) {
-        Integer workerID = workerTaskUpdateInfo.getWorkerID();
-        Integer taskID = workerTaskUpdateInfo.getTaskID();
+    protected void updateSuccessfulWorkerInfo(WorkerTaskNonPrivacyUpdateInfo workerTaskNonPrivacyUpdateInfo) {
+        Integer workerID = workerTaskNonPrivacyUpdateInfo.getWorkerID();
+        Integer taskID = workerTaskNonPrivacyUpdateInfo.getTaskID();
 
-        if (PrivacySolution.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID().equals(workerID) || taskID.equals(-1)) {
+        if (NonPrivacySolution.DEFAULT_WORKER_ID_DISTANCE_PAIR.getWorkerID().equals(workerID) || taskID.equals(-1)) {
             return;
         }
 
-        Integer budgetIndexIncrement = workerTaskUpdateInfo.getBudgetIndexIncrement();
+        Double successfulUtilityFunctionValue = workerTaskNonPrivacyUpdateInfo.getNewSuccessfulUtilityFunctionValue();
 
-        Double effectiveNoiseDistance = workerTaskUpdateInfo.getEffectiveNoiseDistance();
-        Double effectivePrivacyBudget = workerTaskUpdateInfo.getEffectivePrivacyBudget();
-        Double privacyBudgetCost = workerTaskUpdateInfo.getNewTotalCostPrivacyBudget();
-
-        Double newNoiseDistance = workerTaskUpdateInfo.getNewNoiseDistance();
-        Double newPrivacyBudget = workerTaskUpdateInfo.getNewPrivacyBudget();
-
-        Double successfulUtilityFunctionValue = workerTaskUpdateInfo.getNewSuccessfulUtilityFunctionValue();
-
-        this.workers[workerID].setBudgetIndex(taskID, this.workers[workerID].getBudgetIndex(taskID) + budgetIndexIncrement);
-        this.workers[workerID].setEffectiveNoiseDistance(taskID, effectiveNoiseDistance);
-        this.workers[workerID].setEffectivePrivacyBudget(taskID, effectivePrivacyBudget);
-        this.workers[workerID].setTotalPrivacyBudgetCost(taskID, privacyBudgetCost);
-        this.workers[workerID].addElementToAlreadyPublishedNoiseDistanceAndBudgetTreeSet(taskID, new DistanceBudgetPair(newNoiseDistance, newPrivacyBudget));
         this.workers[workerID].setSuccessfullyUtilityFunctionValue(taskID, successfulUtilityFunctionValue);
         this.workers[workerID].setCurrentWinningState(taskID);
     }
@@ -226,7 +206,7 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
     protected void updateDefeatedWorkerInfo(TaskWorkerIDSuccessfulValuationPair workerTaskUpdateInfo) {
         Integer workerID = workerTaskUpdateInfo.getWorkerID();
         Integer taskID = workerTaskUpdateInfo.getTaskID();
-        if (PrivacySolution.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR.getWorkerID().equals(workerID) || taskID.equals(-1)) {
+        if (NonPrivacySolution.DEFAULT_WORKER_ID_DISTANCE_PAIR.getWorkerID().equals(workerID) || taskID.equals(-1)) {
             return;
         }
         Double successfulUtilityFunctionValue = workerTaskUpdateInfo.getSuccessfulUtilityValue();
@@ -239,34 +219,34 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
      * 数组的第一个是胜利worker，会调用updateSuccessfulWorkerInfo
      * 数组剩余两个是失败和遗弃(同时是胜利)worker，会调用updateDefeatedWorkerInfo
      */
-    public void updateWorkerInfo(ResponseWorkerTaskInfo responseWorkerTaskInfo) {
-        this.updateDefeatedWorkerInfo(responseWorkerTaskInfo.getAbandonedInfo());
-        this.updateDefeatedWorkerInfo(responseWorkerTaskInfo.getDefeatedInfo());
+    public void updateWorkerInfo(ResponseNonPrivacyWorkerTaskInfo responseNonPrivacyWorkerTaskInfo) {
+        this.updateDefeatedWorkerInfo(responseNonPrivacyWorkerTaskInfo.getAbandonedInfo());
+        this.updateDefeatedWorkerInfo(responseNonPrivacyWorkerTaskInfo.getDefeatedInfo());
         // 考虑到winning状态更新，必须将successful这个放在其他两个之后
-        this.updateSuccessfulWorkerInfo(responseWorkerTaskInfo.getWinnerInfo());
+        this.updateSuccessfulWorkerInfo(responseNonPrivacyWorkerTaskInfo.getWinnerInfo());
     }
 
-    private void updateWinnerList(ResponseWorkerTaskInfo responseWorkerTaskInfo, WorkerIDNoiseDistanceBudgetPair[] winnerPackedArray) {
-        WorkerTaskUpdateInfo winnerInfo = responseWorkerTaskInfo.getWinnerInfo();
-        TaskWorkerIDSuccessfulValuationPair abandonedInfo = responseWorkerTaskInfo.getAbandonedInfo();
+    private void updateWinnerList(ResponseNonPrivacyWorkerTaskInfo responseNonPrivacyWorkerTaskInfo, WorkerIDDistancePair[] winnerPackedArray) {
+        WorkerTaskNonPrivacyUpdateInfo winnerInfo = responseNonPrivacyWorkerTaskInfo.getWinnerInfo();
+        TaskWorkerIDSuccessfulValuationPair abandonedInfo = responseNonPrivacyWorkerTaskInfo.getAbandonedInfo();
 
         Integer abandonedTaskID = abandonedInfo.getTaskID();
         if (abandonedTaskID >= 0) {
-            winnerPackedArray[abandonedTaskID] = PrivacySolution.DEFAULT_WORKER_ID_DISTANCE_BUDGET_PAIR;
+            winnerPackedArray[abandonedTaskID] = NonPrivacySolution.DEFAULT_WORKER_ID_DISTANCE_PAIR;
         }
         Integer proposalTaskID = winnerInfo.getTaskID();
 
-        winnerPackedArray[proposalTaskID] = winnerInfo.getWorkerIDEffectiveNoiseDistancePair();
+        winnerPackedArray[proposalTaskID] = winnerInfo.getWorkerIDDistancePair();
 
     }
 
 
-    public WorkerIDNoiseDistanceBudgetPair[] compete() {
+    public WorkerIDDistancePair[] compete() {
         int k = 0;
-        WorkerIDNoiseDistanceBudgetPair[] winnerPackedArray = new WorkerIDNoiseDistanceBudgetPair[this.tasks.length];
+        WorkerIDDistancePair[] winnerPackedArray = new WorkerIDDistancePair[this.tasks.length];
         initializeAllocation(winnerPackedArray);
         boolean strategyChangeState = true;
-        ResponseWorkerTaskInfo tempResponseInfo;
+        ResponseNonPrivacyWorkerTaskInfo tempResponseInfo;
         Double tempGTValue;
         while (strategyChangeState) {
             strategyChangeState = false;
@@ -325,32 +305,34 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
         List<Double> workerRangeList;
-        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath, 1);
-        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 0.001);
+//        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath, 1);
+//        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 0.001);
 
 
         // 初始化 task 和 workers
-        GameTheoryNonPrivacyBasedSolution gameTheoryBasedSolution = new GameTheoryNonPrivacyBasedSolution();
+        GameTheoryNonPrivacyBasedSolution gameTheoryNonPrivacyBasedSolution = new GameTheoryNonPrivacyBasedSolution();
 
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
             taskValueArray = DoubleRead.readDouble(taskValuePath);
             workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
-            gameTheoryBasedSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            gameTheoryNonPrivacyBasedSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];
-            gameTheoryBasedSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+            gameTheoryNonPrivacyBasedSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
         }
 
         //todo: 根据不同的数据集选用不同的初始化
 //        multiTaskMultiCompetitionSolution.initializeAgents();
         Integer dataTypeValue = Integer.valueOf(dataType);
         if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
-            gameTheoryBasedSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+//            gameTheoryNonPrivacyBasedSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+            gameTheoryNonPrivacyBasedSolution.initializeAgents();
         } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
-            gameTheoryBasedSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+//            gameTheoryNonPrivacyBasedSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+            gameTheoryNonPrivacyBasedSolution.initializeAgentsWithLatitudeLongitude();
         } else {
             throw new RuntimeException("The type input is not right!");
         }
@@ -358,12 +340,12 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
 
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
-        WorkerIDNoiseDistanceBudgetPair[] winner = gameTheoryBasedSolution.compete();
+        WorkerIDDistancePair[] winner = gameTheoryNonPrivacyBasedSolution.compete();
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
 //        showResultA(winner);
-        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gameTheoryBasedSolution.workers);
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gameTheoryNonPrivacyBasedSolution.workers);
 
         CommonFunction.showResultB(winner);
 

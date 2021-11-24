@@ -10,9 +10,9 @@ public abstract class Solution {
     public static final int BUDGET_TAG = 1;
 
     // parameter for distance
-    public static final double alpha = 1;
+    public static double alpha = 1;
     // parameter for privacy budget
-    public static final double beta = 1;
+    public static double beta = 1;
 
 //    public static int proposalSize = Integer.MAX_VALUE;
     public Integer proposalSize = null;
@@ -24,9 +24,17 @@ public abstract class Solution {
         return alpha * distance;
     }
 
+    public static double transformValueToDistance(double value) {
+        return value / alpha;
+    }
+
     public static double transformPrivacyBudgetToValue(double privacyBudget) {
         // 要求该函数必须是线性函数，即满足 f(x+y) = f(x) + f(y)
         return beta * privacyBudget;
+    }
+
+    public static double transformValueToPrivacyBudget(double value) {
+        return value / beta;
     }
 
 

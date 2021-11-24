@@ -265,4 +265,10 @@ public class MyPrint {
             System.out.println(obj);
         }
     }
+
+    public static void showArray(Object[] objects) {
+        for (int i = 0; i < objects.length; i++) {
+            System.out.println(objects[i]);
+        }
+    }
 }

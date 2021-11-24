@@ -16,6 +16,7 @@ public abstract class NonPrivacySolution extends Solution { // Task value 保证
     public MultiTaskNonPrivacyWorker[] workers = null;
 
     public static WorkerIDDistancePair DEFAULT_WORKER_ID_DISTANCE_PAIR = new WorkerIDDistancePair(-1, Double.MAX_VALUE);
+    public static final Integer DEFAULT_WORKER_WINNING_STATE = -1;
 
     public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
         Point taskPosition, workerPosition;
@@ -106,7 +107,7 @@ public abstract class NonPrivacySolution extends Solution { // Task value 保证
     }
 
 
-    protected double getUtilityValue(double taskValue, double realDistance) {
+    public static double getUtilityValue(double taskValue, double realDistance) {
         return taskValue  - transformDistanceToValue(realDistance);
     }
 

@@ -2,6 +2,7 @@ package edu.ecnu.dll.scheme.scheme_main.struct.function;
 
 
 import edu.ecnu.dll.basic.basic_solution.PrivacySolution;
+import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.comparator.WorkerIDNoDistanceUtilityNoiseDistanceBudgetPairComparator;
 import edu.ecnu.dll.basic.basic_struct.data_structure.PreferenceTable;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair;
@@ -211,16 +212,17 @@ public class PrivacyUtilityConflictElimination {
      * @param taskIDBNextWorkerInfo
      * @return 如果 taskIDB 比 taskIDA 占优，返回true，否则返回false
      */
+    // todo: 需要修改以适应 distanceValue 函数
     protected boolean compareFourValuesWithSuccessor(WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair taskIDAWorkerInfo, WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair taskIDBWorkerInfo, WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair taskIDANextWorkerInfo, WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair taskIDBNextWorkerInfo) {
         double tempPCFValue;
 //        if (taskIDANextWorkerInfo == null || taskIDBNextWorkerInfo == null) {
 //            System.out.println("null");
 //        }
-        Double noDistanceUtilityA = taskIDAWorkerInfo.getNoDistanceUtility();
-        Double noDistanceUtilityB = taskIDBWorkerInfo.getNoDistanceUtility();
+        Double noDistanceUtilityA = Solution.transformValueToDistance(taskIDAWorkerInfo.getNoDistanceUtility());
+        Double noDistanceUtilityB = Solution.transformValueToDistance(taskIDBWorkerInfo.getNoDistanceUtility());
 
-        Double aNextNoDistanceUtility = taskIDANextWorkerInfo.getNoDistanceUtility();
-        Double bNextNoDistanceUtility = taskIDBNextWorkerInfo.getNoDistanceUtility();
+        Double aNextNoDistanceUtility = Solution.transformValueToDistance(taskIDANextWorkerInfo.getNoDistanceUtility());
+        Double bNextNoDistanceUtility = Solution.transformValueToDistance(taskIDBNextWorkerInfo.getNoDistanceUtility());
         Double aNextNoiseDistance = taskIDANextWorkerInfo.getEffectiveNoiseDistance();
         Double bNextNoiseDistance = taskIDBNextWorkerInfo.getEffectiveNoiseDistance();
         Double aNextBudget = taskIDANextWorkerInfo.getEffectivePrivacyBudget();
@@ -240,6 +242,7 @@ public class PrivacyUtilityConflictElimination {
      * @param taskIDBCurrentWorkerInfo
      * @return 如果 taskIDB 比 taskIDA 占优(Utility更大)，返回true，否则返回false
      */
+    // todo: 需要修改以适应 distanceValue 函数
     protected boolean compareWithCurrentInfo(WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair taskIDACurrentWorkerInfo, WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair taskIDBCurrentWorkerInfo) {
         double tempPCFValue;
         // PCF(B,A,B,A)
@@ -247,8 +250,8 @@ public class PrivacyUtilityConflictElimination {
         Double bNoiseDistance = taskIDBCurrentWorkerInfo.getEffectiveNoiseDistance();
         Double aBudget = taskIDACurrentWorkerInfo.getEffectivePrivacyBudget();
         Double bBudget = taskIDBCurrentWorkerInfo.getEffectivePrivacyBudget();
-        Double aNoDistanceUtility = taskIDACurrentWorkerInfo.getNoDistanceUtility();
-        Double bNoDistanceUtility = taskIDBCurrentWorkerInfo.getNoDistanceUtility();
+        Double aNoDistanceUtility = Solution.transformValueToDistance(taskIDACurrentWorkerInfo.getNoDistanceUtility());
+        Double bNoDistanceUtility = Solution.transformValueToDistance(taskIDBCurrentWorkerInfo.getNoDistanceUtility());
 
         tempPCFValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(bNoiseDistance, aNoiseDistance + bNoDistanceUtility - aNoDistanceUtility, bBudget, aBudget);
         if (tempPCFValue > 0.5) {

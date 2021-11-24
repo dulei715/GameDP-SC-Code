@@ -108,6 +108,19 @@ public class CommonFunction {
 
     }
 
+    public static double getResultData(UtilityDistanceIDPair[] winner) {
+        double result = 0.0;
+        UtilityDistanceIDPair utilityDistanceIDPair = null;
+        for (int i = 0; i < winner.length; i++) {
+            utilityDistanceIDPair = winner[i];
+            if (utilityDistanceIDPair == null) {
+                continue;
+            }
+            result += utilityDistanceIDPair.getUtility();
+        }
+        return result;
+    }
+
     public static void showResultA(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {
         int serveredTaskSize = 0;
         for (int i = 0; i < winnerTaskWorkerPackedArray.length; i++) {
@@ -242,5 +255,4 @@ public class CommonFunction {
         MyPrint.showList(competeFailureTaskIDList);
 
     }
-
 }

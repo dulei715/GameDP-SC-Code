@@ -343,12 +343,30 @@ public class MainDataSetGenerator {
 
 
 //        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
-        String parentDirSYN = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
-        MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(parentDirSYN);
-//        boolean isLongitudeLatitude = true;
+        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset\\";
+        String[] inputParentPath = new String[]{
+                "task_worker_1_1_0",
+                "task_worker_1_1_5",
+                "task_worker_1_2_0",
+                "task_worker_1_2_5",
+                "task_worker_1_3_0",
+                "task_worker_1_3_5",
+        };
+//        String[] outputPath = new String[]{
+//                "task_worker_1_1_0\\worker_point.txt",
+//                "task_worker_1_1_5\\worker_point.txt",
+//                "task_worker_1_2_0\\worker_point.txt",
+//                "task_worker_1_2_5\\worker_point.txt",
+//                "task_worker_1_3_0\\worker_point.txt",
+//                "task_worker_1_3_5\\worker_point.txt",
+//        };
         boolean isLongitudeLatitude = false;
+        for (int i = 0; i < inputParentPath.length; i++) {
+            MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(basicPath + inputParentPath[i]);
+            MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(basicPath + inputParentPath[i], isLongitudeLatitude);
+        }
+//        boolean isLongitudeLatitude = true;
 //        double factor = 0.001;
-        MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(parentDirSYN, isLongitudeLatitude);
 
     }
 }

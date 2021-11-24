@@ -1,13 +1,17 @@
 package edu.ecnu.dll.run.run_main;
 
+import edu.ecnu.dll.basic.basic_solution.PrivacySolution;
+import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.BasicExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.ExtendedExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.PackNormalExperimentResult;
+import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.result_tools.TargetTool;
 import edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task.NoiseDistanceConflictEliminationBasedSolution;
+import edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task.UtilityConflictEliminationBasedSolution;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
@@ -18,8 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MultiTaskMultiCompleteRun extends AbstractRun {
-    public static NormalExperimentResult runningOnSingleDataset(String parentPath, String dataType, boolean ppcfState, double[] fixedTaskValueAndWorkerRange, Integer proposalSize) {
+public class ConflictEliminationCompleteRun extends AbstractRun {
+    public static ExtendedExperimentResult runningOnSingleDataset(String parentPath, String dataType, boolean ppcfState, double[] fixedTaskValueAndWorkerRange, Integer proposalSize) {
         // 从数据库读数据
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
         String basicDatasetPath = parentPath;
@@ -166,7 +170,7 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
 //        System.out.println(normalExperimentResult);
     }
 
-    public static void main(String[] args) {
+    public static void main3(String[] args) {
         String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
 //        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\test";
         String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
@@ -186,6 +190,80 @@ public class MultiTaskMultiCompleteRun extends AbstractRun {
             System.out.println(normalExperimentResult);
         }
 
+    }
+
+    public static NormalExperimentResult runningOnSingleDatasetWithDistanceConflictElimination(List<Point> taskPointList, List<Point> workerPointList, List<Double[]>[] workerPrivacyBudgetList, List<Double[]>[] workerNoiseDistanceList,
+                                                                boolean ppcfState, double taskValue, double workerRange, Integer proposalSize, String dataType) {
+
+        // 初始化 task 和 workers
+        NoiseDistanceConflictEliminationBasedSolution privacySolution = new NoiseDistanceConflictEliminationBasedSolution();
+
+
+        privacySolution.proposalSize = proposalSize;
+
+        privacySolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+        Integer dataTypeValue = Integer.valueOf(dataType);
+        if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
+            privacySolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
+            privacySolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else {
+            throw new RuntimeException("The type input is not right!");
+        }
+
+
+        // 执行竞争过程
+        long startCompetingTime = System.currentTimeMillis();
+        WorkerIDNoiseDistanceBudgetPair[] winner = privacySolution.compete(ppcfState);
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, privacySolution.workers);
+
+        NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
+        ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, proposalSize, taskValue, workerRange);
+
+        return extendedExperimentResult;
+    }
+
+    public static ExtendedExperimentResult runningOnSingleDatasetWithUtilityConflictElimination(List<Point> taskPointList, List<Point> workerPointList, List<Double[]>[] workerPrivacyBudgetList, List<Double[]>[] workerNoiseDistanceList,
+                                                                                               boolean ppcfState, double taskValue, double workerRange, Integer proposalSize, String dataType) {
+
+        // 初始化 task 和 workers
+        UtilityConflictEliminationBasedSolution uConflictSolution = new UtilityConflictEliminationBasedSolution();
+
+
+        uConflictSolution.proposalSize = proposalSize;
+
+        uConflictSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+        Integer dataTypeValue = Integer.valueOf(dataType);
+        if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
+            uConflictSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
+            uConflictSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else {
+            throw new RuntimeException("The type input is not right!");
+        }
+
+
+        // 执行竞争过程
+        long startCompetingTime = System.currentTimeMillis();
+        WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair[] winner = uConflictSolution.compete(ppcfState);
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, uConflictSolution.workers);
+
+        NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
+        ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, proposalSize, taskValue, workerRange);
+
+        return extendedExperimentResult;
     }
 
 }

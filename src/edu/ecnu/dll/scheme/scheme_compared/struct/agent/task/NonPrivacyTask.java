@@ -25,6 +25,9 @@ public class NonPrivacyTask extends Task {
     }
 
     public UtilityDistanceIDPair getFirstElement() {
+        if (utilityDistanceWorkerIDSet.isEmpty()) {
+            return null;
+        }
         return utilityDistanceWorkerIDSet.first();
     }
 

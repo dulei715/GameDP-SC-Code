@@ -1,6 +1,7 @@
 package edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task;
 
 import edu.ecnu.dll.basic.basic_solution.PrivacySolution;
+import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.comparator.TargetInfoComparator;
 import edu.ecnu.dll.basic.basic_struct.comparator.WorkerIDNoDistanceUtilityNoiseDistanceBudgetPairComparator;
 import edu.ecnu.dll.basic.basic_struct.data_structure.PreferenceTable;
@@ -301,11 +302,17 @@ public class UtilityConflictEliminationBasedSolution extends PrivacySolution {
     }
 
     public static void main(String[] args) {
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test\\test1";
-        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
-        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
+//        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
+        Solution.alpha = 0.001;
+        Solution.beta = 1;
+
+        double[] fixedTaskValueAndWorkerRange = new double[]{40.0, 4000};
+//        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
+        Integer dataType = AbstractRun.COORDINATE;
 
 
         String workerPointPath = basicDatasetPath + "\\worker_point.txt";

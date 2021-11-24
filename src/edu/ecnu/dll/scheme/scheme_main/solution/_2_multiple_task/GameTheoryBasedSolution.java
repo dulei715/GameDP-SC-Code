@@ -1,5 +1,6 @@
 package edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task;
 
+import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.comparator.TargetInfoComparator;
 import edu.ecnu.dll.basic.basic_struct.pack.TaskWorkerIDSuccessfulValuationPair;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.BasicExperimentResult;
@@ -305,7 +306,10 @@ public class GameTheoryBasedSolution extends PrivacySolution {
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
         String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
 //        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
-        double[] fixedTaskValueAndWorkerRange = new double[]{400.0, 400};
+        Solution.alpha = 0.001;
+        Solution.beta = 1;
+
+        double[] fixedTaskValueAndWorkerRange = new double[]{40.0, 4000};
 //        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
         Integer dataType = AbstractRun.COORDINATE;
 
@@ -323,7 +327,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
         List<Double> workerRangeList;
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath, 1);
-        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 0.001);
+        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 1);
 
 
         // 初始化 task 和 workers
@@ -369,6 +373,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
 
 //        System.out.println(normalExperimentResult);
         System.out.println(extendedExperimentResult);
+
     }
 
 

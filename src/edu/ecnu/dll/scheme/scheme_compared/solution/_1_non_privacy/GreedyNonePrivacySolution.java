@@ -1,9 +1,11 @@
 package edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy;
 
+import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.pack.UtilityDistanceIDPair;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.result_tools.TargetTool;
 import edu.ecnu.dll.basic.basic_solution.NonPrivacySolution;
+import edu.ecnu.dll.run.run_main.AbstractRun;
 import tools.basic.BasicCalculation;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
@@ -55,6 +57,9 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
         Integer tempWorkerID;
         for (int i = 0; i < this.tasks.length; i++) {
             tempPair = this.tasks[i].getFirstElement();
+            if (tempPair == null) {
+                continue;
+            }
             if(tempPair.getUtility() <= 0) {
                 continue;
             }
@@ -71,7 +76,16 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
 
     public static void main(String[] args) {
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
+
+//        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
+        Solution.alpha = 0.001;
+        Solution.beta = 1;
+
+        double[] fixedTaskValueAndWorkerRange = new double[]{40.0, 4000};
+//        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
+        Integer dataType = AbstractRun.COORDINATE;
 
         String workerPointPath = basicDatasetPath + "\\worker_point.txt";
         String taskPointPath = basicDatasetPath + "\\task_point.txt";
@@ -90,24 +104,46 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
 
 
         // 初始化 task 和 workers
-        Double taskValue = 20.0, workerRange = 2.0;
+        Double taskValue , workerRange;
         GreedyNonePrivacySolution competitionSolution = new GreedyNonePrivacySolution();
-        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+//        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+
+        if (fixedTaskValueAndWorkerRange == null) {
+            taskValueArray = DoubleRead.readDouble(taskValuePath);
+            workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+            competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+        } else {
+            taskValue = fixedTaskValueAndWorkerRange[0];
+            workerRange = fixedTaskValueAndWorkerRange[1];
+            competitionSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+        }
 
 
         //todo: 根据不同的数据集选用不同的初始化
 //        multiTaskMultiCompetitionSolution.initializeAgents();
 //        Integer dataTypeValue = Integer.valueOf(dataType);
-        competitionSolution.initializeAgentsWithLatitudeLongitude();
+//        competitionSolution.initializeAgentsWithLatitudeLongitude();
+        Integer dataTypeValue = Integer.valueOf(dataType);
+        if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
+            competitionSolution.initializeAgents();
+        } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
+            competitionSolution.initializeAgentsWithLatitudeLongitude();
+        } else {
+            throw new RuntimeException("The type input is not right!");
+        }
 
         long startCompetingTime = System.currentTimeMillis();
         UtilityDistanceIDPair[] winner = competitionSolution.greedy();
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
+        double totalUtility = CommonFunction.getResultData(winner);
+
         System.out.println(runningTime);
 
         CommonFunction.showResultB(winner);
+
+        System.out.println("Total utility: " + totalUtility);
 
 
 

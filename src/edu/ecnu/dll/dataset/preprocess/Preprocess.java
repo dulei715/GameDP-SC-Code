@@ -156,11 +156,27 @@ public class Preprocess {
 //        Preprocess.extractTSMCNYCAndTKYToDataset(parentInputPath, parentOutputPath);
 
         String inputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_point.txt";
-        String outputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default\\worker_point.txt";
+        String outputBasic = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset\\";
+        String[] outputPath = new String[]{
+                "task_worker_1_1_0\\worker_point.txt",
+                "task_worker_1_1_5\\worker_point.txt",
+                "task_worker_1_2_0\\worker_point.txt",
+                "task_worker_1_2_5\\worker_point.txt",
+                "task_worker_1_3_0\\worker_point.txt",
+                "task_worker_1_3_5\\worker_point.txt",
+        };
+        double[] scales = new double[] {
+                1, 1.5, 2, 2.5, 3, 3.5
+        };
         int taskSize = 1286;
-        int workerSize = (int)(taskSize*3.5);
-        System.out.println(workerSize);
-        extractRandomPointByGivenSize(inputPath, outputPath, workerSize);
+        double tempScale;
+        int workerSize;
+        for (int i = 0; i < scales.length; i++) {
+            tempScale = scales[i];
+            workerSize = (int)(taskSize*tempScale);
+            extractRandomPointByGivenSize(inputPath, outputBasic + outputPath[i], workerSize);
+        }
+//        System.out.println(workerSize);
     }
 
 }

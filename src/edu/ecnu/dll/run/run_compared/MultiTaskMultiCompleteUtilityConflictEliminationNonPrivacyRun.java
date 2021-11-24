@@ -1,5 +1,6 @@
 package edu.ecnu.dll.run.run_compared;
 
+import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.BasicExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDDistancePair;
@@ -69,9 +70,19 @@ public class MultiTaskMultiCompleteUtilityConflictEliminationNonPrivacyRun exten
     }
 
     public static void main(String[] args) {
-        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
+//        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\SYN";
 //        String parentPath = "E:\\\\1.学习\\\\4.数据集\\\\1.FourSquare-NYCandTokyoCheck-ins\\\\output\\\\test";
-        String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
+//        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
+        Solution.alpha = 0.001;
+        Solution.beta = 1;
+
+        double[] fixedTaskValueAndWorkerRange = new double[]{40.0, 4000};
+//        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
+        String dataType = AbstractRun.COORDINATE.toString();
+//        String dataType = String.valueOf(AbstractRun.LONGITUDE_LATITUDE);
+
+
         int proposalSizeNumber = 60;
         List<Integer> proposalSizeList = new ArrayList<>();
         for (int i = 0; i < proposalSizeNumber; i++) {
@@ -81,10 +92,10 @@ public class MultiTaskMultiCompleteUtilityConflictEliminationNonPrivacyRun exten
 //        Integer[] proposalSize = new Integer[]{1, 4, 7, 10, 13, 16, 19, 22, 25, 28, Integer.MAX_VALUE};
         Integer[] proposalSize = proposalSizeList.toArray(new Integer[0]);
 //        String workerChosenState = String.valueOf(MultiTaskMultiCompetitionNonPrivacySolution.UTILITY_WITH_TASK_ENTROPY);
-        double[] valueRange = new double[]{20,4};
+//        double[] valueRange = new double[]{20,4};
 
         for (int i = 0; i < proposalSize.length; i++) {
-            NormalExperimentResult normalExperimentResult = runningOnSingleDataset(parentPath, dataType, valueRange, proposalSize[i]);
+            NormalExperimentResult normalExperimentResult = runningOnSingleDataset(basicDatasetPath, dataType, fixedTaskValueAndWorkerRange, proposalSize[i]);
             System.out.println(normalExperimentResult);
         }
 
