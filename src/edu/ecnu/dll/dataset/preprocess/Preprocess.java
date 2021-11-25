@@ -1,5 +1,6 @@
 package edu.ecnu.dll.dataset.preprocess;
 
+import tools.basic.StringUtil;
 import tools.io.read.CSVRead;
 import tools.io.read.OrderRead;
 import tools.io.read.PointRead;
@@ -9,9 +10,63 @@ import tools.struct.Order;
 import tools.struct.Point;
 import tools.struct.Taxi;
 
+import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class Preprocess {
+
+    public static void multipleDataWithFirstLineUnchanged(String inputPath, String outputPath, Double factorK, Double constA, String split) {
+        BufferedReader bufferedReader = null;
+        BufferedWriter bufferedWriter = null;
+        String readLine, writeLine;
+        try {
+            bufferedReader = new BufferedReader(new FileReader(inputPath));
+            File outputFile = new File(outputPath);
+            File outputParentFile = outputFile.getParentFile();
+            if (!outputParentFile.exists()) {
+                outputParentFile.mkdirs();
+            }
+            if (!outputFile.exists()) {
+                outputFile.createNewFile();
+            }
+            bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+            readLine = bufferedReader.readLine();
+            bufferedWriter.write(readLine);
+            bufferedWriter.newLine();
+
+            String[] splitLine;
+            Double[] values;
+            Double tempValue;
+            while ((readLine = bufferedReader.readLine()) != null) {
+                readLine = readLine.trim();
+                splitLine = readLine.split(split);
+                values = new Double[splitLine.length];
+                for (int i = 0; i < splitLine.length; i++) {
+                    tempValue = Double.valueOf(splitLine[i]);
+                    tempValue = tempValue * factorK + constA;
+                    values[i] = tempValue;
+                }
+                writeLine = StringUtil.concat(split, values);
+                bufferedWriter.write(writeLine);
+                bufferedWriter.newLine();
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedWriter.close();
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     public static void extractChengduDataToDataset(String inputDataParentPath, String outputParentPath) {
         String nodeFileName = "\\chengdu.node";
         String taxiFileName = "\\chengdu_taxi.txt";

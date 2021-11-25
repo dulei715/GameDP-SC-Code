@@ -103,11 +103,24 @@ public class BasicTest {
 
     }
 
+    @Test
+    public void basicFun1() {
+        Double valueA = Double.MAX_VALUE;
+        Double valueB = Double.MIN_VALUE;
+        Double valueC = valueB - valueA;
+        System.out.println(valueA);
+        System.out.println(valueB);
+        System.out.println(valueC);
+        System.out.println(valueA*valueB);
+        System.out.println(valueB == 0);
+    }
+
 
     @Test
     public void fun9(){
 //        String path = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_budget.txt";
-        String path = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default\\worker_noise_distance.txt";
+//        String path = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default\\worker_noise_distance.txt";
+        String path = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset\\task_worker_1_2_0\\" +  "worker_noise_distance.txt";
         List<Double[]>[] lists = TwoDimensionDoubleRead.readTopKDouble(path, 10);
         for (int i = 0; i < lists.length; i++) {
             for (Double[] doubles : lists[i]) {

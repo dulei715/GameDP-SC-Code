@@ -8,19 +8,17 @@ import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.BasicExperime
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.ExtendedExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.multi_agent_info.ResponseNonPrivacyWorkerTaskInfo;
-import edu.ecnu.dll.basic.basic_struct.pack.multi_agent_info.ResponseWorkerTaskInfo;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.*;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.result_tools.TargetTool;
 import edu.ecnu.dll.run.run_main.AbstractRun;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
-import tools.io.read.TwoDimensionDoubleRead;
 import tools.struct.Point;
 
 import java.util.List;
 
-public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
+public class GameTheoryNonPrivacySolution extends NonPrivacySolution {
 
 
     public static TargetInfoComparator targetInfoComparator = new TargetInfoComparator(TargetInfoComparator.DESCENDING);
@@ -180,7 +178,7 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
         } else {
             beforeWinnerTaskValue = chosenTaskValue;
             beforeWinnerDistance = winnerPackedArray[chosenTaskID].getDistance();
-            defeatSuccessfulValue = this.workers[defeatedWorkerID].getSuccessfullyUtilityFunctionValue(chosenTaskID) - GameTheoryNonPrivacyBasedSolution.getUtilityValue(beforeWinnerTaskValue, beforeWinnerDistance);
+            defeatSuccessfulValue = this.workers[defeatedWorkerID].getSuccessfullyUtilityFunctionValue(chosenTaskID) - GameTheoryNonPrivacySolution.getUtilityValue(beforeWinnerTaskValue, beforeWinnerDistance);
         }
 
         TaskWorkerIDSuccessfulValuationPair defeatedInfo = new TaskWorkerIDSuccessfulValuationPair(chosenTaskID, defeatedWorkerID, defeatSuccessfulValue);
@@ -242,7 +240,7 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
 
 
     public WorkerIDDistancePair[] compete() {
-        int k = 0;
+//        int k = 0;
         WorkerIDDistancePair[] winnerPackedArray = new WorkerIDDistancePair[this.tasks.length];
         initializeAllocation(winnerPackedArray);
         boolean strategyChangeState = true;
@@ -251,7 +249,7 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
         while (strategyChangeState) {
             strategyChangeState = false;
             // 重复迭代所有worker
-            ++k;
+//            ++k;
             for (int workerID = 0; workerID < workers.length; workerID++) {
                 /**
                  *  针对每个worker，选出使其GTUtility最大的task
@@ -276,7 +274,7 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
             }
         }
 
-        System.out.println(k);
+//        System.out.println(k);
         return winnerPackedArray;
 
     }
@@ -310,18 +308,18 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
 
 
         // 初始化 task 和 workers
-        GameTheoryNonPrivacyBasedSolution gameTheoryNonPrivacyBasedSolution = new GameTheoryNonPrivacyBasedSolution();
+        GameTheoryNonPrivacySolution gameTheoryNonPrivacySolution = new GameTheoryNonPrivacySolution();
 
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
             taskValueArray = DoubleRead.readDouble(taskValuePath);
             workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
-            gameTheoryNonPrivacyBasedSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            gameTheoryNonPrivacySolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];
-            gameTheoryNonPrivacyBasedSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+            gameTheoryNonPrivacySolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
         }
 
         //todo: 根据不同的数据集选用不同的初始化
@@ -329,10 +327,10 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
         Integer dataTypeValue = Integer.valueOf(dataType);
         if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
 //            gameTheoryNonPrivacyBasedSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
-            gameTheoryNonPrivacyBasedSolution.initializeAgents();
+            gameTheoryNonPrivacySolution.initializeAgents();
         } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
 //            gameTheoryNonPrivacyBasedSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
-            gameTheoryNonPrivacyBasedSolution.initializeAgentsWithLatitudeLongitude();
+            gameTheoryNonPrivacySolution.initializeAgentsWithLatitudeLongitude();
         } else {
             throw new RuntimeException("The type input is not right!");
         }
@@ -340,12 +338,12 @@ public class GameTheoryNonPrivacyBasedSolution extends NonPrivacySolution {
 
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
-        WorkerIDDistancePair[] winner = gameTheoryNonPrivacyBasedSolution.compete();
+        WorkerIDDistancePair[] winner = gameTheoryNonPrivacySolution.compete();
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
 //        showResultA(winner);
-        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gameTheoryNonPrivacyBasedSolution.workers);
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gameTheoryNonPrivacySolution.workers);
 
         CommonFunction.showResultB(winner);
 

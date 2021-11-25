@@ -6,7 +6,7 @@ import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerID
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.run_main.AbstractRun;
 import edu.ecnu.dll.run.result_tools.TargetTool;
-import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.DistanceConflictEliminationBasedNonPrivacySolution;
+import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.DistanceConflictEliminationNonPrivacySolution;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
 import tools.struct.Point;
@@ -33,7 +33,7 @@ public class MultiTaskMultiCompleteDistanceConflictEliminationNonPrivacyRun exte
 
 
         // 初始化 task 和 workers
-        DistanceConflictEliminationBasedNonPrivacySolution competitionSolution = new DistanceConflictEliminationBasedNonPrivacySolution();
+        DistanceConflictEliminationNonPrivacySolution competitionSolution = new DistanceConflictEliminationNonPrivacySolution();
 //        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         competitionSolution.proposalSize = proposalSize;
         Double taskValue = null, workerRange = null;
@@ -59,7 +59,7 @@ public class MultiTaskMultiCompleteDistanceConflictEliminationNonPrivacyRun exte
 
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
-        WorkerIDDistancePair[] winner = competitionSolution.complete();
+        WorkerIDDistancePair[] winner = competitionSolution.compete();
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 

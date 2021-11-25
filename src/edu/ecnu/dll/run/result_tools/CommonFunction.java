@@ -1,5 +1,6 @@
 package edu.ecnu.dll.run.result_tools;
 
+import edu.ecnu.dll.basic.basic_solution.NonPrivacySolution;
 import edu.ecnu.dll.basic.basic_struct.agent.Worker;
 import edu.ecnu.dll.basic.basic_struct.comparator.TaskWorkerIDComparator;
 import edu.ecnu.dll.basic.basic_struct.pack.TaskWorkerIDPair;
@@ -72,11 +73,6 @@ public class CommonFunction {
 
     // for non privacy
     public static BasicExperimentResult getResultData(WorkerIDDistancePair[] winnerTaskWorkerPackedArray, Worker[] workers) {
-        TaskWorkerIDPair[] taskWorkerIDPairArray;
-        List<TaskWorkerIDPair> taskWorkerIDPairList = new ArrayList<>();
-
-        List<Integer> nonCompeteTaskIDList = new ArrayList<>();
-        List<Integer> competeFailureTaskIDList = new ArrayList<>();
 
         Integer totalTaskSize = winnerTaskWorkerPackedArray.length;
         Integer totalWorkerSize = workers.length;
@@ -108,7 +104,7 @@ public class CommonFunction {
 
     }
 
-    public static double getResultData(UtilityDistanceIDPair[] winner) {
+    public static double getResultUtilityData(UtilityDistanceIDPair[] winner) {
         double result = 0.0;
         UtilityDistanceIDPair utilityDistanceIDPair = null;
         for (int i = 0; i < winner.length; i++) {
@@ -119,6 +115,26 @@ public class CommonFunction {
             result += utilityDistanceIDPair.getUtility();
         }
         return result;
+    }
+
+    public static BasicExperimentResult getResultData(UtilityDistanceIDPair[] winner, int workerSize) {
+        double result = 0.0;
+        double totalDistance = 0.0;
+        int winnerWorkerSize = 0;
+        int failureTaskSize = 0;
+        UtilityDistanceIDPair utilityDistanceIDPair = null;
+        for (int i = 0; i < winner.length; i++) {
+            utilityDistanceIDPair = winner[i];
+            if (utilityDistanceIDPair == null || utilityDistanceIDPair.getId().equals(NonPrivacySolution.DEFAULT_WORKER_ID_DISTANCE_PAIR.getWorkerID())) {
+                ++ failureTaskSize;
+                continue;
+            }
+            ++ winnerWorkerSize;
+            result += utilityDistanceIDPair.getUtility();
+            totalDistance += utilityDistanceIDPair.getDistance();
+        }
+        // Integer totalTaskSize, Integer totalWorkerSize, Integer totalUnServedTaskSize, Integer totalAllocatedWorkerSize, Double totalWinnerUtility, Double totalFailureUtility, Double realTravelDistance
+        return new BasicExperimentResult(winner.length, workerSize, failureTaskSize, winnerWorkerSize, result, 0.0, totalDistance);
     }
 
     public static void showResultA(WorkerIDNoiseDistanceBudgetPair[] winnerTaskWorkerPackedArray) {

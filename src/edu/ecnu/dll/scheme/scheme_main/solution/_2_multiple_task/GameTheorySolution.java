@@ -21,7 +21,7 @@ import tools.struct.Point;
 
 import java.util.List;
 
-public class GameTheoryBasedSolution extends PrivacySolution {
+public class GameTheorySolution extends PrivacySolution {
 
 
     public static TargetInfoComparator targetInfoComparator = new TargetInfoComparator(TargetInfoComparator.DESCENDING);
@@ -83,7 +83,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
             abandonedBeforeValue = this.tasks[abandonedTaskID].valuation;
             // todo: 记得更新 effective noise distance
             abandonedBeforeEffectiveNoiseDistance = this.workers[workerID].getEffectiveNoiseDistance(abandonedTaskID);
-            Double decreaseValuation = GameTheoryBasedSolution.getValueAndDistancePartOfUtilityValue(abandonedBeforeValue, abandonedBeforeEffectiveNoiseDistance);
+            Double decreaseValuation = GameTheorySolution.getValueAndDistancePartOfUtilityValue(abandonedBeforeValue, abandonedBeforeEffectiveNoiseDistance);
             abandonedSuccessfulValue = this.workers[workerID].getSuccessfullyUtilityFunctionValue(abandonedTaskID) - decreaseValuation;
         }
 
@@ -184,7 +184,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
         } else {
             beforeWinnerTaskValue = chosenTaskValue;
             beforeWinnerEffectiveNoiseDistance = winnerPackedArray[chosenTaskID].getEffectiveNoiseDistance();
-            defeatSuccessfulValue = this.workers[defeatedWorkerID].getSuccessfullyUtilityFunctionValue(chosenTaskID) - GameTheoryBasedSolution.getValueAndDistancePartOfUtilityValue(beforeWinnerTaskValue, beforeWinnerEffectiveNoiseDistance);
+            defeatSuccessfulValue = this.workers[defeatedWorkerID].getSuccessfullyUtilityFunctionValue(chosenTaskID) - GameTheorySolution.getValueAndDistancePartOfUtilityValue(beforeWinnerTaskValue, beforeWinnerEffectiveNoiseDistance);
         }
 
         TaskWorkerIDSuccessfulValuationPair defeatedInfo = new TaskWorkerIDSuccessfulValuationPair(chosenTaskID, defeatedWorkerID, defeatSuccessfulValue);
@@ -260,7 +260,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
 
 
     public WorkerIDNoiseDistanceBudgetPair[] compete() {
-        int k = 0;
+//        int k = 0;
         WorkerIDNoiseDistanceBudgetPair[] winnerPackedArray = new WorkerIDNoiseDistanceBudgetPair[this.tasks.length];
         initializeAllocation(winnerPackedArray);
         boolean strategyChangeState = true;
@@ -269,7 +269,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
         while (strategyChangeState) {
             strategyChangeState = false;
             // 重复迭代所有worker
-            ++k;
+//            ++k;
             for (int workerID = 0; workerID < workers.length; workerID++) {
                 /**
                  *  针对每个worker，选出使其GTUtility最大的task
@@ -294,7 +294,7 @@ public class GameTheoryBasedSolution extends PrivacySolution {
             }
         }
 
-        System.out.println(k);
+//        System.out.println(k);
         return winnerPackedArray;
 
     }
@@ -331,27 +331,27 @@ public class GameTheoryBasedSolution extends PrivacySolution {
 
 
         // 初始化 task 和 workers
-        GameTheoryBasedSolution gameTheoryBasedSolution = new GameTheoryBasedSolution();
+        GameTheorySolution gameTheorySolution = new GameTheorySolution();
 
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
             taskValueArray = DoubleRead.readDouble(taskValuePath);
             workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
-            gameTheoryBasedSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            gameTheorySolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];
-            gameTheoryBasedSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+            gameTheorySolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
         }
 
         //todo: 根据不同的数据集选用不同的初始化
 //        multiTaskMultiCompetitionSolution.initializeAgents();
         Integer dataTypeValue = Integer.valueOf(dataType);
         if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
-            gameTheoryBasedSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+            gameTheorySolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
         } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
-            gameTheoryBasedSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+            gameTheorySolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
         } else {
             throw new RuntimeException("The type input is not right!");
         }
@@ -359,12 +359,12 @@ public class GameTheoryBasedSolution extends PrivacySolution {
 
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
-        WorkerIDNoiseDistanceBudgetPair[] winner = gameTheoryBasedSolution.compete();
+        WorkerIDNoiseDistanceBudgetPair[] winner = gameTheorySolution.compete();
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
 //        showResultA(winner);
-        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gameTheoryBasedSolution.workers);
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gameTheorySolution.workers);
 
         CommonFunction.showResultB(winner);
 

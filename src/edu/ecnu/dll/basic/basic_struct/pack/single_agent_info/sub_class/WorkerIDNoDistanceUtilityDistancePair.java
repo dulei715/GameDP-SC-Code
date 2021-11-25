@@ -1,5 +1,7 @@
 package edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class;
 
+import edu.ecnu.dll.basic.basic_solution.Solution;
+
 public class WorkerIDNoDistanceUtilityDistancePair extends WorkerIDDistancePair {
     private Double noDistanceUtility = null;
 
@@ -20,7 +22,7 @@ public class WorkerIDNoDistanceUtilityDistancePair extends WorkerIDDistancePair 
     }
 
     public Double getUtility() {
-        return noDistanceUtility - distance;
+        return noDistanceUtility - Solution.transformDistanceToValue(distance);
     }
 
     @Override

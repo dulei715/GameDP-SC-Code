@@ -23,7 +23,7 @@ import tools.struct.Point;
 
 import java.util.*;
 
-public class NoiseDistanceConflictEliminationBasedSolution extends PrivacySolution {
+public class NoiseDistanceConflictEliminationSolution extends PrivacySolution {
 
 
 
@@ -98,6 +98,13 @@ public class NoiseDistanceConflictEliminationBasedSolution extends PrivacySoluti
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
 
+            // Utility 函数判断
+            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
+            if (tempNewUtilityValue <= 0) {
+                this.workers[workerID].setBudgetIndex(i, Integer.MAX_VALUE);
+                continue;
+            }
+
             // PCF 判断
             double pcfValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(tempCompeteDistance, lastTermTaskWinnerPackedArray[i].getEffectiveNoiseDistance(), tempEffectivePrivacyBudget, lastTermTaskWinnerPackedArray[i].getEffectivePrivacyBudget());
             if (pcfValue <= 0.5) {
@@ -105,15 +112,6 @@ public class NoiseDistanceConflictEliminationBasedSolution extends PrivacySoluti
             }
 
 
-            // Utility 函数判断
-//            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
-            Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
-//            if (tempNewUtilityValue <= 0  || tempNewUtilityValue <= this.workers[workerID].successfullyUtilityFunctionValue[i]) {
-//                continue;
-//            }
-            if (tempNewUtilityValue <= 0) {
-                continue;
-            }
 
 
 
@@ -198,7 +196,7 @@ public class NoiseDistanceConflictEliminationBasedSolution extends PrivacySoluti
         HashSet<Integer>[] competedWorkerIDSet = new HashSet[this.tasks.length];
 
         // 记录worker竞争时临时效用函数值
-        double[] tempUtilityArray = new double[this.workers.length];
+//        double[] tempUtilityArray = new double[this.workers.length];
 
         // 记录每个worker的申请到的task列表
         // List<Integer>[] allocatedTaskIDListArray = new ArrayList[this.workers.length];
@@ -328,26 +326,26 @@ public class NoiseDistanceConflictEliminationBasedSolution extends PrivacySoluti
 
 
         // 初始化 task 和 workers
-        NoiseDistanceConflictEliminationBasedSolution noiseDistanceConflictEliminationBasedSolution = new NoiseDistanceConflictEliminationBasedSolution();
-        noiseDistanceConflictEliminationBasedSolution.proposalSize = 20;
+        NoiseDistanceConflictEliminationSolution noiseDistanceConflictEliminationSolution = new NoiseDistanceConflictEliminationSolution();
+        noiseDistanceConflictEliminationSolution.proposalSize = 20;
 
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
-            noiseDistanceConflictEliminationBasedSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            noiseDistanceConflictEliminationSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];
-            noiseDistanceConflictEliminationBasedSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+            noiseDistanceConflictEliminationSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
         }
 
         //todo: 根据不同的数据集选用不同的初始化
 //        multiTaskMultiCompetitionSolution.initializeAgents();
         Integer dataTypeValue = Integer.valueOf(dataType);
         if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
-            noiseDistanceConflictEliminationBasedSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+            noiseDistanceConflictEliminationSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
         } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
-            noiseDistanceConflictEliminationBasedSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+            noiseDistanceConflictEliminationSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
         } else {
             throw new RuntimeException("The type input is not right!");
         }
@@ -355,12 +353,12 @@ public class NoiseDistanceConflictEliminationBasedSolution extends PrivacySoluti
 
         // 执行竞争过程
         long startCompetingTime = System.currentTimeMillis();
-        WorkerIDNoiseDistanceBudgetPair[] winner = noiseDistanceConflictEliminationBasedSolution.compete(false);
+        WorkerIDNoiseDistanceBudgetPair[] winner = noiseDistanceConflictEliminationSolution.compete(false);
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
 //        showResultA(winner);
-        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, noiseDistanceConflictEliminationBasedSolution.workers);
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, noiseDistanceConflictEliminationSolution.workers);
 
         CommonFunction.showResultB(winner);
 

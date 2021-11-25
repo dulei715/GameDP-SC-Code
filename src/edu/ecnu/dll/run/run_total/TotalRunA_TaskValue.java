@@ -2,19 +2,18 @@ package edu.ecnu.dll.run.run_total;
 
 import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.ExtendedExperimentResult;
-import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.PackExtendedExperimentResult;
-import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.PackNormalExperimentResult;
-import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair;
+import edu.ecnu.dll.run.run_compared.ConflictEliminationNonPrivacyCompleteRun;
+import edu.ecnu.dll.run.run_compared.GameIterationNonPrivacyCompleteRun;
+import edu.ecnu.dll.run.run_compared.GreedyNonPrivacyCompleteRun;
 import edu.ecnu.dll.run.run_main.AbstractRun;
 import edu.ecnu.dll.run.run_main.ConflictEliminationCompleteRun;
-import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.DistanceConflictEliminationBasedNonPrivacySolution;
-import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.GameTheoryNonPrivacyBasedSolution;
+import edu.ecnu.dll.run.run_main.GameIterationCompleteRun;
+import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.DistanceConflictEliminationNonPrivacySolution;
+import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.GameTheoryNonPrivacySolution;
 import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.GreedyNonePrivacySolution;
-import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.UtilityConflictEliminationBasedNonPrivacySolution;
-import edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task.GameTheoryBasedSolution;
-import edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task.NoiseDistanceConflictEliminationBasedSolution;
-import edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task.UtilityConflictEliminationBasedSolution;
+import edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy.UtilityConflictEliminationNonPrivacySolution;
+import edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task.GameTheorySolution;
 import tools.io.print.MyPrint;
 import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
@@ -26,7 +25,9 @@ import java.util.List;
 public class TotalRunA_TaskValue {
     public static void main(String[] args) {
 
+        // todo: 修改数据集路径
         String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset";
+//        String basicPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
         String taskPointFileName = "\\task_point.txt";
         String taskValueFileName = "\\task_value.txt";
         String workerPointFileName = "\\worker_point.txt";
@@ -41,11 +42,23 @@ public class TotalRunA_TaskValue {
          *      4. data type
          *      5. 数据集名称
          */
-        Solution.alpha = 0.001;
+        // todo: 修改效用函数参数
+        Solution.alpha = 0.0001;
+//        Solution.alpha = 1;
         Solution.beta = 1;
-        int proposalSize = Integer.MAX_VALUE;
+//        Solution.beta = 1;
+
+
+//        int proposalSize = Integer.MAX_VALUE;
+        int proposalSize = 7;
+
+        // todo: 修改数据集类型
         String dataType = AbstractRun.COORDINATE.toString();
+//        String dataType = AbstractRun.LONGITUDE_LATITUDE.toString();
+
+        // todo: 修改数据集名称
         String datasetName = "ChengduDiDi";
+//        String datasetName = "SYN";
 
 
 
@@ -61,16 +74,20 @@ public class TotalRunA_TaskValue {
          */
 
         Double workerTaskRatioDefault = 2.5;
+
+        // todo: 修改数据集路径2
         String parentPartPath = "\\task_worker_1_2_0";
+//        String parentPartPath = "";
 
 
         Double[] taskValueArray = new Double[] {
-                5.0, 10.0, 15.0, 20.0, 25.0
+                5.0, 10.0, 15.0, 20.0, 25.0, 30.0, 30.5
         };
 
 
 //        Double workerRangeDefault = 1.1;
-        Double workerRangeDefault = 1100.0;
+//        Double workerRangeDefault = 2.0;
+        Double workerRangeDefault = 50000.0;
 
 
         /**
@@ -105,14 +122,14 @@ public class TotalRunA_TaskValue {
 //        ConflictEliminationCompleteRun conflictRun = new ConflictEliminationCompleteRun();
 
 
-        GameTheoryBasedSolution gameSolution = new GameTheoryBasedSolution();
+        GameTheorySolution gameSolution = new GameTheorySolution();
 
-        UtilityConflictEliminationBasedNonPrivacySolution uConflictNPSolution = new UtilityConflictEliminationBasedNonPrivacySolution();
-        DistanceConflictEliminationBasedNonPrivacySolution dConflictNPSolution = new DistanceConflictEliminationBasedNonPrivacySolution();
+        UtilityConflictEliminationNonPrivacySolution uConflictNPSolution = new UtilityConflictEliminationNonPrivacySolution();
+        DistanceConflictEliminationNonPrivacySolution dConflictNPSolution = new DistanceConflictEliminationNonPrivacySolution();
 
 
 
-        GameTheoryNonPrivacyBasedSolution gameNPSolution = new GameTheoryNonPrivacyBasedSolution();
+        GameTheoryNonPrivacySolution gameNPSolution = new GameTheoryNonPrivacySolution();
         GreedyNonePrivacySolution greedyNPSolution = new GreedyNonePrivacySolution();
 
 
@@ -137,29 +154,72 @@ public class TotalRunA_TaskValue {
         for (int i = 0; i < taskValueArray.length; i++) {
             taskValue = taskValueArray[i];
 
-            // 1. 执行 privacy utility conflicts(两种)
-            solutionName = "UtilityConflictPrivacySolution";
-            ppfState = false;
-            ExtendedExperimentResult uConflictPrivacyNoPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
-            PackExtendedExperimentResult uConflictPrivacyNoPPCFResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, uConflictPrivacyNoPPCF);
-//            resultList.add(uConflictPrivacyNoPPCFResult.toString());
+//            // 1. 执行 privacy utility conflicts(两种)
+//            solutionName = "UtilityConflictPrivacySolution";
+//            ppfState = false;
+//            ExtendedExperimentResult uConflictPrivacyNoPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+//            PackExtendedExperimentResult uConflictPrivacyNoPPCFResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, uConflictPrivacyNoPPCF);
+////            resultList.add(uConflictPrivacyNoPPCFResult.toString());
 //            System.out.println(uConflictPrivacyNoPPCFResult.toString());
-//            break;
-//            System.out.println(uConflictPrivacyNoPPCF);
-//            break;
+//
+//            ppfState = true;
+//            ExtendedExperimentResult uConflictPrivacyPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+//            PackExtendedExperimentResult uConflictPrivacyPPCFResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, uConflictPrivacyPPCF);
+////            resultList.add(uConflictPrivacyNoPPCFResult.toString());
+//            System.out.println(uConflictPrivacyPPCFResult);
+//
+//
+//
+//            // 2. 执行 privacy distance conflicts(两种)
+//
+//            solutionName = "DistanceConflictPrivacySolution";
+//            ppfState = false;
+//            ExtendedExperimentResult dConflictPrivacyNoPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+//            PackExtendedExperimentResult dConflictPrivacyNoPPCResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, dConflictPrivacyNoPPCF);
+//            System.out.println(dConflictPrivacyNoPPCResult);
+//
+//            ppfState = true;
+//            ExtendedExperimentResult dConflictPrivacyPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+//            PackExtendedExperimentResult dConflictPrivacyPPCResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, dConflictPrivacyPPCF);
+//            System.out.println(dConflictPrivacyPPCResult);
+//
+//
+//
+//            // 3. 执行 privacy game iterate
+//            solutionName = "GamePrivacySolution";
+//            ExtendedExperimentResult gPrivacy = GameIterationCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, taskValue, workerRangeDefault, dataType);
+//            PackExtendedExperimentResult gPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, gPrivacy);
+//            System.out.println(gPrivacyResult);
 
-            // 2. 执行 privacy distance conflicts(两种)
 
 
-            // 3. 执行 privacy game iterate
+//            // 4. 执行 non-privacy utility conflicts
+//            solutionName = "UtilityConflictNonPrivacySolution";
+//            ExtendedExperimentResult uConflictNonPrivacy = ConflictEliminationNonPrivacyCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, taskValue, workerRangeDefault, proposalSize, dataType);
+//            PackExtendedExperimentResult uConflictNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, uConflictNonPrivacy);
+//            System.out.println(uConflictNonPrivacyResult);
+//
+//            // 5. 执行 non-privacy distance conflicts
+//            solutionName = "DistanceConflictNonPrivacySolution";
+//            ExtendedExperimentResult dConflictNonPrivacy = ConflictEliminationNonPrivacyCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, taskValue, workerRangeDefault, proposalSize, dataType);
+//            PackExtendedExperimentResult dConflictNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, dConflictNonPrivacy);
+//            System.out.println(dConflictNonPrivacyResult);
+//
+//
+//            // 6. 执行 non-privacy game iterator
+//            solutionName = "GameNonPrivacySolution";
+//            ExtendedExperimentResult gNonPrivacy = GameIterationNonPrivacyCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, taskValue, workerRangeDefault, dataType);
+//            PackExtendedExperimentResult gNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, gNonPrivacy);
+//            System.out.println(gNonPrivacyResult);
 
-            // 4. 执行 non-privacy utility conflicts
-            // 5. 执行 non-privacy distance conflicts
-            // 6. 执行 non-privacy game iterator
             // 7. 执行 non-privacy greedy
+            solutionName = "GreedyNonPrivacySolution";
+            ExtendedExperimentResult greedyNonPrivacy = GreedyNonPrivacyCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, taskValue, workerRangeDefault, dataType);
+            PackExtendedExperimentResult greedyNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, greedyNonPrivacy);
+            System.out.println(greedyNonPrivacyResult);
 
 
-
+            MyPrint.showSplitLine("*", 100);
 
 
         }

@@ -45,6 +45,15 @@ public abstract class PrivacySolution extends Solution {
         return this.tasks[taskID].valuation - transformPrivacyBudgetToValue(this.workers[workerID].getTotalPrivacyBudgetCost(taskID));
     }
 
+    // 给定不含distance的utility和distance，返回utility值
+    public static double getUtilityFromWithoutDistanceUtilityAndDistance(double withoutDistanceValue, double distance) {
+        return withoutDistanceValue - transformDistanceToValue(distance);
+    }
+
+    public double getNewNonDistanceUtility(Integer taskID, Integer workerID) {
+        return this.tasks[taskID].valuation - transformPrivacyBudgetToValue(getNewTotalCostPrivacyBudget(workerID, taskID));
+    }
+
 //    public static double getUtilityWithoutDistance(double taskValue, double privacyBudgetCost) {
 //        return taskValue - transformPrivacyBudgetToValue(privacyBudgetCost);
 //    }

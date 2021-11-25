@@ -51,7 +51,7 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
 
 
 
-    public UtilityDistanceIDPair[] greedy() {
+    public UtilityDistanceIDPair[] compete() {
         UtilityDistanceIDPair[] result = new UtilityDistanceIDPair[this.tasks.length];
         UtilityDistanceIDPair tempPair;
         Integer tempWorkerID;
@@ -133,11 +133,11 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
         }
 
         long startCompetingTime = System.currentTimeMillis();
-        UtilityDistanceIDPair[] winner = competitionSolution.greedy();
+        UtilityDistanceIDPair[] winner = competitionSolution.compete();
         long endCompetingTime = System.currentTimeMillis();
         Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
 
-        double totalUtility = CommonFunction.getResultData(winner);
+        double totalUtility = CommonFunction.getResultUtilityData(winner);
 
         System.out.println(runningTime);
 
