@@ -280,8 +280,8 @@ public class MainDataSetGenerator {
 
 //        double valueLowerBound = 7000;
 //        double valueUpperBound = 15000;
-        double valueLowerBound = 10;
-        double valueUpperBound = 200;
+        double valueLowerBound = 5;
+        double valueUpperBound = 25;
         int precision = 2;
 
         double rangeLowerBound = 10;
@@ -290,8 +290,8 @@ public class MainDataSetGenerator {
         int budgetGroupSize = 7;
 //        double budgetGroupLowerBound = 1;
 //        double budgetGroupUpperBound = 20;
-        double budgetGroupLowerBound = 0.01;
-        double budgetGroupUpperBound = 1;
+        double budgetGroupLowerBound = 1;
+        double budgetGroupUpperBound = 10;
 
         Integer taskSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + taskFileName);
         Integer workerSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + workerFileName);
@@ -345,14 +345,14 @@ public class MainDataSetGenerator {
 
 
 //        String parentDirSYN = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test";
-        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset\\";
+        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\";
         String[] inputParentPath = new String[]{
-//                "task_worker_1_1_0",
-//                "task_worker_1_1_5",
+                "task_worker_1_1_0",
+                "task_worker_1_1_5",
                 "task_worker_1_2_0",
-//                "task_worker_1_2_5",
-//                "task_worker_1_3_0",
-//                "task_worker_1_3_5"
+                "task_worker_1_2_5",
+                "task_worker_1_3_0",
+                "task_worker_1_3_5"
         };
 //        String[] outputPath = new String[]{
 //                "task_worker_1_1_0\\worker_point.txt",

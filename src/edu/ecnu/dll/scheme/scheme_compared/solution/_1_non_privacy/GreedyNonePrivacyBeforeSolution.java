@@ -1,20 +1,20 @@
 package edu.ecnu.dll.scheme.scheme_compared.solution._1_non_privacy;
 
+import edu.ecnu.dll.basic.basic_solution.NonPrivacySolution;
 import edu.ecnu.dll.basic.basic_solution.Solution;
 import edu.ecnu.dll.basic.basic_struct.pack.UtilityDistanceIDPair;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.result_tools.TargetTool;
-import edu.ecnu.dll.basic.basic_solution.NonPrivacySolution;
 import edu.ecnu.dll.run.run_main.AbstractRun;
 import tools.basic.BasicCalculation;
 import tools.io.read.DoubleRead;
 import tools.io.read.PointRead;
 import tools.struct.Point;
 
-import java.util.Iterator;
 import java.util.List;
 
-public class GreedyNonePrivacySolution extends NonPrivacySolution {
+@Deprecated
+public class GreedyNonePrivacyBeforeSolution extends NonPrivacySolution {
 
 
 
@@ -32,8 +32,6 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
                     this.tasks[i].addElement(j, tempUtility, tempDistance);
                 }
             }
-            // 为每个worker设置一个状态，用来记录是否已经被分配
-            this.workers[j].currentWinningState = -1;
         }
     }
 //
@@ -49,8 +47,6 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
                     this.tasks[i].addElement(j, tempUtility, tempDistance);
                 }
             }
-            // 为每个worker设置一个状态，用来记录是否已经被分配
-            this.workers[j].currentWinningState = -1;
         }
     }
 
@@ -58,25 +54,21 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
 
     public UtilityDistanceIDPair[] compete() {
         UtilityDistanceIDPair[] result = new UtilityDistanceIDPair[this.tasks.length];
-        UtilityDistanceIDPair tempPair = null;
-        Iterator<UtilityDistanceIDPair> tempIterator;
+        UtilityDistanceIDPair tempPair;
+        Integer tempWorkerID;
         for (int i = 0; i < this.tasks.length; i++) {
-            tempIterator = this.tasks[i].utilityDistanceWorkerIDSet.iterator();
-            while (tempIterator.hasNext()) {
-                tempPair = tempIterator.next();
-                if (this.workers[tempPair.getId()].getCurrentWinningState() > -1) {
-                    tempPair = null;
-                } else {
-                    break;
-                }
-            }
-            if (tempPair == null || tempPair.getUtility() <= 0) {
+            tempPair = this.tasks[i].getFirstElement();
+            if (tempPair == null) {
                 continue;
             }
-
-            this.workers[tempPair.getId()].setCurrentWinningState(i);
-
+            if(tempPair.getUtility() <= 0) {
+                continue;
+            }
             result[i] = tempPair;
+            tempWorkerID = tempPair.getId();
+            for (int k = i + 1; k < this.tasks.length; k++) {
+                this.tasks[k].removeFirstElementByID(tempWorkerID);
+            }
         }
         return result;
     }
@@ -114,7 +106,7 @@ public class GreedyNonePrivacySolution extends NonPrivacySolution {
 
         // 初始化 task 和 workers
         Double taskValue , workerRange;
-        GreedyNonePrivacySolution competitionSolution = new GreedyNonePrivacySolution();
+        GreedyNonePrivacyBeforeSolution competitionSolution = new GreedyNonePrivacyBeforeSolution();
 //        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
 
         if (fixedTaskValueAndWorkerRange == null) {

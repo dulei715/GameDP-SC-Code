@@ -9,6 +9,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class PointTool {
+
+    /**
+     * 获取两个集合各个点之间的距离值的统计量（用于距离数据）
+     * @param taskPointList
+     * @param workerPointList
+     * @param interval
+     * @return
+     */
     public static Map<Double, Integer> getDistanceStatisticDataFromNormData(List<Point> taskPointList, List<Point> workerPointList, double interval) {
         TreeMap<Double, Integer> countResultMap = new TreeMap<>();
         Point taskPoint, workerPoint;
@@ -30,6 +38,13 @@ public class PointTool {
         return countResultMap;
     }
 
+    /**
+     * 获取两个集合各个点之间的距离值的统计量（用于经纬度数据）
+     * @param taskPointList
+     * @param workerPointList
+     * @param interval
+     * @return
+     */
     public static Map<Double, Integer> getDistanceStatisticDataFromLLData(List<Point> taskPointList, List<Point> workerPointList, double interval) {
         TreeMap<Double, Integer> countResultMap = new TreeMap<>();
         Point taskPoint, workerPoint;
@@ -53,12 +68,12 @@ public class PointTool {
     }
 
     public static void main(String[] args) {
-        String basicPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
+        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\task_worker_1_2_0";
         String taskPath = basicPath + "\\task_point.txt";
         String workerPath = basicPath + "\\worker_point.txt";
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPath);
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPath);
-        Map<Double, Integer> resultMap = getDistanceStatisticDataFromLLData(taskPointList, workerPointList, 0.1);
+        Map<Double, Integer> resultMap = getDistanceStatisticDataFromLLData(taskPointList, workerPointList, 10);
         MyPrint.showMap(resultMap);
     }
 }

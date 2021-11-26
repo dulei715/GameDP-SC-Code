@@ -130,8 +130,9 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
         }
         return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
     }
-    public TaskTargetInfo[] chooseArrayByDistanceFilteredByUtilityFunction(List<Integer> taskIDList, Integer workerID, WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair[] lastTermTaskWinnerPackedArray, int topK, boolean ppcfState){
-        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForDistanceComparator);
+    public TaskTargetInfo[] chooseArrayByUtilityFilteredByUtilityFunction(List<Integer> taskIDList, Integer workerID, WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair[] lastTermTaskWinnerPackedArray, int topK, boolean ppcfState){
+//        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForDistanceComparator);
+        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForUtilityValueComparator);
         for (Integer i : taskIDList) {
             if (lastTermTaskWinnerPackedArray[i].getWorkerID().equals(workerID)) {
                 continue;
@@ -145,12 +146,6 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
             // Utility 函数判断
             Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewTotalCostPrivacyBudget);
 
-            if (tempNewUtilityValue <= 0) {
-                this.workers[workerID].setBudgetIndex(i, Integer.MAX_VALUE);
-                continue;
-            }
-
-
 
             // PPCF 判断utility是否占优
             if (ppcfState) {
@@ -161,6 +156,10 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
                 }
             }
 
+            if (tempNewUtilityValue <= 0) {
+                this.workers[workerID].setBudgetIndex(i, Integer.MAX_VALUE);
+                continue;
+            }
 
 
 
@@ -180,20 +179,25 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
             }
 
 
+//            double tempRealDistance = this.workers[workerID].getToTaskDistance(i);
 
 
 
 
             TaskTargetInfo taskTargetInfo = null;
             // todo: 设计成取前k个最小距离的task
+            // todo: 设计成取前k个最大utility
 
             if (candidateTaskTargetInfoSet.size() < topK) {
-                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+//                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempRealDistance, tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
             } else {
                 taskTargetInfo = candidateTaskTargetInfoSet.last();
+//                if (tempRealDistance < taskTargetInfo.getTarget()) {
                 if (tempNewUtilityValue > taskTargetInfo.getTarget()) {
                     candidateTaskTargetInfoSet.remove(taskTargetInfo); //todo: 测试是否能够真的删除
-                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, this.workers[workerID].getToTaskDistance(i), tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+//                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempRealDistance, tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
+                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, tempEffectivePrivacyBudget, tempNewUtilityValue, tempNewTotalCostPrivacyBudget, tempNewPrivacyBudget, tempNewNoiseDistance, tempNewUtilityValue));
                 }
             }
 
@@ -441,7 +445,7 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
                 // 进行是否竞争判断3： 考察 utility函数、PPCF函数、PCF函数、任务熵
 
                 TaskTargetInfo[] winnerInfoArray = null;
-                winnerInfoArray = chooseArrayByDistanceFilteredByUtilityFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize, ppcfState);
+                winnerInfoArray = chooseArrayByUtilityFilteredByUtilityFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize, ppcfState);
                 if (winnerInfoArray == null) {
                     continue;
                 }

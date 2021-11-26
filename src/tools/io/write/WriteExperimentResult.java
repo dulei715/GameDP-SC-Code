@@ -1,12 +1,13 @@
 package tools.io.write;
 
+import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.ExtendedExperimentResult;
 import edu.ecnu.dll.basic.basic_struct.pack.experiment_result_info.NormalExperimentResult;
 
 import java.util.List;
 
 public class WriteExperimentResult extends BasicWrite {
     public static final String SPLIT_SYMBOL = ",";
-    public void writeResultList(String outputPath, List<String> titles, List<NormalExperimentResult> data) {
+    public void writeResultList(String outputPath, List<String> titles, List<ExtendedExperimentResult> data) {
         startWriting(outputPath);
         writeOneLine(titles, SPLIT_SYMBOL);
         writeListDataWithNewLineSplit(data);

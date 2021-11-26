@@ -16,6 +16,11 @@ public class Point {
         this.yIndex = yIndex;
     }
 
+    public Point(double[] indexes) {
+        this.xIndex = indexes[0];
+        this.yIndex = indexes[1];
+    }
+
     public double getxIndex() {
         return xIndex;
     }

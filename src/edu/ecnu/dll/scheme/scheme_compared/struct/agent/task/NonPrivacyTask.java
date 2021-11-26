@@ -16,12 +16,12 @@ public class NonPrivacyTask extends Task {
 
     public NonPrivacyTask(double[] location) {
         super(location, 0);
-        this.utilityDistanceWorkerIDSet = new TreeSet<>(UTILITY_DISTANCE_ID_COMPARATOR.reversed());
+        this.utilityDistanceWorkerIDSet = new TreeSet<>(UTILITY_DISTANCE_ID_COMPARATOR);
     }
 
     public NonPrivacyTask(double[] location, double valuation) {
         super(location, valuation);
-        this.utilityDistanceWorkerIDSet = new TreeSet<>(UTILITY_DISTANCE_ID_COMPARATOR.reversed());
+        this.utilityDistanceWorkerIDSet = new TreeSet<>(UTILITY_DISTANCE_ID_COMPARATOR);
     }
 
     public UtilityDistanceIDPair getFirstElement() {

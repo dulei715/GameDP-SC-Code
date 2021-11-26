@@ -186,13 +186,19 @@ public class Preprocess {
         return new HashSet[]{taskPointCollection, workerPointCollection};
     }
 
-    public static void extractRandomPointByGivenSize(String inputPath, String outputPath, int size) {
+    public static void extractRandomPointByGivenSize(String inputPath, String outputPath, int size, double factorK, double constA) {
         List<Point> points = PointRead.readPointWithFirstLineCount(inputPath);
         int pointSize = points.size();
         int interval = pointSize / size;
         List<Point> newPoints = new ArrayList<>(size);
+        double[] tempPointValueIndex;
+        double[] alterTempPointIndex;
         for (int i = 0, k = 0; i < pointSize && k < size; i+=interval, ++k) {
-            newPoints.add(points.get(i));
+            tempPointValueIndex = points.get(i).getIndex();
+            alterTempPointIndex = new double[tempPointValueIndex.length];
+            alterTempPointIndex[0] = tempPointValueIndex[0] * factorK + constA;
+            alterTempPointIndex[1] = tempPointValueIndex[1] * factorK + constA;
+            newPoints.add(new Point(alterTempPointIndex));
         }
         PointWrite pointWrite = new PointWrite();
         pointWrite.startWriting(outputPath);
@@ -201,7 +207,7 @@ public class Preprocess {
     }
 
 
-    public static void main(String[] args) {
+    public static void main0(String[] args) {
 //        String inputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original";
 //        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
 //        extractChengduDataToDataset(inputParentPath, outputParentPath);
@@ -211,7 +217,7 @@ public class Preprocess {
 //        Preprocess.extractTSMCNYCAndTKYToDataset(parentInputPath, parentOutputPath);
 
         String inputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\worker_point.txt";
-        String outputBasic = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset\\";
+        String outputBasic = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\";
         String[] outputPath = new String[]{
                 "task_worker_1_1_0\\worker_point.txt",
                 "task_worker_1_1_5\\worker_point.txt",
@@ -223,15 +229,36 @@ public class Preprocess {
         double[] scales = new double[] {
                 1, 1.5, 2, 2.5, 3, 3.5
         };
+        double factorK = 0.001;
+        double constA = 0.0;
         int taskSize = 1286;
         double tempScale;
         int workerSize;
         for (int i = 0; i < scales.length; i++) {
             tempScale = scales[i];
             workerSize = (int)(taskSize*tempScale);
-            extractRandomPointByGivenSize(inputPath, outputBasic + outputPath[i], workerSize);
+            extractRandomPointByGivenSize(inputPath, outputBasic + outputPath[i], workerSize, factorK, constA);
         }
 //        System.out.println(workerSize);
+    }
+
+    public static void main(String[] args) {
+        String inputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\task_point.txt";
+        String outputBasic = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\";
+        String[] outputPath = new String[]{
+                "task_worker_1_1_0\\task_point.txt",
+                "task_worker_1_1_5\\task_point.txt",
+                "task_worker_1_2_0\\task_point.txt",
+                "task_worker_1_2_5\\task_point.txt",
+                "task_worker_1_3_0\\task_point.txt",
+                "task_worker_1_3_5\\task_point.txt",
+        };
+        double factorK = 0.001;
+        double constA = 0.0;
+        for (int i = 0; i < outputPath.length; i++) {
+            multipleDataWithFirstLineUnchanged(inputPath, outputBasic + outputPath[i], factorK, constA, " ");
+        }
+
     }
 
 }

@@ -17,6 +17,7 @@ import edu.ecnu.dll.scheme.scheme_main.solution._2_multiple_task.GameTheorySolut
 import tools.io.print.MyPrint;
 import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
+import tools.io.write.WriteExperimentResult;
 import tools.struct.Point;
 
 import java.util.ArrayList;
@@ -26,13 +27,15 @@ public class TotalRunA_TaskValue {
     public static void main(String[] args) {
 
         // todo: 修改数据集路径
-        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset";
+        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
 //        String basicPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
         String taskPointFileName = "\\task_point.txt";
         String taskValueFileName = "\\task_value.txt";
         String workerPointFileName = "\\worker_point.txt";
         String workerBudgetFileName = "\\worker_budget.txt";
         String workerNoiseDistanceFileName = "\\worker_noise_distance.txt";
+
+        String outputPath = basicPath + "\\outputPath\\output.csv";
 
         /**
          * 基本设置
@@ -43,14 +46,14 @@ public class TotalRunA_TaskValue {
          *      5. 数据集名称
          */
         // todo: 修改效用函数参数
-        Solution.alpha = 0.0001;
+        Solution.alpha = 0.1;
 //        Solution.alpha = 1;
-        Solution.beta = 1;
+        Solution.beta = 0.2;
 //        Solution.beta = 1;
 
 
 //        int proposalSize = Integer.MAX_VALUE;
-        int proposalSize = 7;
+        int proposalSize = Integer.MAX_VALUE;
 
         // todo: 修改数据集类型
         String dataType = AbstractRun.COORDINATE.toString();
@@ -87,7 +90,8 @@ public class TotalRunA_TaskValue {
 
 //        Double workerRangeDefault = 1.1;
 //        Double workerRangeDefault = 2.0;
-        Double workerRangeDefault = 50000.0;
+//        Double workerRangeDefault = 50000.0;
+        Double workerRangeDefault = 30.0;
 
 
         /**
@@ -122,15 +126,15 @@ public class TotalRunA_TaskValue {
 //        ConflictEliminationCompleteRun conflictRun = new ConflictEliminationCompleteRun();
 
 
-        GameTheorySolution gameSolution = new GameTheorySolution();
-
-        UtilityConflictEliminationNonPrivacySolution uConflictNPSolution = new UtilityConflictEliminationNonPrivacySolution();
-        DistanceConflictEliminationNonPrivacySolution dConflictNPSolution = new DistanceConflictEliminationNonPrivacySolution();
-
-
-
-        GameTheoryNonPrivacySolution gameNPSolution = new GameTheoryNonPrivacySolution();
-        GreedyNonePrivacySolution greedyNPSolution = new GreedyNonePrivacySolution();
+//        GameTheorySolution gameSolution = new GameTheorySolution();
+//
+//        UtilityConflictEliminationNonPrivacySolution uConflictNPSolution = new UtilityConflictEliminationNonPrivacySolution();
+//        DistanceConflictEliminationNonPrivacySolution dConflictNPSolution = new DistanceConflictEliminationNonPrivacySolution();
+//
+//
+//
+//        GameTheoryNonPrivacySolution gameNPSolution = new GameTheoryNonPrivacySolution();
+//        GreedyNonePrivacySolution greedyNPSolution = new GreedyNonePrivacySolution();
 
 
         // 读入基本数据
@@ -150,73 +154,81 @@ public class TotalRunA_TaskValue {
         List<String> resultList = new ArrayList<>();
         System.out.println();
         String title = PackExtendedExperimentResult.getSelfTitle() + "," + ExtendedExperimentResult.getTitleNameString(",");
-        System.out.println(title);
+//        System.out.println(title);
         for (int i = 0; i < taskValueArray.length; i++) {
             taskValue = taskValueArray[i];
 
-//            // 1. 执行 privacy utility conflicts(两种)
-//            solutionName = "UtilityConflictPrivacySolution";
-//            ppfState = false;
-//            ExtendedExperimentResult uConflictPrivacyNoPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
-//            PackExtendedExperimentResult uConflictPrivacyNoPPCFResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, uConflictPrivacyNoPPCF);
-////            resultList.add(uConflictPrivacyNoPPCFResult.toString());
+            // 1. 执行 privacy utility conflicts(两种)
+            solutionName = "UtilityConflictPrivacySolution";
+            ppfState = false;
+            ExtendedExperimentResult uConflictPrivacyNoPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+            PackExtendedExperimentResult uConflictPrivacyNoPPCFResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, uConflictPrivacyNoPPCF);
+            resultList.add(uConflictPrivacyNoPPCFResult.toString());
 //            System.out.println(uConflictPrivacyNoPPCFResult.toString());
-//
-//            ppfState = true;
-//            ExtendedExperimentResult uConflictPrivacyPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
-//            PackExtendedExperimentResult uConflictPrivacyPPCFResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, uConflictPrivacyPPCF);
-////            resultList.add(uConflictPrivacyNoPPCFResult.toString());
+
+            ppfState = true;
+            ExtendedExperimentResult uConflictPrivacyPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+            PackExtendedExperimentResult uConflictPrivacyPPCFResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, uConflictPrivacyPPCF);
+            resultList.add(uConflictPrivacyPPCFResult.toString());
 //            System.out.println(uConflictPrivacyPPCFResult);
-//
-//
-//
-//            // 2. 执行 privacy distance conflicts(两种)
-//
-//            solutionName = "DistanceConflictPrivacySolution";
-//            ppfState = false;
-//            ExtendedExperimentResult dConflictPrivacyNoPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
-//            PackExtendedExperimentResult dConflictPrivacyNoPPCResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, dConflictPrivacyNoPPCF);
+
+
+
+            // 2. 执行 privacy distance conflicts(两种)
+
+            solutionName = "DistanceConflictPrivacySolution";
+            ppfState = false;
+            ExtendedExperimentResult dConflictPrivacyNoPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+            PackExtendedExperimentResult dConflictPrivacyNoPPCResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, dConflictPrivacyNoPPCF);
+            resultList.add(dConflictPrivacyNoPPCResult.toString());
 //            System.out.println(dConflictPrivacyNoPPCResult);
-//
-//            ppfState = true;
-//            ExtendedExperimentResult dConflictPrivacyPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
-//            PackExtendedExperimentResult dConflictPrivacyPPCResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, dConflictPrivacyPPCF);
+
+
+            ppfState = true;
+            ExtendedExperimentResult dConflictPrivacyPPCF = ConflictEliminationCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, ppfState, taskValue, workerRangeDefault, proposalSize, dataType);
+            PackExtendedExperimentResult dConflictPrivacyPPCResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), ppfState, solutionName, dConflictPrivacyPPCF);
+            resultList.add(dConflictPrivacyPPCResult.toString());
 //            System.out.println(dConflictPrivacyPPCResult);
-//
-//
-//
-//            // 3. 执行 privacy game iterate
-//            solutionName = "GamePrivacySolution";
-//            ExtendedExperimentResult gPrivacy = GameIterationCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, taskValue, workerRangeDefault, dataType);
-//            PackExtendedExperimentResult gPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, gPrivacy);
+
+
+
+            // 3. 执行 privacy game iterate
+            solutionName = "GamePrivacySolution";
+            ExtendedExperimentResult gPrivacy = GameIterationCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, workerPrivacyBudgetList, workerNoiseDistanceList, taskValue, workerRangeDefault, dataType);
+            PackExtendedExperimentResult gPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, gPrivacy);
+            resultList.add(gPrivacyResult.toString());
 //            System.out.println(gPrivacyResult);
 
 
 
-//            // 4. 执行 non-privacy utility conflicts
-//            solutionName = "UtilityConflictNonPrivacySolution";
-//            ExtendedExperimentResult uConflictNonPrivacy = ConflictEliminationNonPrivacyCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, taskValue, workerRangeDefault, proposalSize, dataType);
-//            PackExtendedExperimentResult uConflictNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, uConflictNonPrivacy);
+            // 4. 执行 non-privacy utility conflicts
+            solutionName = "UtilityConflictNonPrivacySolution";
+            ExtendedExperimentResult uConflictNonPrivacy = ConflictEliminationNonPrivacyCompleteRun.runningOnSingleDatasetWithUtilityConflictElimination(taskPointList, workerPointList, taskValue, workerRangeDefault, proposalSize, dataType);
+            PackExtendedExperimentResult uConflictNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, uConflictNonPrivacy);
+            resultList.add(uConflictNonPrivacyResult.toString());
 //            System.out.println(uConflictNonPrivacyResult);
-//
-//            // 5. 执行 non-privacy distance conflicts
-//            solutionName = "DistanceConflictNonPrivacySolution";
-//            ExtendedExperimentResult dConflictNonPrivacy = ConflictEliminationNonPrivacyCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, taskValue, workerRangeDefault, proposalSize, dataType);
-//            PackExtendedExperimentResult dConflictNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, dConflictNonPrivacy);
+
+            // 5. 执行 non-privacy distance conflicts
+            solutionName = "DistanceConflictNonPrivacySolution";
+            ExtendedExperimentResult dConflictNonPrivacy = ConflictEliminationNonPrivacyCompleteRun.runningOnSingleDatasetWithDistanceConflictElimination(taskPointList, workerPointList, taskValue, workerRangeDefault, proposalSize, dataType);
+            PackExtendedExperimentResult dConflictNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, dConflictNonPrivacy);
+            resultList.add(dConflictNonPrivacyResult.toString());
 //            System.out.println(dConflictNonPrivacyResult);
-//
-//
-//            // 6. 执行 non-privacy game iterator
-//            solutionName = "GameNonPrivacySolution";
-//            ExtendedExperimentResult gNonPrivacy = GameIterationNonPrivacyCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, taskValue, workerRangeDefault, dataType);
-//            PackExtendedExperimentResult gNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, gNonPrivacy);
+
+
+            // 6. 执行 non-privacy game iterator
+            solutionName = "GameNonPrivacySolution";
+            ExtendedExperimentResult gNonPrivacy = GameIterationNonPrivacyCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, taskValue, workerRangeDefault, dataType);
+            PackExtendedExperimentResult gNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, gNonPrivacy);
+            resultList.add(gNonPrivacyResult.toString());
 //            System.out.println(gNonPrivacyResult);
 
             // 7. 执行 non-privacy greedy
             solutionName = "GreedyNonPrivacySolution";
             ExtendedExperimentResult greedyNonPrivacy = GreedyNonPrivacyCompleteRun.runningOnSingleDataset(taskPointList, workerPointList, taskValue, workerRangeDefault, dataType);
             PackExtendedExperimentResult greedyNonPrivacyResult = new PackExtendedExperimentResult(datasetName, Integer.valueOf(dataType), false, solutionName, greedyNonPrivacy);
-            System.out.println(greedyNonPrivacyResult);
+            resultList.add(greedyNonPrivacyResult.toString());
+//            System.out.println(greedyNonPrivacyResult);
 
 
             MyPrint.showSplitLine("*", 100);
@@ -224,6 +236,8 @@ public class TotalRunA_TaskValue {
 
         }
 
+        WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
+        writeExperimentResult.writeResultList(outputPath, title, resultList);
 
 
     }

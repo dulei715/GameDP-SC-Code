@@ -256,10 +256,18 @@ public class GameTheoryNonPrivacySolution extends NonPrivacySolution {
                  */
                tempResponseInfo = getBestResponseTaskPackedInfo(workerID, winnerPackedArray);
 
-               if (tempResponseInfo == null) {
-                   continue;
-               }
-               tempGTValue = tempResponseInfo.getGtUtilityValue();
+
+                if (tempResponseInfo == null) {
+                    continue;
+                }
+
+
+//                if (!tempResponseInfo.getDefeatedInfo().getWorkerID().equals(-1)){
+//                    System.out.println("Oh Hou!");
+//                }
+
+
+                tempGTValue = tempResponseInfo.getGtUtilityValue();
                if (tempGTValue <= 0) {
                    continue;
                }

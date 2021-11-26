@@ -167,8 +167,9 @@ public class UtilityConflictEliminationNonPrivacySolution extends NonPrivacySolu
         return candidateTaskTargetInfoSet.toArray(new TaskTargetInfo[0]);
     }
 
-    protected TaskTargetInfo[] chooseArrayByDistanceFilteredByUtilityFunction(List<Integer> taskIDList, Integer workerID, WorkerIDNoDistanceUtilityDistancePair[] lastTermTaskWinnerPackedArray, int topK){
-        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForDistanceComparator);
+    protected TaskTargetInfo[] chooseArrayByUtilityFilteredByUtilityFunction(List<Integer> taskIDList, Integer workerID, WorkerIDNoDistanceUtilityDistancePair[] lastTermTaskWinnerPackedArray, int topK){
+//        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForDistanceComparator);
+        TreeSet<TaskTargetInfo> candidateTaskTargetInfoSet = new TreeSet<>(targetInfoForUtilityValueComparator);
         for (Integer i : taskIDList) {
             if (lastTermTaskWinnerPackedArray[i].getWorkerID().equals(workerID)) {
                 continue;
@@ -189,12 +190,15 @@ public class UtilityConflictEliminationNonPrivacySolution extends NonPrivacySolu
             TaskTargetInfo taskTargetInfo = null;
 
             if (candidateTaskTargetInfoSet.size() < topK) {
-                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, tempCompeteDistance, null, null, null, tempNewUtilityValue));
+//                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, tempCompeteDistance, null, null, null, tempNewUtilityValue));
+                candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, tempNewUtilityValue, null, null, null, tempNewUtilityValue));
             } else {
                 taskTargetInfo = candidateTaskTargetInfoSet.last();
+//                if (tempCompeteDistance < taskTargetInfo.getTarget()) {
                 if (tempNewUtilityValue > taskTargetInfo.getTarget()) {
                     candidateTaskTargetInfoSet.remove(taskTargetInfo); //todo: 测试是否能够真的删除
-                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, tempCompeteDistance, null, null, null, tempNewUtilityValue));
+//                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, tempCompeteDistance, null, null, null, tempNewUtilityValue));
+                    candidateTaskTargetInfoSet.add(new TaskTargetInfo(i, tempCompeteDistance, null, tempNewUtilityValue, null, null, null, tempNewUtilityValue));
                 }
             }
 
@@ -339,7 +343,7 @@ public class UtilityConflictEliminationNonPrivacySolution extends NonPrivacySolu
 
                 TaskTargetInfo[] winnerInfoArray = null;
 //                winnerInfoArray = chooseArrayByUtilityFilteredByDistanceFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
-                winnerInfoArray = chooseArrayByDistanceFilteredByUtilityFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
+                winnerInfoArray = chooseArrayByUtilityFilteredByUtilityFunction(tempCandidateTaskList, tempWorkerID, taskCurrentWinnerPackedArray, proposalSize);
                 if (winnerInfoArray == null) {
                     continue;
                 }
