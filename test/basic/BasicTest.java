@@ -1,5 +1,6 @@
 package basic;
 
+import edu.ecnu.dll.config.Constant;
 import org.junit.Test;
 import tools.basic.BasicArray;
 import tools.basic.BasicCalculation;
@@ -113,6 +114,13 @@ public class BasicTest {
         System.out.println(valueC);
         System.out.println(valueA*valueB);
         System.out.println(valueB == 0);
+    }
+
+    @Test
+    public void basicFun2() {
+        String dir = System.getProperty("user.dir");
+        System.out.println(dir);
+        System.out.println(Constant.FILE_PATH_SPLIT);
     }
 
 

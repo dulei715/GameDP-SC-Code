@@ -2,17 +2,18 @@ package edu.ecnu.dll.basic.basic_solution;
 
 import edu.ecnu.dll.basic.basic_struct.agent.Task;
 import edu.ecnu.dll.basic.basic_struct.agent.Worker;
+import edu.ecnu.dll.config.Constant;
 
 import java.util.Set;
 
 public abstract class Solution {
-    public static final int DISTANCE_TAG = 0;
-    public static final int BUDGET_TAG = 1;
+//    public static final int DISTANCE_TAG = 0;
+//    public static final int BUDGET_TAG = 1;
 
     // parameter for distance
-    public static double alpha = 1;
+    public static double alpha = Constant.ALPHA;
     // parameter for privacy budget
-    public static double beta = 1;
+    public static double beta = Constant.BETA;
 
 //    public static int proposalSize = Integer.MAX_VALUE;
     public Integer proposalSize = null;
