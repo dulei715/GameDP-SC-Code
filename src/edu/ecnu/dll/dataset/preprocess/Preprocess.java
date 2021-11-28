@@ -186,6 +186,7 @@ public class Preprocess {
         return new HashSet[]{taskPointCollection, workerPointCollection};
     }
 
+
     public static void extractRandomPointByGivenSize(String inputPath, String outputPath, int size, double factorK, double constA) {
         List<Point> points = PointRead.readPointWithFirstLineCount(inputPath);
         int pointSize = points.size();
@@ -242,7 +243,7 @@ public class Preprocess {
 //        System.out.println(workerSize);
     }
 
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
         String inputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu\\task_point.txt";
         String outputBasic = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\";
         String[] outputPath = new String[]{
@@ -259,6 +260,48 @@ public class Preprocess {
             multipleDataWithFirstLineUnchanged(inputPath, outputBasic + outputPath[i], factorK, constA, " ");
         }
 
+    }
+
+    public static void main(String[] args) {
+//        String inputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original";
+//        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
+//        extractChengduDataToDataset(inputParentPath, outputParentPath);
+
+//        String parentInputPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins";
+//        String parentOutputPath = parentInputPath + "\\output";
+//        Preprocess.extractTSMCNYCAndTKYToDataset(parentInputPath, parentOutputPath);
+
+//        String basicParentPath = "\\nyc_total_dataset_ll";
+        String basicParentPath = "\\tky_total_dataset_ll";
+
+        String inputTaskPointPath = "E:\\1.学习\\4.数据集\\dataset\\original" + basicParentPath + "\\task_point.txt";
+        String inputWorkerPointPath = "E:\\1.学习\\4.数据集\\dataset\\original" + basicParentPath + "\\worker_point.txt";
+        String outputBasic = "E:\\1.学习\\4.数据集\\dataset\\original" + basicParentPath + "\\";
+        String[] outputPathParentPart = new String[]{
+                "task_worker_1_1_0\\",
+                "task_worker_1_1_5\\",
+                "task_worker_1_2_0\\",
+                "task_worker_1_2_5\\",
+                "task_worker_1_3_0\\",
+                "task_worker_1_3_5\\",
+        };
+        String workerPointFileName = "worker_point.txt";
+        String taskPointFileName = "task_point.txt";
+        double[] scales = new double[] {
+                1, 1.5, 2, 2.5, 3, 3.5
+        };
+        double factorK = 1.0;
+        double constA = 0.0;
+        Integer taskSize = PointRead.readPointSizeWithFirstLineCount(inputTaskPointPath);
+        double tempScale;
+        int workerSize;
+        for (int i = 0; i < scales.length; i++) {
+            tempScale = scales[i];
+            workerSize = (int)(taskSize*tempScale);
+            extractRandomPointByGivenSize(inputTaskPointPath, outputBasic + outputPathParentPart[i] + taskPointFileName, taskSize, factorK, constA);
+            extractRandomPointByGivenSize(inputWorkerPointPath, outputBasic + outputPathParentPart[i] + workerPointFileName, workerSize, factorK, constA);
+        }
+//        System.out.println(workerSize);
     }
 
 }

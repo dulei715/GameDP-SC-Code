@@ -404,10 +404,10 @@ public class BestNonePrivacySolution extends NonPrivacySolution {
 //        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
 //        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 //        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
 
@@ -415,7 +415,7 @@ public class BestNonePrivacySolution extends NonPrivacySolution {
         // 初始化 task 和 workers
         Double taskValue = 20.0, workerRange = 2.0;
         BestNonePrivacySolution competitionSolution = new BestNonePrivacySolution();
-        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+        competitionSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
 
 
         //todo: 根据不同的数据集选用不同的初始化

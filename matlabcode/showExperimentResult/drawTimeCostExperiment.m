@@ -49,7 +49,7 @@ set(findobj('FontSize',10),'FontSize',figure_FontSize);
 
 xlabel(xLabelName);
 ylabel(yLabelName);
-h = legend('ucs-p', 'dcs-p','gts-p','ucs-np','dcs-np','grs-np','Location','Best');
+h = legend('ucs-p', 'dcs-p','gts-p','ucs-np','dcs-np','gts-np','grs-np','Location','Best');
 set(h,'FontName','Times New Roman','FontSize',14,'FontWeight','normal');
 
 %frame = getframe(fig);

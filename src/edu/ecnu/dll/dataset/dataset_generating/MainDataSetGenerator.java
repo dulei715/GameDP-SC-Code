@@ -303,6 +303,38 @@ public class MainDataSetGenerator {
         generateWorkerPrivacyBudgetDataSet(parentDirPath + outputWorkerPrivacyBudgetFileName, workerSize, taskSize, budgetGroupSize, budgetGroupLowerBound, budgetGroupUpperBound, precision);
 
     }
+    public static void generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(String parentDirPath, double[] valueBound, double[] rangeBound, double[] budgetBound, int budgetGroupSize) {
+        String taskFileName = "\\task_point.txt";
+        String workerFileName = "\\worker_point.txt";
+        String outputTaskValueFileName = "\\task_value.txt";
+        String outputWorkerRangeFileName = "\\worker_range.txt";
+        String outputWorkerPrivacyBudgetFileName = "\\worker_budget.txt";
+
+//        double valueLowerBound = 7000;
+//        double valueUpperBound = 15000;
+        double valueLowerBound = valueBound[0];
+        double valueUpperBound = valueBound[1];
+        int precision = 2;
+
+        double rangeLowerBound = rangeBound[0];
+        double rangeUpperBound = rangeBound[1];
+
+//        int budgetGroupSize = 7;
+//        double budgetGroupLowerBound = 1;
+//        double budgetGroupUpperBound = 20;
+        double budgetGroupLowerBound = budgetBound[0];
+        double budgetGroupUpperBound = budgetBound[1];
+
+        Integer taskSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + taskFileName);
+        Integer workerSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + workerFileName);
+
+        generateTaskValuesDataSet(parentDirPath + outputTaskValueFileName, taskSize, valueLowerBound, valueUpperBound, precision);
+
+        generateWorkerRangesDataSet(parentDirPath + outputWorkerRangeFileName, workerSize, rangeLowerBound, rangeUpperBound, precision);
+
+        generateWorkerPrivacyBudgetDataSet(parentDirPath + outputWorkerPrivacyBudgetFileName, workerSize, taskSize, budgetGroupSize, budgetGroupLowerBound, budgetGroupUpperBound, precision);
+
+    }
 
     public static void generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(String parentDirPath, boolean isLongitudeLatitude) {
         String taskFileName = "\\task_point.txt";
@@ -317,7 +349,7 @@ public class MainDataSetGenerator {
     }
 
 
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
 //        String outputPath = System.getProperty("user.dir") + "\\dataset\\UniformDataPoint.txt";
 //        DataSetGenerator dataSetGenerator = new DataSetGenerator();
 //        dataSetGenerator.generateUniformPlaneDataPoint(200000, 10000, outputPath);
@@ -365,6 +397,40 @@ public class MainDataSetGenerator {
         boolean isLongitudeLatitude = false;
         for (int i = 0; i < inputParentPath.length; i++) {
             MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(basicPath + inputParentPath[i]);
+            MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(basicPath + inputParentPath[i], isLongitudeLatitude);
+        }
+//        boolean isLongitudeLatitude = true;
+//        double factor = 0.001;
+
+    }
+    public static void main(String[] args) {
+
+
+//        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\nyc_total_dataset_ll\\";
+        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\tky_total_dataset_ll\\";
+        String[] inputParentPath = new String[]{
+//                "task_worker_1_1_0",
+//                "task_worker_1_1_5",
+//                "task_worker_1_2_0",
+//                "task_worker_1_2_5",
+                "task_worker_1_3_0",
+//                "task_worker_1_3_5"
+        };
+//        String[] outputPath = new String[]{
+//                "task_worker_1_1_0\\worker_point.txt",
+//                "task_worker_1_1_5\\worker_point.txt",
+//                "task_worker_1_2_0\\worker_point.txt",
+//                "task_worker_1_2_5\\worker_point.txt",
+//                "task_worker_1_3_0\\worker_point.txt",
+//                "task_worker_1_3_5\\worker_point.txt",
+//        };
+        boolean isLongitudeLatitude = true;
+        double[] valueBound = new double[]{5,25};
+        double[] rangeBound = new double[]{0.5,2};
+        double[] budgetBound = new double[]{1,10};
+        int budgetGroupSize = 7;
+        for (int i = 0; i < inputParentPath.length; i++) {
+            MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(basicPath + inputParentPath[i], valueBound, rangeBound, budgetBound, budgetGroupSize);
             MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(basicPath + inputParentPath[i], isLongitudeLatitude);
         }
 //        boolean isLongitudeLatitude = true;

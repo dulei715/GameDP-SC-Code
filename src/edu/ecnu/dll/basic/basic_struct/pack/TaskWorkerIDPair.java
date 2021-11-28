@@ -27,4 +27,12 @@ public class TaskWorkerIDPair{
         this.taskID = taskID;
         this.workerID = workerID;
     }
+
+    @Override
+    public String toString() {
+        return "TaskWorkerIDPair{" +
+                "taskID=" + taskID +
+                ", workerID=" + workerID +
+                '}';
+    }
 }

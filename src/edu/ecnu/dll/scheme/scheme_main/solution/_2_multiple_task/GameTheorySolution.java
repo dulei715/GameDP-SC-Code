@@ -322,7 +322,7 @@ public class GameTheorySolution extends PrivacySolution {
         String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray;
+        List<Double> taskValueList;
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
         List<Double> workerRangeList;
@@ -336,9 +336,9 @@ public class GameTheorySolution extends PrivacySolution {
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
-            taskValueArray = DoubleRead.readDouble(taskValuePath);
-            workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
-            gameTheorySolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
+            workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
+            gameTheorySolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];

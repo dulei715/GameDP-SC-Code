@@ -26,10 +26,10 @@ public class MultiTaskMultiCompleteDistanceConflictEliminationNonPrivacyRun exte
         String workerRangePath = basicDatasetPath + "\\worker_range.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
 
 
         // 初始化 task 和 workers
@@ -39,7 +39,7 @@ public class MultiTaskMultiCompleteDistanceConflictEliminationNonPrivacyRun exte
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
-            competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            competitionSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];

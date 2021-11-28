@@ -509,10 +509,10 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
         String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath, 1);
         List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 1);
 
@@ -524,7 +524,7 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
-            utilityConflictEliminationSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            utilityConflictEliminationSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];

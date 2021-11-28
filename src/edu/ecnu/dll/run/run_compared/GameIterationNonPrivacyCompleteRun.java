@@ -129,5 +129,41 @@ public class GameIterationNonPrivacyCompleteRun extends AbstractRun {
 
         return extendedExperimentResult;
     }
+    public static ExtendedExperimentResult runningOnSingleDataset(List<Point> taskPointList, List<Point> workerPointList,
+                                                                                               List<Double> taskValueList, List<Double> workerRangeList, String dataType) {
+
+        // 初始化 task 和 workers
+        GameTheoryNonPrivacySolution gGameNPSolution = new GameTheoryNonPrivacySolution();
+
+
+
+        gGameNPSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+        Integer dataTypeValue = Integer.valueOf(dataType);
+        if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
+            gGameNPSolution.initializeAgents();
+        } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
+            gGameNPSolution.initializeAgentsWithLatitudeLongitude();
+        } else {
+            throw new RuntimeException("The type input is not right!");
+        }
+
+
+        // 执行竞争过程
+        long startCompetingTime = System.currentTimeMillis();
+//        WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair[] winner = gGameSolution.compete();
+        WorkerIDDistancePair[] winner = gGameNPSolution.compete();
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gGameNPSolution.workers);
+
+        NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
+        ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, 0, null, null);
+
+        return extendedExperimentResult;
+    }
 
 }

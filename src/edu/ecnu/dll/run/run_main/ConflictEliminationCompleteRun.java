@@ -31,10 +31,10 @@ public class ConflictEliminationCompleteRun extends AbstractRun {
         String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath, 1);
         List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath, 1);
 
@@ -46,7 +46,7 @@ public class ConflictEliminationCompleteRun extends AbstractRun {
         Double taskValue = null, workerRange = null;
 
         if (fixedTaskValueAndWorkerRange == null) {
-            competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            competitionSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];
@@ -337,6 +337,79 @@ public class ConflictEliminationCompleteRun extends AbstractRun {
 
         NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
         ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, proposalSize, taskValue, workerRange);
+
+        return extendedExperimentResult;
+    }
+    public static ExtendedExperimentResult runningOnSingleDatasetWithDistanceConflictElimination(List<Point> taskPointList, List<Point> workerPointList, List<Double[]>[] workerPrivacyBudgetList, List<Double[]>[] workerNoiseDistanceList,
+                                                                boolean ppcfState, List<Double> taskValueList, List<Double> workerRangeList, Integer proposalSize, String dataType) {
+
+        // 初始化 task 和 workers
+        NoiseDistanceConflictEliminationSolution privacySolution = new NoiseDistanceConflictEliminationSolution();
+
+
+        privacySolution.proposalSize = proposalSize;
+
+        privacySolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+        Integer dataTypeValue = Integer.valueOf(dataType);
+        if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
+            privacySolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
+            privacySolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else {
+            throw new RuntimeException("The type input is not right!");
+        }
+
+
+        // 执行竞争过程
+        long startCompetingTime = System.currentTimeMillis();
+        WorkerIDNoiseDistanceBudgetPair[] winner = privacySolution.compete(ppcfState);
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, privacySolution.workers);
+
+        NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
+        ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, proposalSize, null, null);
+
+        return extendedExperimentResult;
+    }
+
+    public static ExtendedExperimentResult runningOnSingleDatasetWithUtilityConflictElimination(List<Point> taskPointList, List<Point> workerPointList, List<Double[]>[] workerPrivacyBudgetList, List<Double[]>[] workerNoiseDistanceList,
+                                                                                               boolean ppcfState, List<Double> taskValueList, List<Double> workerRangeList, Integer proposalSize, String dataType) {
+
+        // 初始化 task 和 workers
+        UtilityConflictEliminationSolution uConflictSolution = new UtilityConflictEliminationSolution();
+
+
+        uConflictSolution.proposalSize = proposalSize;
+
+        uConflictSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+        Integer dataTypeValue = Integer.valueOf(dataType);
+        if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
+            uConflictSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
+            uConflictSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else {
+            throw new RuntimeException("The type input is not right!");
+        }
+
+
+        // 执行竞争过程
+        long startCompetingTime = System.currentTimeMillis();
+        WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair[] winner = uConflictSolution.compete(ppcfState);
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, uConflictSolution.workers);
+
+        NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
+        ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, proposalSize, null, null);
 
         return extendedExperimentResult;
     }

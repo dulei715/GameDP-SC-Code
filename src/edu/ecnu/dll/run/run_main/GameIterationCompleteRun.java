@@ -123,5 +123,41 @@ public class GameIterationCompleteRun extends AbstractRun {
 
         return extendedExperimentResult;
     }
+    public static ExtendedExperimentResult runningOnSingleDataset(List<Point> taskPointList, List<Point> workerPointList, List<Double[]>[] workerPrivacyBudgetList, List<Double[]>[] workerNoiseDistanceList,
+                                                                                               List<Double> taskValueList, List<Double> workerRangeList, String dataType) {
+
+        // 初始化 task 和 workers
+        GameTheorySolution gGameSolution = new GameTheorySolution();
+
+
+
+        gGameSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+        Integer dataTypeValue = Integer.valueOf(dataType);
+        if (AbstractRun.COORDINATE.equals(dataTypeValue)) {
+            gGameSolution.initializeAgents(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else if (AbstractRun.LONGITUDE_LATITUDE.equals(dataTypeValue)) {
+            gGameSolution.initializeAgentsWithLatitudeLongitude(workerPrivacyBudgetList, workerNoiseDistanceList);
+        } else {
+            throw new RuntimeException("The type input is not right!");
+        }
+
+
+        // 执行竞争过程
+        long startCompetingTime = System.currentTimeMillis();
+//        WorkerIDNoDistanceUtilityNoiseDistanceBudgetPair[] winner = gGameSolution.compete();
+        WorkerIDNoiseDistanceBudgetPair[] winner = gGameSolution.compete();
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        BasicExperimentResult basicExperimentResult = CommonFunction.getResultData(winner, gGameSolution.workers);
+
+        NormalExperimentResult normalExperimentResult = new NormalExperimentResult(basicExperimentResult, runningTime);
+        ExtendedExperimentResult extendedExperimentResult = new ExtendedExperimentResult(normalExperimentResult, 0, null, null);
+
+        return extendedExperimentResult;
+    }
 
 }

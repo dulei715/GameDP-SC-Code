@@ -61,14 +61,14 @@ public abstract class PrivacySolution extends Solution {
     /**
      *  5个初始化函数
      */
-    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
+    public void initializeBasicInformation(List<Point> taskPositionList, List<Double> taskValueList, List<Point> workerPositionList, List<Double> workerRangeList) {
         Point taskPosition, workerPosition;
         // 同时初始化父类
         super.tasks = this.tasks = new BasicTask[taskPositionList.size()];
         for (int i = 0; i < taskPositionList.size(); i++) {
             taskPosition = taskPositionList.get(i);
             this.tasks[i] = new BasicTask(taskPosition.getIndex());
-            this.tasks[i].valuation = taskValueArray[i];
+            this.tasks[i].valuation = taskValueList.get(i);
         }
         // 同时初始化父类
         super.workers = this.workers = new MultiTaskPrivacyBasicWorker[workerPositionList.size()];

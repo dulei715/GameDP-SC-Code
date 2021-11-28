@@ -96,10 +96,10 @@ public class GreedyNonePrivacyBeforeSolution extends NonPrivacySolution {
 //        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        List<Double> taskValueList = null;
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
 //        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 //        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
 
@@ -110,9 +110,9 @@ public class GreedyNonePrivacyBeforeSolution extends NonPrivacySolution {
 //        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
 
         if (fixedTaskValueAndWorkerRange == null) {
-            taskValueArray = DoubleRead.readDouble(taskValuePath);
-            workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
-            competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+            taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
+            workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
+            competitionSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
         } else {
             taskValue = fixedTaskValueAndWorkerRange[0];
             workerRange = fixedTaskValueAndWorkerRange[1];

@@ -34,7 +34,7 @@ public class DistanceConflictEliminationNonPrivacySolution extends NonPrivacySol
     public static TargetInfoComparator targetInfoForUtilityAndCompositionValueComparator = new TargetInfoComparator(TargetInfoComparator.DESCENDING);
 
     @Override
-    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
+    public void initializeBasicInformation(List<Point> taskPositionList, List<Double> taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
         super.initializeBasicInformation(taskPositionList, taskValueArray, workerPositionList, workerRangeList);
         this.tasks = super.tasks;
         this.workers = super.workers;
@@ -417,10 +417,10 @@ public class DistanceConflictEliminationNonPrivacySolution extends NonPrivacySol
 //        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        Double[] taskValueArray = DoubleRead.readDouble(taskValuePath);
+        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleToList(workerRangePath);
+        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
 //        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 //        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
 
@@ -428,7 +428,7 @@ public class DistanceConflictEliminationNonPrivacySolution extends NonPrivacySol
         // 初始化 task 和 workers
         Double taskValue = 20.0, workerRange = 2.0;
         DistanceConflictEliminationNonPrivacySolution competitionSolution = new DistanceConflictEliminationNonPrivacySolution();
-        competitionSolution.initializeBasicInformation(taskPointList, taskValueArray, workerPointList, workerRangeList);
+        competitionSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
         competitionSolution.proposalSize = 20;
 
 

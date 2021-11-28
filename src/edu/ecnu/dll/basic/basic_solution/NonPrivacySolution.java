@@ -18,14 +18,14 @@ public abstract class NonPrivacySolution extends Solution { // Task value 保证
     public static WorkerIDDistancePair DEFAULT_WORKER_ID_DISTANCE_PAIR = new WorkerIDDistancePair(-1, Double.MAX_VALUE);
     public static final Integer DEFAULT_WORKER_WINNING_STATE = -1;
 
-    public void initializeBasicInformation(List<Point> taskPositionList, Double[] taskValueArray, List<Point> workerPositionList, List<Double> workerRangeList) {
+    public void initializeBasicInformation(List<Point> taskPositionList, List<Double> taskValueList, List<Point> workerPositionList, List<Double> workerRangeList) {
         Point taskPosition, workerPosition;
         // 同时初始化父类
         super.tasks = this.tasks = new NonPrivacyTask[taskPositionList.size()];
         for (int i = 0; i < taskPositionList.size(); i++) {
             taskPosition = taskPositionList.get(i);
             this.tasks[i] = new NonPrivacyTask(taskPosition.getIndex());
-            this.tasks[i].valuation = taskValueArray[i];
+            this.tasks[i].valuation = taskValueList.get(i);
         }
         // 同时初始化父类
         super.workers = this.workers = new MultiTaskNonPrivacyWorker[workerPositionList.size()];

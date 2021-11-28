@@ -13,8 +13,8 @@ public class DatasetGenerateTest {
     @Test
     public void generateUniformDataset() {
         String basicPath = "E:\\dataset\\uniform_dataset.txt";
-        int dimensionLength = 10000;
-        int pointSize = 200000;
+        int dimensionLength = 100;
+        int pointSize = 10000;
         MainDataSetGenerator.generateUniformPlaneDataPoint(dimensionLength, pointSize, basicPath);
 
     }
@@ -22,9 +22,9 @@ public class DatasetGenerateTest {
     @Test
     public void generateNormalDataset() {
         String basicPath = "E:\\dataset\\normal_dataset.txt";
-        int pointSize = 200_000;
+        int pointSize = 10000;
         double mean = 0;
-        double variance = 1_000_000_000;
+        double variance = 150;
         MainDataSetGenerator.generateNormalPlaneDataPoint(pointSize, mean, variance, basicPath);
     }
 

@@ -85,7 +85,7 @@ public class DoubleRead {
     }
 
 
-    public static List<Double> readDoubleToList(String filePath) {
+    public static List<Double> readDoubleWithFirstSizeLineToList(String filePath) {
         BufferedReader bufferedReader = null;
         String line;
         int dataSize;
