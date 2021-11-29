@@ -3,6 +3,7 @@ package dataset;
 import edu.ecnu.dll.dataset.dataset_generating.MainDataSetGenerator;
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
 import edu.ecnu.dll.dataset.dataset_generating.sample.impl.MeanSamplingFunction;
+import edu.ecnu.dll.dataset.preprocess.Preprocess;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -26,6 +27,28 @@ public class DatasetGenerateTest {
         double mean = 0;
         double variance = 150;
         MainDataSetGenerator.generateNormalPlaneDataPoint(pointSize, mean, variance, basicPath);
+    }
+
+    @Test
+    public void fun1() {
+        String uniformPath = "E:\\1.学习\\4.数据集\\dataset\\original\\uniform_total_dataset_km\\uniform_dataset.txt";
+        String uniformTaskOutputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\uniform_total_dataset_km\\task_point.txt";
+        String uniformWorkerOutputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\uniform_total_dataset_km\\worker_point.txt";
+
+        String normalPath = "E:\\1.学习\\4.数据集\\dataset\\original\\normal_total_dataset_km\\normal_dataset.txt";
+        String normalTaskOutputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\normal_total_dataset_km\\task_point.txt";
+        String normalWorkerOutputPath = "E:\\1.学习\\4.数据集\\dataset\\original\\normal_total_dataset_km\\worker_point.txt";
+
+
+        int size = 2000;
+        Preprocess.extractRandomPointByGivenSize(uniformPath, uniformTaskOutputPath, size, 1, 0);
+        Preprocess.extractRemainPointByGivenSet(uniformPath, uniformTaskOutputPath, uniformWorkerOutputPath, 1, 0);
+
+        Preprocess.extractRandomPointByGivenSize(normalPath, normalTaskOutputPath, size, 1, 0);
+        Preprocess.extractRemainPointByGivenSet(normalPath, normalTaskOutputPath, normalWorkerOutputPath, 1, 0);
+
+
+
     }
 
     @Test
@@ -144,6 +167,12 @@ public class DatasetGenerateTest {
                 MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerSize, taskSize, budgetGroupSize, 0, 10, 2);
             }
         }
+    }
+
+    @Test
+    public void generateValueAndPrivacyBudgetNoiseDistance() {
+
+
     }
 
 

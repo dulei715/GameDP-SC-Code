@@ -6,8 +6,10 @@ import edu.ecnu.dll.config.Constant;
 import edu.ecnu.dll.run.run_compared.ConflictEliminationNonPrivacyCompleteRun;
 import edu.ecnu.dll.run.run_compared.GameIterationNonPrivacyCompleteRun;
 import edu.ecnu.dll.run.run_compared.GreedyNonPrivacyCompleteRun;
+import edu.ecnu.dll.run.run_main.AbstractRun;
 import edu.ecnu.dll.run.run_main.ConflictEliminationCompleteRun;
 import edu.ecnu.dll.run.run_main.GameIterationCompleteRun;
+import tools.io.print.MyPrint;
 import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
 import tools.io.write.WriteExperimentResult;
@@ -232,6 +234,8 @@ public class TotalRunC_WorkerRange {
 
         WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
         writeExperimentResult.writeResultList(outputPath, title, resultList);
+//        System.out.println(title);
+//        MyPrint.showList(resultList, "\r\n");
 
     }
 }

@@ -166,6 +166,7 @@ public class Preprocess {
 
     }
 
+
     protected static HashSet<Point>[] readAndFilterData(String inputDataParentPath, String dataFileName, String effectiveCharacter, String taskCharacterValue, String workerCharacterValue, String xIndexCharacterName, String yIndexCharacterName) {
         String tempValue;
         List<Map<String, String>> nycData = CSVRead.readData(inputDataParentPath + dataFileName);
@@ -204,6 +205,23 @@ public class Preprocess {
         PointWrite pointWrite = new PointWrite();
         pointWrite.startWriting(outputPath);
         pointWrite.writePoint(newPoints);
+        pointWrite.endWriting();
+    }
+
+    public static void extractRemainPointByGivenSet(String totalDataInputPath, String excludedDataInputPath, String outputPath, double factorK, double constA) {
+        HashSet<Point> excludedSet = new HashSet<>(PointRead.readPointWithFirstLineCount(excludedDataInputPath));
+        List<Point> totalDataList = PointRead.readPointWithFirstLineCount(totalDataInputPath);
+        Iterator<Point> totalIterator = totalDataList.listIterator();
+        Point tempPoint;
+        while (totalIterator.hasNext()) {
+            tempPoint = totalIterator.next();
+            if (excludedSet.contains(tempPoint)) {
+                totalIterator.remove();
+            }
+        }
+        PointWrite pointWrite = new PointWrite();
+        pointWrite.startWriting(outputPath);
+        pointWrite.writePoint(totalDataList);
         pointWrite.endWriting();
     }
 

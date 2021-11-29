@@ -18,8 +18,8 @@ public class Constant {
             FILE_PATH_SPLIT + "task_worker_1_1_5",
             FILE_PATH_SPLIT + "task_worker_1_2_0",
             FILE_PATH_SPLIT + "task_worker_1_2_5",
-            FILE_PATH_SPLIT + "task_worker_1_3_0"
-//            FILE_PATH_SPLIT + "task_worker_1_3_5"
+            FILE_PATH_SPLIT + "task_worker_1_3_0",
+            FILE_PATH_SPLIT + "task_worker_1_3_5"
     };
     public static final String parentPathDefault = FILE_PATH_SPLIT + "task_worker_1_2_0";
 
@@ -33,10 +33,18 @@ public class Constant {
     public static final Double[] workerRangeArray = new Double[] {
             10.0, 15.0, 20.0, 25.0, 30.0
     };
-    //    public static final Double workerRangeDefault = 30.0;
     public static final Double workerRangeDefault = 20.0;
-    //    public static final Double workerRangeDefault = 5.0;
+//    public static final Double[] workerRangeArray = new Double[] {
+//            0.8, 1.1, 1.4, 1.7, 2.0
+//    };
+//    public static final Double workerRangeDefault = 1.4;
     public static final int defaultProposalSize = Integer.MAX_VALUE;
+
+//    public static final Double[] privacyBudgetArray = new Double[] {
+//            1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0
+//    };
+//
+//    public static final Double privacyBudgetDefault = 5.0;
 
 
 
