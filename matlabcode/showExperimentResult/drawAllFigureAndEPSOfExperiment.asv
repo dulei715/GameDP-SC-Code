@@ -1,0 +1,49 @@
+function y = drawAllFigureAndEPSOfExperiment(input_parent_path, output_parent_path, output_dataset_name)
+% 画关于运行时间的图
+
+%% 画关于utility变化的图 
+% average value 变化
+dataFilePath = [input_parent_path, 'output_task_value_change.csv'];
+outputFileName = [output_parent_path, 'utility_value_change_',output_dataset_name];
+taskValueLine = 11;
+UtilityLine = 6;
+xName = 'task value';
+yName = 'average utility';
+drawAverageUtilityExperiment(dataFilePath, taskValueLine,UtilityLine, xName, yName, outputFileName);
+
+% relative utility
+dataFilePath = [input_parent_path, 'output_task_value_change.csv'];
+outputFileName = [output_parent_path, 'utilitydeviation_value_change_',output_dataset_name];
+taskValueLine = 11;
+UtilityLine = 6;
+xName = 'task value';
+yName = 'relative deviation of utility';
+drawRelativeDeviationUtilityExperiment(dataFilePath, taskValueLine,UtilityLine, xName, yName, outputFileName);
+
+
+
+
+%% 画关于distance的变化图
+% distance
+dataFilePath = [input_parent_path, 'output_task_value_change.csv'];
+outputFileName = [output_parent_path, 'distance_value_change_',output_dataset_name];
+taskValueLine = 11;
+DistanceLine = 9;
+xName = 'task value';
+yName = 'average distance (km)';
+drawAverageDistanceExperiment(dataFilePath, taskValueLine,DistanceLine, xName, yName, outputFileName);
+
+% relatie distance
+dataFilePath = [input_parent_path, 'output_task_value_change.csv'];
+outputFileName = [output_parent_path, 'distancedeviation_value_change_',output_dataset_name];
+taskValueLine = 11;
+DistanceLine = 9;
+xName = 'task value';
+yName = 'relative deviation of distance';
+drawRelativeDeviationDistanceExperiment(dataFilePath, taskValueLine,DistanceLine, xName, yName, outputFileName);
+
+
+
+% 画关于变化的图
+
+% 画关于worker ratio变化的图

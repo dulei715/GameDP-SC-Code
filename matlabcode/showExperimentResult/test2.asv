@@ -6,6 +6,4 @@ f = figure;
 hold on;
 plot(x,y1,x,y2);
 %imshow(f,'border','tight','initialmagnification','fit');
-%saveas(f,'E:\test2\hh','pdf');
-%export_fig(f,'-eps','E:\test2\hh.eps');
-export_fig(f , '-pdf' , '-r256' , '-transparent' , 'E:\test2\Test3')
+saveas(f,'E:\test2\hh','eps');

@@ -150,26 +150,28 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
             // PPCF 判断utility是否占优
             if (ppcfState) {
                 if (tempNewUtilityValue <= lastTermTaskWinnerPackedArray[i].getEffectiveUtility()) {
+//                    if (tempNewUtilityValue > 0 ){
+//                        System.out.println("haha");
+//                    }
                     // 如果PPCF不占优，则通过设置privacybuget状态为用尽状态来防止接下来被再次选择
                     this.workers[workerID].setBudgetIndex(i, Integer.MAX_VALUE);
                     continue;
                 }
             }
 
-            if (tempNewUtilityValue <= 0) {
-                this.workers[workerID].setBudgetIndex(i, Integer.MAX_VALUE);
-                continue;
-            }
-
-
 
             double tempCompeteDistance = newEffectiveDistanceBudgetPair.distance;
             double tempEffectivePrivacyBudget = newEffectiveDistanceBudgetPair.budget;
             double tempNonDistanceUtility = getNewNonDistanceUtility(i, workerID);
 
-
-
             this.workers[workerID].increaseBudgetIndex(i);
+
+            if (tempNewUtilityValue <= 0) {
+//                this.workers[workerID].setBudgetIndex(i, Integer.MAX_VALUE);
+                continue;
+            }
+
+
 
             // PCF 判断utility是否占优
 //            double pcfValue = LaplaceProbabilityDensityFunction.probabilityDensityFunction(tempCompeteDistance, lastTermTaskWinnerPackedArray[i].getEffectiveNoiseDistance(), tempEffectivePrivacyBudget, lastTermTaskWinnerPackedArray[i].getEffectivePrivacyBudget());
@@ -177,6 +179,10 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
             if (pcfValue <= 0.5) {
                 continue;
             }
+
+//            if(ppcfState==false && tempNewUtilityValue <= lastTermTaskWinnerPackedArray[i].getEffectiveUtility() && pcfValue > 0.5){
+//                System.out.println("haha");
+//            }
 
 
 //            double tempRealDistance = this.workers[workerID].getToTaskDistance(i);

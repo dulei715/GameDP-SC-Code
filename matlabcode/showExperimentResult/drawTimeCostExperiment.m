@@ -1,4 +1,4 @@
-function y = drawTimeCostExperiment(filename, xCol, xLabelName)
+function y = drawTimeCostExperiment(filename, xCol, xLabelName, yLabelName,outputFileName)
 %function y = drawExperiment(filename, xCol, yCol, xLabelName, yLabelName, output_basic_dir, output_filenames)
 lineStart = 2;
 lineEnd = 4;
@@ -16,7 +16,7 @@ end
 yCol = 1;
 %yfactor = 0.0001;
 yfactor = 1;
-yLabelName = 'competing time cost (ms)';
+%yLabelName = 'competing time cost (ms)';
 totalAllocatedWorker = matrix.data(:,5);
 uConfPSolution_ppcfFalse = matrix.data(1:9:end,yCol).*yfactor;
 uConfPSolution_ppcfTrue = matrix.data(2:9:end,yCol).*yfactor;
@@ -57,6 +57,8 @@ set(h,'FontName','Times New Roman','FontSize',14,'FontWeight','normal');
 %for filename = output_filenames
 %    imwrite(img,[output_basic_dir, filename]);
 %end
-
+saveas(fig,outputFileName,'fig');
+%saveas(fig,[outputFileName,'.eps'],'psc2');
+export_fig(fig , '-pdf' , '-r256' , '-transparent' , outputFileName);
 
 

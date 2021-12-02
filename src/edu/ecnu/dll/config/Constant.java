@@ -8,8 +8,9 @@ public class Constant {
 
 
 
-    public static final double ALPHA = 0.1;
-//    public static final double BETA = 0.2;
+//    public static final double ALPHA = 0.1;
+    public static final double ALPHA = 1;
+    //    public static final double BETA = 0.2;
     public static final double BETA = 1;
 
     // for worker ratio
@@ -27,13 +28,18 @@ public class Constant {
     public static final Double[] taskValueArray = new Double[] {
             5.0, 10.0, 15.0, 20.0, 25.0
     };
+//    public static final Double[] taskValueArray = new Double[] {
+//            5.0*5, 10.0*5, 15.0*5, 20.0*5, 25.0*5
+//    };
     public static final Double taskValueDefault = 15.0;
 
     // for worker range
     public static final Double[] workerRangeArray = new Double[] {
             10.0, 15.0, 20.0, 25.0, 30.0
     };
-    public static final Double workerRangeDefault = 20.0;
+//    public static final Double workerRangeDefault = 20.0;
+    public static final Double workerRangeDefault = 1.0;
+//    public static final Double workerRangeDefault = 40.0;
 //    public static final Double[] workerRangeArray = new Double[] {
 //            0.8, 1.1, 1.4, 1.7, 2.0
 //    };

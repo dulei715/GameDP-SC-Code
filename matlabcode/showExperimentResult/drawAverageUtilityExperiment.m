@@ -1,4 +1,4 @@
-function y = drawAverageUtilityExperiment(filename, xCol, yCol, xLabelName, yLabelName)
+function y = drawAverageUtilityExperiment(filename, xCol, yCol, xLabelName, yLabelName,outputFileName)
 %function y = drawExperiment(filename, xCol, yCol, xLabelName, yLabelName, output_basic_dir, output_filenames)
 %data = readmatrix(path,lineStart-1,colStart-1 ,[lineStart-1,lineEnd-1,colStart-1,colEnd-1]);
 %data(lineStart:end,colStart:end)
@@ -51,6 +51,9 @@ set(h,'FontName','Times New Roman','FontSize',14,'FontWeight','normal');
 %for filename = output_filenames
 %    imwrite(img,[output_basic_dir, filename]);
 %end
-
+saveas(fig,outputFileName,'fig');
+%saveas(fig,[outputFileName,'.eps'],'psc2');
+%saveas(fig,outputFileName,'eps');
+export_fig(fig , '-pdf' , '-r256' , '-transparent' , outputFileName);
 
 

@@ -111,7 +111,9 @@ public class NoiseDistanceConflictEliminationSolution extends PrivacySolution {
                 continue;
             }
 
-
+//            if(ppcfState==false && this.workers[workerID].getToTaskDistance(i) >= lastTermTaskWinnerPackedArray[i].getEffectiveNoiseDistance() && lastTermTaskWinnerPackedArray[i].getEffectiveNoiseDistance() >= 0 && pcfValue > 0.5){
+//                System.out.println("haha");
+//            }
 
 
 
