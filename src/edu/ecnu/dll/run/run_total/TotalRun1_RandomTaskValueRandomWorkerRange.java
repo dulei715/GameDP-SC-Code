@@ -23,16 +23,16 @@ public class TotalRun1_RandomTaskValueRandomWorkerRange {
     public static void main(String[] args) {
 
         // todo: 修改数据集路径
-        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
-//        String basicPath = args[0];
+//        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
+        String basicPath = args[0];
         // todo: 修改数据集路径2
         String parentPartPath = Constant.parentPathDefault;
         // todo: 修改数据集类型
-        String dataType = AbstractRun.COORDINATE.toString();
-//        String dataType = args[1];
+//        String dataType = AbstractRun.COORDINATE.toString();
+        String dataType = args[1];
         // todo: 修改数据集名称
-        String datasetName = "ChengduDiDi";
-//        String datasetName = args[2];
+//        String datasetName = "ChengduDiDi";
+        String datasetName = args[2];
 
 
         String taskPointFileName = Constant.FILE_PATH_SPLIT + "task_point.txt";
@@ -234,10 +234,10 @@ public class TotalRun1_RandomTaskValueRandomWorkerRange {
         System.out.println("Finish random task value and random worker range");
 
 
-//        WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
-//        writeExperimentResult.writeResultList(outputPath, title, resultList);
-        System.out.println(title);
-        MyPrint.showList(resultList, "\r\n");
+        WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
+        writeExperimentResult.writeResultList(outputPath, title, resultList);
+//        System.out.println(title);
+//        MyPrint.showList(resultList, "\r\n");
 
     }
 }

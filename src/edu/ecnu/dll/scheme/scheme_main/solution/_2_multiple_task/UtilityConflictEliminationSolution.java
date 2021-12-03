@@ -187,9 +187,6 @@ public class UtilityConflictEliminationSolution extends PrivacySolution {
 
 //            double tempRealDistance = this.workers[workerID].getToTaskDistance(i);
 
-
-
-
             TaskTargetInfo taskTargetInfo = null;
             // todo: 设计成取前k个最小距离的task
             // todo: 设计成取前k个最大utility

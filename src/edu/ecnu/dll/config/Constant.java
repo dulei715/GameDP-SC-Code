@@ -20,13 +20,16 @@ public class Constant {
             FILE_PATH_SPLIT + "task_worker_1_2_0",
             FILE_PATH_SPLIT + "task_worker_1_2_5",
             FILE_PATH_SPLIT + "task_worker_1_3_0",
-            FILE_PATH_SPLIT + "task_worker_1_3_5"
+//            FILE_PATH_SPLIT + "task_worker_1_3_5"
     };
     public static final String parentPathDefault = FILE_PATH_SPLIT + "task_worker_1_2_0";
 
     // for task value
+//    public static final Double[] taskValueArray = new Double[] {
+//            5.0, 10.0, 15.0, 20.0, 25.0
+//    };
     public static final Double[] taskValueArray = new Double[] {
-            5.0, 10.0, 15.0, 20.0, 25.0
+            3.0, 6.0, 9.0, 12.0, 15.0
     };
 //    public static final Double[] taskValueArray = new Double[] {
 //            5.0*5, 10.0*5, 15.0*5, 20.0*5, 25.0*5
@@ -34,11 +37,14 @@ public class Constant {
     public static final Double taskValueDefault = 15.0;
 
     // for worker range
+//    public static final Double[] workerRangeArray = new Double[] {
+//            10.0, 15.0, 20.0, 25.0, 30.0
+//    };
     public static final Double[] workerRangeArray = new Double[] {
-            10.0, 15.0, 20.0, 25.0, 30.0
+            0.8, 1.1, 1.4, 1.7, 2.0
     };
 //    public static final Double workerRangeDefault = 20.0;
-    public static final Double workerRangeDefault = 1.0;
+    public static final Double workerRangeDefault = 1.4;
 //    public static final Double workerRangeDefault = 40.0;
 //    public static final Double[] workerRangeArray = new Double[] {
 //            0.8, 1.1, 1.4, 1.7, 2.0
