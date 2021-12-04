@@ -304,6 +304,26 @@ public class MainDataSetGenerator {
         generateWorkerPrivacyBudgetDataSet(parentDirPath + outputWorkerPrivacyBudgetFileName, workerSize, taskSize, budgetGroupSize, budgetGroupLowerBound, budgetGroupUpperBound, precision);
 
     }
+
+    public static void generatePrivacyBudgetFromTaskWorkerPoint(String parentDirPath, double[] budgetBound, int budgetGroupSize) {
+        String taskFileName = Constant.FILE_PATH_SPLIT + "task_point.txt";
+        String workerFileName = Constant.FILE_PATH_SPLIT + "worker_point.txt";
+        String outputTaskValueFileName = Constant.FILE_PATH_SPLIT + "task_value.txt";
+        String outputWorkerRangeFileName = Constant.FILE_PATH_SPLIT + "worker_range.txt";
+        String outputWorkerPrivacyBudgetFileName = Constant.FILE_PATH_SPLIT + "worker_budget.txt";
+
+        int precision = 2;
+
+
+        double budgetGroupLowerBound = budgetBound[0];
+        double budgetGroupUpperBound = budgetBound[1];
+
+        Integer taskSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + taskFileName);
+        Integer workerSize = PointRead.readPointSizeWithFirstLineCount(parentDirPath + workerFileName);
+        generateWorkerPrivacyBudgetDataSet(parentDirPath + outputWorkerPrivacyBudgetFileName, workerSize, taskSize, budgetGroupSize, budgetGroupLowerBound, budgetGroupUpperBound, precision);
+
+    }
+
     public static void generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(String parentDirPath, double[] valueBound, double[] rangeBound, double[] budgetBound, int budgetGroupSize) {
         String taskFileName = Constant.FILE_PATH_SPLIT + "task_point.txt";
         String workerFileName = Constant.FILE_PATH_SPLIT + "worker_point.txt";
@@ -348,6 +368,7 @@ public class MainDataSetGenerator {
         List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(parentDirPath + workerPrivacyBudgetFileName, 1);
         generateWorkerNoiseDistanceDataSet(parentDirPath + workerNoiseDistanceFileName, workerPointList, taskPointList, workerPrivacyBudgetList, isLongitudeLatitude);
     }
+
 
 
     public static void main1(String[] args) {
