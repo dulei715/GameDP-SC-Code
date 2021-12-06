@@ -17,10 +17,10 @@ yCol = 6; % TotalUtilityËùÔÚÁÐ
 yfactor = 1;
 %yLabelName = 'competing time cost (ms)';
 totalAllocatedWorker = matrix.data(:,5);
-uConfPSolution_ppcfFalse = matrix.data(1:9:end,yCol).*yfactor ./ totalAllocatedWorker;
-uConfPSolution_ppcfTrue = matrix.data(2:9:end,yCol).*yfactor ./ totalAllocatedWorker;
-dConfPSolution_ppcfFalse = matrix.data(3:9:end,yCol).*yfactor ./ totalAllocatedWorker;
-dConfPSolution_ppcfTrue = matrix.data(4:9:end,yCol).*yfactor ./ totalAllocatedWorker;
+uConfPSolution_ppcfFalse = matrix.data(1:9:end,yCol).*yfactor ./ totalAllocatedWorker(1:9:end,1);
+uConfPSolution_ppcfTrue = matrix.data(2:9:end,yCol).*yfactor ./ totalAllocatedWorker(2:9:end,1);
+dConfPSolution_ppcfFalse = matrix.data(3:9:end,yCol).*yfactor ./ totalAllocatedWorker(3:9:end,1);
+dConfPSolution_ppcfTrue = matrix.data(4:9:end,yCol).*yfactor ./ totalAllocatedWorker(4:9:end,1);
 
 %size(uConfPSolution_ppcfTrue)
 fig = figure;
@@ -30,8 +30,8 @@ hold on;
 plot(x,uConfPSolution_ppcfTrue, 'ro-','LineWidth',2);
 plot(x, dConfPSolution_ppcfTrue, 'g*-','LineWidth',2);
 
-plot(x, uConfPSolution_ppcfFalse, 'rs','LineWidth',2);
-plot(x, dConfPSolution_ppcfFalse, 'gx', 'LineWidth', 2);
+plot(x, uConfPSolution_ppcfFalse, 'rs:','LineWidth',2);
+plot(x, dConfPSolution_ppcfFalse, 'gx:', 'LineWidth', 2);
 
 figure_FontSize = 18;
 set(get(gca,'XLabel'),'FontSize',figure_FontSize,'FontName','Times New Roman');
