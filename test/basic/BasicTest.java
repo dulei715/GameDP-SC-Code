@@ -11,6 +11,10 @@ import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
 import tools.struct.Point;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -137,6 +141,25 @@ public class BasicTest {
                 }
                 System.out.println();
             }
+        }
+    }
+
+    @Test
+    public void bufferedReadTest() throws IOException {
+        String filePath = "E:\\test0\\point.txt";
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
+        int size = Integer.valueOf(bufferedReader.readLine());
+        bufferedReader.mark(size * 9+1);
+        int len = 5, k = 0;
+        int totalSize = 500;
+        String line;
+        for (int i = 0; i < totalSize; i++) {
+            if (i % len == 0) {
+                bufferedReader.reset();
+            }
+            line = bufferedReader.readLine();
+//            System.out.println(line.getBytes().length);
+            System.out.println(line);
         }
     }
 

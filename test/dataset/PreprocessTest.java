@@ -55,4 +55,11 @@ public class PreprocessTest {
         }
     }
 
+    @Test
+    public void fun3() {
+        String inputParent = "E:\\1.学习\\4.数据集\\dataset\\原始的\\chengdu";
+        String outputParent = "E:\\1.学习\\4.数据集\\dataset\\原始的\\chengdu\\output";
+        Preprocess.extractChengduDataToDataset(inputParent, outputParent);
+    }
+
 }

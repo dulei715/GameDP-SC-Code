@@ -103,6 +103,22 @@ public class BasicWrite {
         }
     }
 
+    public void writeSizeAndListDataWithNewLineSplit(List dataList) {
+        int i = 0;
+        Object obj;
+        try {
+            this.bufferedWriter.write(String.valueOf(dataList.size()));
+            this.bufferedWriter.newLine();
+            for (; i < dataList.size(); i++) {
+                obj = dataList.get(i);
+                this.bufferedWriter.write(obj.toString());
+                this.bufferedWriter.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void endWriting() {
         try {
             bufferedWriter.close();

@@ -67,7 +67,7 @@ public class Preprocess {
         }
     }
 
-    public static void extractChengduDataToDataset(String inputDataParentPath, String outputParentPath) {
+    public static void extractChengduDataToDatasetWithoutRepetition(String inputDataParentPath, String outputParentPath) {
         String nodeFileName = "\\chengdu.node";
         String taxiFileName = "\\chengdu_taxi.txt";
         String orderFileName = "\\chengdu_order.txt";
@@ -104,6 +104,47 @@ public class Preprocess {
 
         pointWrite.startWriting(outputParentPath + workerPointOutputFileName);
         pointWrite.writePoint(writingPointSet);
+        pointWrite.endWriting();
+
+    }
+
+    public static void extractChengduDataToDataset(String inputDataParentPath, String outputParentPath) {
+        String nodeFileName = "\\chengdu.node";
+        String taxiFileName = "\\chengdu_taxi.txt";
+        String orderFileName = "\\chengdu_order.txt";
+
+        String taskPointOutputFileName = "\\task_point.txt";
+        String workerPointOutputFileName = "\\worker_point.txt";
+
+        PointWrite pointWrite = new PointWrite();
+
+        List<Point> nodeList = PointRead.readPointWithFirstLineCount(inputDataParentPath + nodeFileName);
+        List<Order> orderList = OrderRead.readOrderWithFirstLineCount(inputDataParentPath + orderFileName);
+        List<Point> writingPointList = new ArrayList<>();
+
+        Integer pointID;
+        for (Order order : orderList) {
+            pointID = order.getBeginPointID();
+            writingPointList.add(nodeList.get(pointID));
+        }
+
+        pointWrite.startWriting(outputParentPath + taskPointOutputFileName);
+        pointWrite.writePoint(writingPointList);
+        pointWrite.endWriting();
+
+        orderList = null;
+        writingPointList.clear();
+        System.gc();
+
+        writingPointList = new ArrayList<>();
+        List<Taxi> taxiList = TaxiRead.readTaxi(inputDataParentPath + taxiFileName);
+        for (Taxi taxi : taxiList) {
+            pointID = taxi.getPointID();
+            writingPointList.add(nodeList.get(pointID));
+        }
+
+        pointWrite.startWriting(outputParentPath + workerPointOutputFileName);
+        pointWrite.writePoint(writingPointList);
         pointWrite.endWriting();
 
     }
