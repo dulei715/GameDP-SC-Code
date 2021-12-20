@@ -2,11 +2,9 @@ package edu.ecnu.dll.dataset.batch;
 
 import edu.ecnu.dll.dataset.batch.filter.TaskFileNameFilter;
 import edu.ecnu.dll.dataset.preprocess.Preprocess;
-import tools.io.print.MyPrint;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.nio.file.Files;
 
 public class BatchPreprocess {
 
