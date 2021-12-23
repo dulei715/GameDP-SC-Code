@@ -4,6 +4,8 @@ import java.io.File;
 
 public class Constant {
 
+    public static final int precision = 2;
+
     public static final String FILE_PATH_SPLIT = File.separator;
 
 
@@ -22,7 +24,7 @@ public class Constant {
             FILE_PATH_SPLIT + "task_worker_1_3_0",
 //            FILE_PATH_SPLIT + "task_worker_1_3_5"
     };
-    // for privacy budgte
+    // for privacy budget
     public static final String[] parentBudgetPathArray = new String[] {
             FILE_PATH_SPLIT + "task_worker_1_2_0" + FILE_PATH_SPLIT + "privacy_change" + FILE_PATH_SPLIT + "privacy_1",
             FILE_PATH_SPLIT + "task_worker_1_2_0" + FILE_PATH_SPLIT + "privacy_change" + FILE_PATH_SPLIT + "privacy_2",
@@ -31,12 +33,19 @@ public class Constant {
             FILE_PATH_SPLIT + "task_worker_1_2_0" + FILE_PATH_SPLIT + "privacy_change" + FILE_PATH_SPLIT + "privacy_5",
     };
     public static final double[][] parentBudgetRange = new double[][] {
-            {1.0, 1.5},
-            {1.5, 2.0},
-            {2.0, 2.5},
-            {2.5, 3.0},
-            {3.0, 3.5}
+            {0.5, 0.74},
+            {0.74, 0.98},
+            {0.98, 1.22},
+            {1.22, 1.46},
+            {1.46, 1.7}
     };
+//    public static final double[][] parentBudgetRange = new double[][] {
+//            {1.0, 1.5},
+//            {1.5, 2.0},
+//            {2.0, 2.5},
+//            {2.5, 3.0},
+//            {3.0, 3.5}
+//    };
     public static final String parentPathDefault = FILE_PATH_SPLIT + "task_worker_1_2_0";
 
     // for task value
@@ -75,6 +84,10 @@ public class Constant {
 //    };
 //
 //    public static final Double privacyBudgetDefault = 5.0;
+
+    public static final double[] defaultPrivacyBudgetBound = new double[]{0.5,1.7};
+
+    public static final int defaultBudgetGroupSize = 7;
 
 
 
