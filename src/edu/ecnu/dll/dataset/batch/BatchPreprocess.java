@@ -338,7 +338,7 @@ public class BatchPreprocess {
     }
 
     //todo: 用于真实数据集后三组的生成，设置线程数为每组4个
-    public static void main(String[] args) {
+    public static void main3(String[] args) {
         double factorK = 0.001;
         double constA = 0;
 //        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
@@ -354,6 +354,27 @@ public class BatchPreprocess {
 //        scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
         Integer[] threadSizePerGroupArray = new Integer[]{
                 0, 0, 3, 4, 4
+        };
+        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+    }
+
+    // 用于normal数据集生成
+    public static void main(String[] args) {
+        double factorK = 1;
+        double constA = 0;
+//        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
+//        Boolean isLLData = false;
+        String basicDirPath = args[0];
+        Boolean isLLData = Boolean.valueOf(args[1]);
+
+        System.out.println(basicDirPath);
+        System.out.println(isLLData);
+
+        scaleAndCopyTaskPointToDifferentWorkerScaleParentFile(basicDirPath, factorK, constA);
+        int basicSize = 1000;
+        scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
+        Integer[] threadSizePerGroupArray = new Integer[]{
+                1, 2, 2, 3, 3
         };
         generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
     }

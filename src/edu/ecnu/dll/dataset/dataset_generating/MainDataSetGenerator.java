@@ -474,7 +474,8 @@ public class MainDataSetGenerator {
     }
 
 
-    public static void main(String[] args) {
+    // 生成uniform的数据
+    public static void main_u(String[] args) {
 
 
 //        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\nyc_total_dataset_ll\\";
@@ -486,6 +487,26 @@ public class MainDataSetGenerator {
             MainDataSetGenerator.generateUniformPlaneDataPoint(100, 1000, basicPath + "batch_" + StringUtil.getFixIndexNumberInteger(i+1, Constant.subNamePositionSize) + "" +
                     "_task_point.txt");
             MainDataSetGenerator.generateUniformPlaneDataPoint(100, 3000, basicPath + "batch_" + StringUtil.getFixIndexNumberInteger(i+1, Constant.subNamePositionSize) + "" +
+                    "_worker_point.txt");
+        }
+
+
+
+    }
+
+    // 生成 normal的数据
+    public static void main(String[] args) {
+
+
+//        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\nyc_total_dataset_ll\\";
+        String basicPath = "E:\\test\\";
+//        String basicPath = args[0] + Constant.FILE_PATH_SPLIT;
+
+        //生成原始数据集
+        for (int i = 0; i < 300; i++) {
+            MainDataSetGenerator.generateNormalPlaneDataPoint(1000, 0, 150, basicPath + "batch_" + StringUtil.getFixIndexNumberInteger(i+1, Constant.subNamePositionSize) + "" +
+                    "_task_point.txt");
+            MainDataSetGenerator.generateNormalPlaneDataPoint(3000, 0, 150, basicPath + "batch_" + StringUtil.getFixIndexNumberInteger(i+1, Constant.subNamePositionSize) + "" +
                     "_worker_point.txt");
         }
 
