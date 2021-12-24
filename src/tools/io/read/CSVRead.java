@@ -46,6 +46,51 @@ public class CSVRead {
         }
         return elementList;
     }
+    public static List<String> readDataLinesWithoutTitle(String filePath) {
+        BufferedReader bufferedReader = null;
+        String line;
+        List<String> elementList = new ArrayList<>();
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
+            line = bufferedReader.readLine();
+            while ((line = bufferedReader.readLine()) != null) {
+                elementList.add(line);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return elementList;
+    }
+
+    public static String readDataTitle(String filePath) {
+        BufferedReader bufferedReader = null;
+        String line = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
+            line = bufferedReader.readLine();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return line;
+    }
 
     public static void main(String[] args) {
         String filePath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\dataset_TSMC2014_NYC.csv";

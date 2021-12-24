@@ -5,6 +5,7 @@ import java.io.File;
 public class Constant {
 
     public static final int precision = 2;
+    public static final int subNamePositionSize = 3;
 
     public static final String FILE_PATH_SPLIT = File.separator;
 
@@ -32,6 +33,14 @@ public class Constant {
             FILE_PATH_SPLIT + "task_worker_1_2_0" + FILE_PATH_SPLIT + "privacy_change" + FILE_PATH_SPLIT + "privacy_4",
             FILE_PATH_SPLIT + "task_worker_1_2_0" + FILE_PATH_SPLIT + "privacy_change" + FILE_PATH_SPLIT + "privacy_5",
     };
+    public static String[] innerParentBudgetPathArray = new String[] {
+            "privacy_change" + FILE_PATH_SPLIT + "privacy_1",
+            "privacy_change" + FILE_PATH_SPLIT + "privacy_2",
+            "privacy_change" + FILE_PATH_SPLIT + "privacy_3",
+            "privacy_change" + FILE_PATH_SPLIT + "privacy_4",
+            "privacy_change" + FILE_PATH_SPLIT + "privacy_5"
+    };
+
     public static final double[][] parentBudgetRange = new double[][] {
             {0.5, 0.74},
             {0.74, 0.98},

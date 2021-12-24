@@ -1,5 +1,6 @@
 package edu.ecnu.dll.dataset.batch;
 
+import edu.ecnu.dll.config.Constant;
 import tools.io.print.MyPrint;
 import tools.io.read.BasicRead;
 import tools.io.write.BasicWrite;
@@ -13,7 +14,7 @@ public class BatchSplit {
 
 //    private static final int cacheSize = 1000;
     private static final int maxLineByteSize = 50;
-    private static final int subNamePositionSize = 3;
+
     private static final String tagName = "batch";
 
     public int splitToSubFileWithFirstLineSize(String inputFilePath, String outputParentFilePath, String outputBasicName, int batchSize, int batchGroupSize) {
@@ -50,7 +51,7 @@ public class BatchSplit {
 //                }
                 stringList.add(lineStr);
             }
-            String outputPath = outputParentFilePath + File.separator + tagName + "_" + String.format("%0"+subNamePositionSize+"d", i+1) + "_" + outputName + outputFileType;
+            String outputPath = outputParentFilePath + File.separator + tagName + "_" + String.format("%0"+ Constant.subNamePositionSize+"d", i+1) + "_" + outputName + outputFileType;
             basicWrite.startWriting(outputPath);
             basicWrite.writeSizeAndListDataWithNewLineSplit(stringList);
             basicWrite.endWriting();

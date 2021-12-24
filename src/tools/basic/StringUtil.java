@@ -21,12 +21,19 @@ public class StringUtil {
         return stringBuilder.toString();
     }
 
+    public static String getFixIndexNumberInteger(Integer value, int indexNumber) {
+        return String.format("%0" + indexNumber + "d", value);
+    }
+
     public static void main(String[] args) {
         Double[] values = new Double[]{
                 1.2, 4.2, 6.1
         };
         String result = concat(",", values);
         System.out.println(result);
+
+        System.out.println(getFixIndexNumberInteger(12,5));
+
     }
 
 }

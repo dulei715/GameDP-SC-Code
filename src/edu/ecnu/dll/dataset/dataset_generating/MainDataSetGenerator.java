@@ -3,6 +3,7 @@ package edu.ecnu.dll.dataset.dataset_generating;
 import edu.ecnu.dll.config.Constant;
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
 import tools.basic.BasicCalculation;
+import tools.basic.StringUtil;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
@@ -427,7 +428,7 @@ public class MainDataSetGenerator {
 //        double factor = 0.001;
 
     }
-    public static void main(String[] args) {
+    public static void main0(String[] args) {
 
 
 //        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\nyc_total_dataset_ll\\";
@@ -439,7 +440,7 @@ public class MainDataSetGenerator {
                 "task_worker_1_2_0",
                 "task_worker_1_2_5",
                 "task_worker_1_3_0",
-                "task_worker_1_3_5"
+//                "task_worker_1_3_5"
         };
 //        String[] outputPath = new String[]{
 //                "task_worker_1_1_0\\worker_point.txt",
@@ -471,4 +472,26 @@ public class MainDataSetGenerator {
 //        double factor = 0.001;
 
     }
+
+
+    public static void main(String[] args) {
+
+
+//        String basicPath = "E:\\1.学习\\4.数据集\\dataset\\original\\nyc_total_dataset_ll\\";
+        String basicPath = "F:\\test\\";
+//        String basicPath = args[0] + Constant.FILE_PATH_SPLIT;
+
+        //生成原始数据集
+        for (int i = 0; i < 300; i++) {
+            MainDataSetGenerator.generateUniformPlaneDataPoint(100, 1000, basicPath + "batch_" + StringUtil.getFixIndexNumberInteger(i+1, Constant.subNamePositionSize) + "" +
+                    "_task_point.txt");
+            MainDataSetGenerator.generateUniformPlaneDataPoint(100, 3000, basicPath + "batch_" + StringUtil.getFixIndexNumberInteger(i+1, Constant.subNamePositionSize) + "" +
+                    "_worker_point.txt");
+        }
+
+
+
+    }
+
+
 }

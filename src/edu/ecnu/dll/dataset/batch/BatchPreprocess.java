@@ -3,6 +3,7 @@ package edu.ecnu.dll.dataset.batch;
 import edu.ecnu.dll.config.Constant;
 import edu.ecnu.dll.dataset.batch.filter.TaskFileNameFilter;
 import edu.ecnu.dll.dataset.batch.filter.WorkerFileNameFilter;
+import edu.ecnu.dll.dataset.batch.multi_thread.*;
 import edu.ecnu.dll.dataset.dataset_generating.MainDataSetGenerator;
 import edu.ecnu.dll.dataset.preprocess.Preprocess;
 import tools.io.read.PointRead;
@@ -128,6 +129,95 @@ public class BatchPreprocess {
         }
     }
 
+    // 多线程
+    @Deprecated
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel(String basicDirPath, boolean isLLData) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File batchDatasetDirFile = new File(basicDirPath + File.separator + "batch_dataset");
+        int threadArraySize = batchDatasetDirFile.list(workerFileNameFilter).length;
+        Thread[] threadArray = new Thread[threadArraySize];
+
+        for (int i = 0; i < threadArraySize; i++) {
+
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread(basicDirPath, String.format("%0"+Constant.subNamePositionSize+"d", i+1), isLLData)    ;
+            threadArray[i].start();
+        }
+    }
+
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel2(String basicDirPath, boolean isLLData) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File batchDatasetDirFile = new File(basicDirPath + File.separator + "batch_dataset");
+        int batchSize = batchDatasetDirFile.list(workerFileNameFilter).length;
+        Thread[] threadArray = new Thread[Constant.parentPathArray.length];
+
+        for (int i = 0; i < Constant.parentPathArray.length; i++) {
+
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread2(basicDirPath, Constant.parentPathArray[i], batchSize, isLLData)    ;
+            threadArray[i].start();
+        }
+    }
+
+    //多线程
+    @Deprecated
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel(String basicDirPath, boolean isLLData) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File basicDirFile = new File(basicDirPath);
+        int threadArraySize = basicDirFile.list(workerFileNameFilter).length;
+        Thread[] threadArray = new Thread[threadArraySize];
+
+        for (int i = 0; i < threadArraySize; i++) {
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread(basicDirPath, String.format("%0"+Constant.subNamePositionSize+"d", i+1), isLLData);
+            threadArray[i].start();
+        }
+    }
+
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel2(String basicDirPath, boolean isLLData) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File basicDirFile = new File(basicDirPath);
+        int batchSize = basicDirFile.list(workerFileNameFilter).length;
+        Thread[] threadArray = new Thread[Constant.parentBudgetRange.length];
+
+        for (int i = 0; i < Constant.parentBudgetRange.length; i++) {
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread2(basicDirPath, Constant.innerParentBudgetPathArray[i], batchSize, isLLData);
+            threadArray[i].start();
+        }
+    }
+
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File basicDirFile = new File(basicDirPath + File.separator + "batch_dataset");
+        int batchSize = basicDirFile.list(workerFileNameFilter).length;
+//        int batchShareSize = (int)Math.ceil(batchSize*1.0 / threadSizePerGroup);
+        int[] batchShareSizeArray = new int[Constant.parentBudgetRange.length];
+        int threadSize = 0;
+        for (int i = 0; i < batchShareSizeArray.length; i++) {
+            if (threadSizePerGroupArray[i] == null || threadSizePerGroupArray[i] <= 0) {
+                batchShareSizeArray[i] = -1;
+            } else {
+                batchShareSizeArray[i] = (int)Math.ceil(batchSize*1.0 / threadSizePerGroupArray[i]);
+                threadSize += threadSizePerGroupArray[i];
+            }
+        }
+
+        Thread[] threadArray = new Thread[threadSize];
+
+        for (int i = 0, k = 0; i < Constant.parentBudgetRange.length; i++) {
+            if (batchShareSizeArray[i] == -1) {
+                continue;
+            }
+            for (int j = 0; j < threadSizePerGroupArray[i]; j++) {
+                int startBatchID = 1 + batchShareSizeArray[i]*j;
+                int endBatchID = batchShareSizeArray[i]*(j+1);
+                if (endBatchID > batchSize) {
+                    endBatchID = batchSize;
+                }
+                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, Constant.parentPathArray[i], startBatchID, endBatchID, isLLData);
+                threadArray[k].start();
+                ++k;
+            }
+        }
+    }
+
     public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudget(String basicDirPath, boolean isLLData) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
 //        File inputPathDirFile = new File(basicDirPath + File.separator );
@@ -202,6 +292,55 @@ public class BatchPreprocess {
     public static void main0(String[] args) {
         double factorK = 0.001;
         double constA = 0;
+        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
+        Boolean isLLData = false;
+//        String basicDirPath = args[0];
+//        Boolean isLLData = Boolean.valueOf(args[1]);
+
+        System.out.println(basicDirPath);
+        System.out.println(isLLData);
+
+//        scaleAndCopyTaskPointToDifferentWorkerScaleParentFile(basicDirPath, factorK, constA);
+//        int basicSize = 1000;
+//        scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel(basicDirPath, isLLData);
+    }
+
+    public static void main2(String[] args) {
+        double factorK = 1;
+        double constA = 0;
+//        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
+//        Boolean isLLData = false;
+        String basicDirPath = args[0];
+        Boolean isLLData = Boolean.valueOf(args[1]);
+
+        System.out.println(basicDirPath);
+        System.out.println(isLLData);
+
+        scaleAndCopyTaskPointToDifferentWorkerScaleParentFile(basicDirPath, factorK, constA);
+        int basicSize = 1000;
+        scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
+//        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatch(basicDirPath, isLLData);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel2(basicDirPath, isLLData);
+    }
+
+    //todo: 用于处理privacy budget变化的部分
+    public static void main1(String[] args) throws IOException {
+//        String basicSourcePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\task_worker_1_2_0";
+        String basicSourcePath = args[0];
+//        Boolean isLLData = false;
+        Boolean isLLData = Boolean.valueOf(args[1]);
+        copyTaskAndWorkerPointToDifferentPrivacyBudgetParentFile(basicSourcePath);
+//        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel(basicSourcePath, isLLData);
+//        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudget(basicSourcePath, isLLData);
+        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel2(basicSourcePath, isLLData);
+
+    }
+
+    //todo: 用于真实数据集后三组的生成，设置线程数为每组4个
+    public static void main(String[] args) {
+        double factorK = 0.001;
+        double constA = 0;
 //        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
 //        Boolean isLLData = false;
         String basicDirPath = args[0];
@@ -213,18 +352,10 @@ public class BatchPreprocess {
 //        scaleAndCopyTaskPointToDifferentWorkerScaleParentFile(basicDirPath, factorK, constA);
 //        int basicSize = 1000;
 //        scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
-        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatch(basicDirPath, isLLData);
-    }
-
-    //todo: 用于处理privacy budget变化的部分
-    public static void main(String[] args) throws IOException {
-//        String basicSourcePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\task_worker_1_2_0";
-        String basicSourcePath = args[0];
-//        Boolean isLLData = false;
-        Boolean isLLData = Boolean.valueOf(args[1]);
-        copyTaskAndWorkerPointToDifferentPrivacyBudgetParentFile(basicSourcePath);
-        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudget(basicSourcePath, isLLData);
-
+        Integer[] threadSizePerGroupArray = new Integer[]{
+                0, 0, 3, 4, 4
+        };
+        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
     }
 
 }
