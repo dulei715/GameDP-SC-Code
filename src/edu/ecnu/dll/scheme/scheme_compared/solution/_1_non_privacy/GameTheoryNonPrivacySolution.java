@@ -114,6 +114,7 @@ public class GameTheoryNonPrivacySolution extends NonPrivacySolution {
 //            tempUtilityValue = getGTUtilityValue(this.tasks[tempTaskID].valuation, tempDistance.distance, tempDistance.budget, beforeWinnerTaskValue, beforeWinnerDistance, abandonedBeforeValue, abandonedBeforeDistance);
             tempUtilityValue = getGTUtilityValue(this.tasks[tempTaskID].valuation, tempDistance, beforeWinnerTaskValue, beforeWinnerDistance, abandonedBeforeValue, abandonedBeforeDistance);
             if (tempUtilityValue > chosenUtilityValue) {
+                // todo: 测试当有两个相同的task点时的无限循环
                 chosenTaskID = tempTaskID;
                 chosenUtilityValue = tempUtilityValue;
                 chosenDistance = tempDistance;
