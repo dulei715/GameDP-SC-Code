@@ -13,12 +13,14 @@ import java.util.List;
 public class GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread2 extends Thread {
     private String basicPath = null;
     private String privacyDir = null;
+    private double[] budgetLUBound = null;
     private Integer batchArraySize = null;
     private Boolean isLLData = null;
 
-    public GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread2(String basicPath, String privacyDir, Integer batchArraySize, Boolean isLLData) {
+    public GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread2(String basicPath, String privacyDir, double[] budgetLUBound, Integer batchArraySize, Boolean isLLData) {
         this.basicPath = basicPath;
         this.privacyDir = privacyDir;
+        this.budgetLUBound = budgetLUBound;
         this.batchArraySize = batchArraySize;
         this.isLLData = isLLData;
     }
@@ -38,7 +40,7 @@ public class GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread
             workerNoiseDistanceOutputPath = innerBasicPath + File.separator + "batch_" + StringUtil.getFixIndexNumberInteger(i+1, Constant.subNamePositionSize) + "_worker_noise_distance.txt";
             List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointInputPath);
             List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointInputPath);
-            MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.parentBudgetRange[i][0], Constant.parentBudgetRange[i][1], Constant.precision);
+            MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, budgetLUBound[0], budgetLUBound[1], Constant.precision);
             List<Double[]>[] budgetListArray = TwoDimensionDoubleRead.readDouble(workerBudgetOutputPath, 1);
             MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, isLLData);
         }
