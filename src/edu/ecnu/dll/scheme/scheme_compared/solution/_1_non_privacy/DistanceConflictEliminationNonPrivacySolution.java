@@ -149,7 +149,7 @@ public class DistanceConflictEliminationNonPrivacySolution extends NonPrivacySol
 
             // Utility 函数判断
             Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i));
-            if (tempNewUtilityValue <= 0) {
+            if (tempNewUtilityValue <= 1e-6) {
                 this.workers[workerID].setTaskCompetingState(i, false);
                 continue;
             }

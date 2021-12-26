@@ -178,7 +178,7 @@ public class UtilityConflictEliminationNonPrivacySolution extends NonPrivacySolu
             Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i));
 
             // 通过utility直接截断
-            if (tempNewUtilityValue <= 0 || tempNewUtilityValue <= lastTermTaskWinnerPackedArray[i].getUtility()) {
+            if (tempNewUtilityValue <= 1e-6 || tempNewUtilityValue <= lastTermTaskWinnerPackedArray[i].getUtility()) {
                 this.workers[workerID].setTaskCompetingState(i, false);
                 continue;
             }

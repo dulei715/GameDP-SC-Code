@@ -404,7 +404,30 @@ public class BatchPreprocess {
         generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
     }
 
+    // 用于uniform
     public static void main(String[] args) {
+        double factorK = 1;
+        double constA = 0;
+//        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
+//        Boolean isLLData = false;
+        String basicDirPath = args[0];
+        Boolean isLLData = Boolean.valueOf(args[1]);
+
+        System.out.println(basicDirPath);
+        System.out.println(isLLData);
+
+        scaleAndCopyTaskPointToDifferentWorkerScaleParentFile(basicDirPath, factorK, constA);
+        int basicSize = 1000;
+        scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
+        Integer[] threadSizePerGroupArray = new Integer[]{
+                1, 2, 2, 3, 3
+        };
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+    }
+
+
+
+    public static void main6(String[] args) {
         double factorK = 1;
         double constA = 0;
 //        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
@@ -425,7 +448,7 @@ public class BatchPreprocess {
     }
 
     //todo: 用于处理privacy budget变化的部分
-    public static void main5(String[] args) throws IOException {
+    public static void main7(String[] args) throws IOException {
 //        String basicSourcePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\task_worker_1_2_0";
         String basicSourcePath = args[0];
 //        Boolean isLLData = false;

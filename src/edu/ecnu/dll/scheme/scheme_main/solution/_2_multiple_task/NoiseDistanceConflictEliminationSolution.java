@@ -100,7 +100,7 @@ public class NoiseDistanceConflictEliminationSolution extends PrivacySolution {
 
             // Utility 函数判断
             Double tempNewUtilityValue = this.getUtilityValue(this.tasks[i].valuation, this.workers[workerID].getToTaskDistance(i), tempNewCostPrivacyBudget);
-            if (tempNewUtilityValue <= 0) {
+            if (tempNewUtilityValue <= 1e-6) {
                 this.workers[workerID].setBudgetIndex(i, Integer.MAX_VALUE);
                 continue;
             }

@@ -280,7 +280,7 @@ public class GameTheorySolution extends PrivacySolution {
                    continue;
                }
                tempGTValue = tempResponseInfo.getGtUtilityValue();
-               if (tempGTValue <= 0) {
+               if (tempGTValue <= 1e-6) {
                    continue;
                }
 

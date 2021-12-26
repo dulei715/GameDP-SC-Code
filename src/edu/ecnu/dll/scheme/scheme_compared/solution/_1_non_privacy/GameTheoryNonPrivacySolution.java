@@ -88,6 +88,15 @@ public class GameTheoryNonPrivacySolution extends NonPrivacySolution {
                 // 不能响应已经获胜的task
                 continue;
             }
+
+            //for test
+//            if (tempTaskID == 57) {
+//                System.out.println("tempTaskID: " + tempTaskID);
+//            }
+//            if (tempTaskID == 78) {
+//                System.out.println("tempTaskID: " + tempTaskID);
+//            }
+
 //            budgetIndex = this.workers[workerID].getBudgetIndex(tempTaskID);
 //            if (budgetIndex >= this.workers[workerID].getPrivacyBudgetArray(tempTaskID).length) {
 //                continue;
@@ -252,10 +261,18 @@ public class GameTheoryNonPrivacySolution extends NonPrivacySolution {
             // 重复迭代所有worker
 //            ++k;
             for (int workerID = 0; workerID < workers.length; workerID++) {
+
+//                if (workerID == 590) {
+//                    System.out.println(workerID);
+//                }
+
                 /**
                  *  针对每个worker，选出使其GTUtility最大的task
                  */
                tempResponseInfo = getBestResponseTaskPackedInfo(workerID, winnerPackedArray);
+
+
+
 
 
                 if (tempResponseInfo == null) {
@@ -269,7 +286,7 @@ public class GameTheoryNonPrivacySolution extends NonPrivacySolution {
 
 
                 tempGTValue = tempResponseInfo.getGtUtilityValue();
-               if (tempGTValue <= 0) {
+               if (tempGTValue <= 1e-6) {
                    continue;
                }
 
