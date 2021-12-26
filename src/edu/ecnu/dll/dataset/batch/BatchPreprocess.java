@@ -405,7 +405,7 @@ public class BatchPreprocess {
     }
 
     // 用于uniform
-    public static void main(String[] args) {
+    public static void main5(String[] args) {
         double factorK = 1;
         double constA = 0;
 //        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km";
@@ -448,7 +448,7 @@ public class BatchPreprocess {
     }
 
     //todo: 用于处理privacy budget变化的部分
-    public static void main7(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {
 //        String basicSourcePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\task_worker_1_2_0";
         String basicSourcePath = args[0];
 //        Boolean isLLData = false;
