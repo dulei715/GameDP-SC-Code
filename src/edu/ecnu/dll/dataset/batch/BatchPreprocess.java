@@ -296,6 +296,46 @@ public class BatchPreprocess {
         }
     }
 
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel4(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray, Integer[] startBias) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File basicDirFile = new File(basicDirPath);
+        int batchSize = basicDirFile.list(workerFileNameFilter).length;
+        int[] batchShareSizeArray = new int[Constant.parentBudgetRange.length];
+        int threadSize = 0;
+        for (int i = 0; i < batchShareSizeArray.length; i++) {
+            if (threadSizePerGroupArray[i] == null || threadSizePerGroupArray[i] <= 0) {
+                batchShareSizeArray[i] = -1;
+            } else {
+                batchShareSizeArray[i] = (int)Math.ceil(batchSize*1.0 / threadSizePerGroupArray[i]);
+                threadSize += threadSizePerGroupArray[i];
+            }
+        }
+
+
+        Thread[] threadArray = new Thread[threadSize];
+//        Thread[] threadArray = new Thread[Constant.parentBudgetRange.length];
+
+        for (int i = 0, k=0; i < Constant.parentBudgetRange.length; i++) {
+            if (batchShareSizeArray[i] == -1) {
+                continue;
+            }
+            for (int j = 0; j < threadSizePerGroupArray[i]; j++) {
+                int startBatchID = startBias[i] + batchShareSizeArray[i]*j;
+                int endBatchID = batchShareSizeArray[i]*(j+1);
+                if (startBatchID > endBatchID) {
+                    continue;
+                }
+                if (endBatchID > batchSize) {
+                    endBatchID = batchSize;
+                }
+                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread3(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], startBatchID, endBatchID, isLLData);
+                threadArray[k].start();
+                ++k;
+            }
+
+        }
+    }
+
     public static void copyTaskAndWorkerPointToDifferentPrivacyBudgetParentFile(String basicDirPath) throws IOException {
         FilenameFilter taskFileNameFilter = new TaskFileNameFilter();
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
@@ -453,13 +493,16 @@ public class BatchPreprocess {
         String basicSourcePath = args[0];
 //        Boolean isLLData = false;
         Boolean isLLData = Boolean.valueOf(args[1]);
-        copyTaskAndWorkerPointToDifferentPrivacyBudgetParentFile(basicSourcePath);
+//        copyTaskAndWorkerPointToDifferentPrivacyBudgetParentFile(basicSourcePath);
 //        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel(basicSourcePath, isLLData);
 //        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudget(basicSourcePath, isLLData);
         Integer[] threadSizePerGroupArray = new Integer[]{
                 2, 2, 2, 2, 2
         };
-        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicSourcePath, isLLData, threadSizePerGroupArray);
+        Integer[] basicBias = new Integer[]{
+                80, 80, 80, 80, 80
+        };
+        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel4(basicSourcePath, isLLData, threadSizePerGroupArray, basicBias);
 
     }
 

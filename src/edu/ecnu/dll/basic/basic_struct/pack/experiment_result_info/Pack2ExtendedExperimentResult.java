@@ -14,7 +14,7 @@ public class Pack2ExtendedExperimentResult extends PackExtendedExperimentResult 
     public Double lowerPrivacyValue = null;
     public Double upperPrivacyValue = null;
 
-    ExtendedExperimentResult extendedExperimentResult = null;
+//    ExtendedExperimentResult extendedExperimentResult = null;
 
     public Pack2ExtendedExperimentResult(String datasetName, Integer dataType, Boolean ppcfState, String solutionName, ExtendedExperimentResult extendedExperimentResult, Double lowerPrivacyValue, Double upperPrivacyValue) {
         this.datasetName = datasetName;

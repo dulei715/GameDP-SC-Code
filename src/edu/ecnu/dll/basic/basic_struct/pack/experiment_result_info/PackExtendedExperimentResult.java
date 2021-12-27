@@ -16,7 +16,7 @@ public class PackExtendedExperimentResult {
 
 //    public Boolean eceaState = null;
 
-    ExtendedExperimentResult extendedExperimentResult = null;
+    public ExtendedExperimentResult extendedExperimentResult = null;
 
 //    public PackNormalExperimentResult(String datasetName, Integer dataType, Boolean ppcfState, Boolean eceaState, Integer workerChosenState, NormalExperimentResult normalExperimentResult) {
     public PackExtendedExperimentResult(String datasetName, Integer dataType, Boolean ppcfState, String solutionName, ExtendedExperimentResult extendedExperimentResult) {

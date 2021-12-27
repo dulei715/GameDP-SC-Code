@@ -29,23 +29,23 @@ public class ConcatExperimentData {
         List<String> workerBudgetChangeResultStr;
         List<Pack2ExtendedExperimentResult> workerBudgetChangeResultB;
 
-        String workerRatioChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[0]);
-        String taskValueChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[1]);
-        String workerRangeChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[2]);
-        String workerBudgetChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[3]);
+        String workerRatioChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[0]);
+        String taskValueChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[1]);
+        String workerRangeChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[2]);
+        String workerBudgetChangeTitle = CSVRead.readDataTitle(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[3]);
 
-        workerRatioChangeResult = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[0]);
-        taskValueChangeResult = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[1]);
-        workerRangeChangeResult = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[2]);
-        workerBudgetChangeResult = Pack2ExtendedExperimentResult.read2Result(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", 1) + resultDataFileName[3]);
+        workerRatioChangeResult = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[0]);
+        taskValueChangeResult = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[1]);
+        workerRangeChangeResult = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[2]);
+        workerBudgetChangeResult = Pack2ExtendedExperimentResult.read2Result(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", 1)+ File.separator + resultDataFileName[3]);
 
         int listSize = workerRatioChangeResult.size();
 
         for (int i = 2; i <= batchSize; i++) {
-            workerRatioChangeResultB = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", i) + resultDataFileName[0]);
-            taskValueChangeResultB = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", i) + resultDataFileName[1]);
-            workerRangeChangeResultB = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", i) + resultDataFileName[2]);
-            workerBudgetChangeResultB = Pack2ExtendedExperimentResult.read2Result(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("%0"+Constant.subNamePositionSize+"d", i) + resultDataFileName[3]);
+            workerRatioChangeResultB = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", i)+ File.separator + resultDataFileName[0]);
+            taskValueChangeResultB = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", i)+ File.separator + resultDataFileName[1]);
+            workerRangeChangeResultB = PackExtendedExperimentResult.readResult(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", i)+ File.separator + resultDataFileName[2]);
+            workerBudgetChangeResultB = Pack2ExtendedExperimentResult.read2Result(basicPath + File.separator + inputBasicParentPath + File.separator + String.format("_%0"+Constant.subNamePositionSize+"d_", i)+ File.separator + resultDataFileName[3]);
 
             for (int j = 0; j < listSize; j++) {
                 workerRatioChangeResult.get(j).concat(workerRatioChangeResultB.get(j));
@@ -71,9 +71,17 @@ public class ConcatExperimentData {
 
         WriteExperimentResult writeExperimentResult = new WriteExperimentResult();
         writeExperimentResult.writeResultList(basicPath + File.separator + outputParentPath + File.separator + resultDataFileName[0], workerRatioChangeTitle, workerRatioChangeResultStr);
-        writeExperimentResult.writeResultList(basicPath + File.separator + outputParentPath + File.separator + resultDataFileName[1], workerRatioChangeTitle, taskValueChangeResultStr);
-        writeExperimentResult.writeResultList(basicPath + File.separator + outputParentPath + File.separator + resultDataFileName[2], workerRatioChangeTitle, workerRangeChangeResultStr);
-        writeExperimentResult.writeResultList(basicPath + File.separator + outputParentPath + File.separator + resultDataFileName[3], workerRatioChangeTitle, workerBudgetChangeResultStr);
+        writeExperimentResult.writeResultList(basicPath + File.separator + outputParentPath + File.separator + resultDataFileName[1], taskValueChangeTitle, taskValueChangeResultStr);
+        writeExperimentResult.writeResultList(basicPath + File.separator + outputParentPath + File.separator + resultDataFileName[2], workerRangeChangeTitle, workerRangeChangeResultStr);
+        writeExperimentResult.writeResultList(basicPath + File.separator + outputParentPath + File.separator + resultDataFileName[3], workerBudgetChangeTitle, workerBudgetChangeResultStr);
+    }
+
+    public static void main(String[] args) {
+        String basicPath = args[0];
+//        String basicPath = "F:\\debug";
+        Integer batchSize = Integer.valueOf(args[1]);
+//        Integer batchSize = 260;
+        concatCSVFile(basicPath, batchSize);
     }
 
 }
