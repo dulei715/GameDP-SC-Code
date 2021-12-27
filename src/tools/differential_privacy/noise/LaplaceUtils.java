@@ -27,6 +27,13 @@ public class LaplaceUtils {
         return laplaceDistribution.sample();
     }
 
+    public static double getNonNegativeLaplaceNoise(double sensitivity, double epsilon) {
+        LaplaceDistribution laplaceDistribution = new LaplaceDistribution(0, sensitivity / epsilon);
+        double result;
+        while ((result = laplaceDistribution.sample()) < 0);
+        return result;
+    }
+
     public double[] getLaplaceNoise(int number) {
         return this.laplaceDistribution.sample(number);
     }
@@ -39,6 +46,14 @@ public class LaplaceUtils {
         Double[] result = new Double[privacyBudgets.length];
         for (int i = 0; i < privacyBudgets.length; i++) {
             result[i] = originalValue + getLaplaceNoise(1, privacyBudgets[i]);
+        }
+        return result;
+    }
+
+    public static Double[] getNonNegativeLaplaceNoiseWithOriginalValue(Double originalValue, Double[] privacyBudgets) {
+        Double[] result = new Double[privacyBudgets.length];
+        for (int i = 0; i < privacyBudgets.length; i++) {
+            result[i] = originalValue + getNonNegativeLaplaceNoise(1, privacyBudgets[i]);
         }
         return result;
     }

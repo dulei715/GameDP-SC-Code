@@ -10,6 +10,7 @@ import edu.ecnu.dll.basic.basic_struct.pack.multi_agent_info.ResponseWorkerTaskI
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.DistanceBudgetPair;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerTaskUpdateInfo;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoiseDistanceBudgetPair;
+import edu.ecnu.dll.config.Constant;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.run_main.AbstractRun;
 import edu.ecnu.dll.run.result_tools.TargetTool;
@@ -304,22 +305,28 @@ public class GameTheorySolution extends PrivacySolution {
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\TKY";
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\test\\test1";
 //        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_default";
+        String basicDatasetPath = "E:\\debug\\task_worker_1_2_0";
 //        double[] fixedTaskValueAndWorkerRange = new double[]{20.0, 2};
-        Solution.alpha = 0.001;
+        Solution.alpha = 1;
         Solution.beta = 1;
 
-        double[] fixedTaskValueAndWorkerRange = new double[]{40.0, 4000};
+//        double[] fixedTaskValueAndWorkerRange = new double[]{40.0, 4000};
 //        Integer dataType = AbstractRun.LONGITUDE_LATITUDE;
         Integer dataType = AbstractRun.COORDINATE;
 
 
-        String workerPointPath = basicDatasetPath + "\\worker_point.txt";
-        String taskPointPath = basicDatasetPath + "\\task_point.txt";
-        String taskValuePath = basicDatasetPath + "\\task_value.txt";
-        String workerRangePath = basicDatasetPath + "\\worker_range.txt";
-        String workerPrivacyBudgetPath = basicDatasetPath + "\\worker_budget.txt";
-        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
+//        String workerPointPath = basicDatasetPath + "\\worker_point.txt";
+//        String taskPointPath = basicDatasetPath + "\\task_point.txt";
+//        String taskValuePath = basicDatasetPath + "\\task_value.txt";
+//        String workerRangePath = basicDatasetPath + "\\worker_range.txt";
+//        String workerPrivacyBudgetPath = basicDatasetPath + "\\worker_budget.txt";
+//        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
+        String taskPointPath = basicDatasetPath + "\\batch_001_task_point.txt";
+        String workerPointPath = basicDatasetPath + "\\batch_001_worker_point.txt";
+
+        String workerPrivacyBudgetPath = basicDatasetPath + "\\batch_001_worker_budget.txt";
+        String workerNoiseDistancePath = basicDatasetPath + "\\batch_001_worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
         List<Double> taskValueList;
@@ -335,15 +342,9 @@ public class GameTheorySolution extends PrivacySolution {
 
         Double taskValue = null, workerRange = null;
 
-        if (fixedTaskValueAndWorkerRange == null) {
-            taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
-            workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
-            gameTheorySolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
-        } else {
-            taskValue = fixedTaskValueAndWorkerRange[0];
-            workerRange = fixedTaskValueAndWorkerRange[1];
-            gameTheorySolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
-        }
+        taskValue = Constant.taskValueDefault;
+        workerRange = Constant.workerRangeDefault;
+        gameTheorySolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
 
         //todo: 根据不同的数据集选用不同的初始化
 //        multiTaskMultiCompetitionSolution.initializeAgents();
