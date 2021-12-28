@@ -11,6 +11,7 @@ public class GenerateAllPrivacyScaleBudgetAndNoiseDistanceWithPointCopy {
 //        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\normal_total_dataset_km";
         Boolean isLLData = Boolean.valueOf(args[1]);
 //        Boolean isLLData = false;
+        Boolean onlyPositiveNoiseDistance = Boolean.valueOf(args[2]);
         String parentName = BatchPreprocess.scaleOutputPath[2];
 
         double factorK = 1.0;
@@ -31,6 +32,6 @@ public class GenerateAllPrivacyScaleBudgetAndNoiseDistanceWithPointCopy {
                 2, 2, 2, 2, 2
         };
 
-        BatchPreprocess.generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        BatchPreprocess.generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray, onlyPositiveNoiseDistance);
     }
 }

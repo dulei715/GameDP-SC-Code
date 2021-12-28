@@ -23,6 +23,7 @@ public class DifferentPrivacyBudgetDataSetGenerator {
 
 //        String basicParentParentParentPath = "E:\\1.学习\\4.数据集\\dataset_for_linux";
         String basicParentParentParentPath = args[0];
+        Boolean onlyPositiveNoiseDistance = Boolean.valueOf(args[1]);
         String realDatasetParentParent = "1_real";
         String[] realDatasetSub = new String[] {
                 "1_nyc", "2_tky", "3_chengdu"
@@ -74,7 +75,7 @@ public class DifferentPrivacyBudgetDataSetGenerator {
 //                MyPrint.showSplitLine("*", 200);
                 // 生成dataset
                 MainDataSetGenerator.generatePrivacyBudgetFromTaskWorkerPoint(tempSourceFile.getAbsolutePath(), Constant.parentBudgetRange[j], privacyGroupSize);
-                MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(tempSourceFile.getAbsolutePath(), isLongLatitudeArray[i]);
+                MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(tempSourceFile.getAbsolutePath(), isLongLatitudeArray[i], onlyPositiveNoiseDistance);
             }
 
 

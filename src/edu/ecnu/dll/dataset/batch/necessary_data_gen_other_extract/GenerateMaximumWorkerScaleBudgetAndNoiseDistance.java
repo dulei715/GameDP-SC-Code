@@ -13,6 +13,8 @@ public class GenerateMaximumWorkerScaleBudgetAndNoiseDistance {
         double factorK = Double.valueOf(args[2]);
         double constA = 0;
 
+        Boolean onlyPositiveNoiseDistance = Boolean.valueOf(args[3]);
+
         // 复制(并统一单位)task和worker到 task_worker_1_3_0 目录下
         int basicSize = 1000;
         String scaleOutputPath = BatchPreprocess.scaleOutputPath[BatchPreprocess.scaleOutputPath.length-1];
@@ -27,6 +29,6 @@ public class GenerateMaximumWorkerScaleBudgetAndNoiseDistance {
         // 在 task_worker_1_3_0 目录下生成budget和 noise distance
         Integer threadSize = 8;
         String parentPath = Constant.parentPathArray[Constant.parentPathArray.length-1];
-        BatchPreprocess.generatePrivacyBudgetAndNoiseDistanceForGivenWorkerBatchParallel3(basicDirPath, parentPath, isLLData, threadSize);
+        BatchPreprocess.generatePrivacyBudgetAndNoiseDistanceForGivenWorkerBatchParallel3(basicDirPath, parentPath, isLLData, threadSize, onlyPositiveNoiseDistance);
     }
 }

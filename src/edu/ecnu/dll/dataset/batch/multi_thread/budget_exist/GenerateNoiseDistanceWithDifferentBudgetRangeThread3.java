@@ -18,14 +18,16 @@ public class GenerateNoiseDistanceWithDifferentBudgetRangeThread3 extends Thread
     private Integer startBatchNumber = null;
     private Integer endBatchNumber = null;
     private Boolean isLLData = null;
+    private Boolean onlyPositiveNoiseDistance = null;
 
-    public GenerateNoiseDistanceWithDifferentBudgetRangeThread3(String basicPath, String privacyDir, double[] budgetLUBound, Integer startBatchNumber, Integer endBatchNumber, Boolean isLLData) {
+    public GenerateNoiseDistanceWithDifferentBudgetRangeThread3(String basicPath, String privacyDir, double[] budgetLUBound, Integer startBatchNumber, Integer endBatchNumber, Boolean isLLData, Boolean onlyPositiveNoiseDistance) {
         this.basicPath = basicPath;
         this.privacyDir = privacyDir;
         this.budgetLUBound = budgetLUBound;
         this.startBatchNumber = startBatchNumber;
         this.endBatchNumber = endBatchNumber;
         this.isLLData = isLLData;
+        this.onlyPositiveNoiseDistance = onlyPositiveNoiseDistance;
     }
 
     /**
@@ -44,7 +46,7 @@ public class GenerateNoiseDistanceWithDifferentBudgetRangeThread3 extends Thread
             List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointInputPath);
             List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointInputPath);
             List<Double[]>[] budgetListArray = TwoDimensionDoubleRead.readDouble(workerBudgetInputPath, 1);
-            MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, isLLData);
+            MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, isLLData, onlyPositiveNoiseDistance);
         }
     }
 }

@@ -9,6 +9,9 @@ public class GenForWorkerScaleCopyForPointBudgetDistance {
         Boolean isLLData = Boolean.valueOf(args[1]);
 
         double factorK = Integer.valueOf(args[2]);
+
+        Boolean onlyPositiveNoiseDistance = Boolean.valueOf(args[3]);
+
         double constA = 0;
 
         BatchPreprocess.scaleAndCopyTaskPointToDifferentWorkerScaleParentFile(basicDirPath, factorK, constA);
@@ -21,6 +24,6 @@ public class GenForWorkerScaleCopyForPointBudgetDistance {
         Integer[] threadSizePerGroupArray = new Integer[]{
                 1, 2, 2, 3, 3
         };
-        BatchPreprocess.generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        BatchPreprocess.generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray, onlyPositiveNoiseDistance);
     }
 }

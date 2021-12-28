@@ -196,7 +196,7 @@ public class BatchPreprocess {
 
 
 
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatch(String basicDirPath, boolean isLLData) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatch(String basicDirPath, boolean isLLData, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
 //        File inputPathDirFile = new File(basicDirPath + File.separator );
         String basicOutputBudgetFileName = "batch_worker_budget.txt";
@@ -225,7 +225,7 @@ public class BatchPreprocess {
 
                 MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputBudgetFilePath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.defaultPrivacyBudgetBound[0], Constant.defaultPrivacyBudgetBound[1], Constant.precision);
                 budgetListArray = TwoDimensionDoubleRead.readDouble(outputBudgetFilePath, 1);
-                MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData);
+                MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData, onlyPositiveNoiseDistance);
 //                System.out.println("outputBudgetName: " + outputBudgetName);
 //                System.out.println("outputFilePath: " + outputFilePath);
 //                System.out.println("workerSize: " + workerSize);
@@ -239,7 +239,7 @@ public class BatchPreprocess {
 
     // 多线程
     @Deprecated
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel(String basicDirPath, boolean isLLData) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel(String basicDirPath, boolean isLLData, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File batchDatasetDirFile = new File(basicDirPath + File.separator + "batch_dataset");
         int threadArraySize = batchDatasetDirFile.list(workerFileNameFilter).length;
@@ -247,12 +247,12 @@ public class BatchPreprocess {
 
         for (int i = 0; i < threadArraySize; i++) {
 
-            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread(basicDirPath, String.format("%0"+Constant.subNamePositionSize+"d", i+1), isLLData)    ;
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread(basicDirPath, String.format("%0"+Constant.subNamePositionSize+"d", i+1), isLLData, onlyPositiveNoiseDistance)    ;
             threadArray[i].start();
         }
     }
 
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel2(String basicDirPath, boolean isLLData) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel2(String basicDirPath, boolean isLLData, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File batchDatasetDirFile = new File(basicDirPath + File.separator + "batch_dataset");
         int batchSize = batchDatasetDirFile.list(workerFileNameFilter).length;
@@ -260,12 +260,12 @@ public class BatchPreprocess {
 
         for (int i = 0; i < Constant.parentPathArray.length; i++) {
 
-            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread2(basicDirPath, Constant.parentPathArray[i], batchSize, isLLData)    ;
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread2(basicDirPath, Constant.parentPathArray[i], batchSize, isLLData, onlyPositiveNoiseDistance);
             threadArray[i].start();
         }
     }
 
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath + File.separator + "batch_dataset");
         int batchSize = basicDirFile.list(workerFileNameFilter).length;
@@ -293,13 +293,13 @@ public class BatchPreprocess {
                 if (endBatchID > batchSize) {
                     endBatchID = batchSize;
                 }
-                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, Constant.parentPathArray[i], startBatchID, endBatchID, isLLData);
+                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, Constant.parentPathArray[i], startBatchID, endBatchID, isLLData, onlyPositiveNoiseDistance);
                 threadArray[k].start();
                 ++k;
             }
         }
     }
-    public static void generatePrivacyBudgetAndNoiseDistanceForGivenWorkerBatchParallel3(String basicDirPath, String parentPath, boolean isLLData, Integer threadSize) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForGivenWorkerBatchParallel3(String basicDirPath, String parentPath, boolean isLLData, Integer threadSize, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath + File.separator + "batch_dataset");
         int batchSize = basicDirFile.list(workerFileNameFilter).length;
@@ -319,25 +319,25 @@ public class BatchPreprocess {
             if (endBatchID > batchSize) {
                 endBatchID = batchSize;
             }
-            threadArray[j] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, parentPath, startBatchID, endBatchID, isLLData);
+            threadArray[j] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, parentPath, startBatchID, endBatchID, isLLData, onlyPositiveNoiseDistance);
             threadArray[j].start();
         }
     }
     //多线程
 
     @Deprecated
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel(String basicDirPath, boolean isLLData) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel(String basicDirPath, boolean isLLData, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath);
         int threadArraySize = basicDirFile.list(workerFileNameFilter).length;
         Thread[] threadArray = new Thread[threadArraySize];
 
         for (int i = 0; i < threadArraySize; i++) {
-            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread(basicDirPath, String.format("%0"+Constant.subNamePositionSize+"d", i+1), isLLData);
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread(basicDirPath, String.format("%0"+Constant.subNamePositionSize+"d", i+1), isLLData, onlyPositiveNoiseDistance);
             threadArray[i].start();
         }
     }
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudget(String basicDirPath, boolean isLLData) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudget(String basicDirPath, boolean isLLData, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
 //        File inputPathDirFile = new File(basicDirPath + File.separator );
         String basicOutputBudgetFileName = "batch_worker_budget.txt";
@@ -367,7 +367,7 @@ public class BatchPreprocess {
 //                MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputBudgetFilePath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.defaultPrivacyBudgetBound[0], Constant.defaultPrivacyBudgetBound[1], Constant.precision);
                 MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputBudgetFilePath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.parentBudgetRange[i][0], Constant.parentBudgetRange[i][1], Constant.precision);
                 budgetListArray = TwoDimensionDoubleRead.readDouble(outputBudgetFilePath, 1);
-                MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData);
+                MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData, onlyPositiveNoiseDistance);
 //                System.out.println("outputBudgetName: " + outputBudgetName);
 //                System.out.println("outputFilePath: " + outputFilePath);
 //                System.out.println("workerSize: " + workerSize);
@@ -379,19 +379,19 @@ public class BatchPreprocess {
         }
     }
 
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel2(String basicDirPath, boolean isLLData) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel2(String basicDirPath, boolean isLLData, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath);
         int batchSize = basicDirFile.list(workerFileNameFilter).length;
         Thread[] threadArray = new Thread[Constant.parentBudgetRange.length];
 
         for (int i = 0; i < Constant.parentBudgetRange.length; i++) {
-            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread2(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], batchSize, isLLData);
+            threadArray[i] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread2(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], batchSize, isLLData, onlyPositiveNoiseDistance);
             threadArray[i].start();
         }
     }
 
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath);
         int batchSize = basicDirFile.list(workerFileNameFilter).length;
@@ -419,7 +419,7 @@ public class BatchPreprocess {
                 if (endBatchID > batchSize) {
                     endBatchID = batchSize;
                 }
-                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread3(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], startBatchID, endBatchID, isLLData);
+                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread3(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], startBatchID, endBatchID, isLLData, onlyPositiveNoiseDistance);
                 threadArray[k].start();
                 ++k;
             }
@@ -427,7 +427,7 @@ public class BatchPreprocess {
         }
     }
 
-    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel4(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray, Integer[] startBias) {
+    public static void generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel4(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray, Integer[] startBias, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath);
         int batchSize = basicDirFile.list(workerFileNameFilter).length;
@@ -459,7 +459,7 @@ public class BatchPreprocess {
                 if (endBatchID > batchSize) {
                     endBatchID = batchSize;
                 }
-                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread3(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], startBatchID, endBatchID, isLLData);
+                threadArray[k] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentBudgetRangeThread3(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], startBatchID, endBatchID, isLLData, onlyPositiveNoiseDistance);
                 threadArray[k].start();
                 ++k;
             }
@@ -495,7 +495,7 @@ public class BatchPreprocess {
     }
 
     //todo: 用于已有budget的情况
-    public static void generateNoiseDistanceForEachWorkerBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray) {
+    public static void generateNoiseDistanceForEachWorkerBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath + File.separator + "batch_dataset");
         int batchSize = basicDirFile.list(workerFileNameFilter).length;
@@ -523,14 +523,14 @@ public class BatchPreprocess {
                 if (endBatchID > batchSize) {
                     endBatchID = batchSize;
                 }
-                threadArray[k] = new GenerateNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, Constant.parentPathArray[i], startBatchID, endBatchID, isLLData);
+                threadArray[k] = new GenerateNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, Constant.parentPathArray[i], startBatchID, endBatchID, isLLData, onlyPositiveNoiseDistance);
                 threadArray[k].start();
                 ++k;
             }
         }
     }
     //todo: 用于已有budget的情况
-    public static void generateNoiseDistanceForEachPrivacyBudgetBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray) {
+    public static void generateNoiseDistanceForEachPrivacyBudgetBatchParallel3(String basicDirPath, boolean isLLData, Integer[] threadSizePerGroupArray, boolean onlyPositiveNoiseDistance) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         File basicDirFile = new File(basicDirPath);
         int batchSize = basicDirFile.list(workerFileNameFilter).length;
@@ -558,7 +558,7 @@ public class BatchPreprocess {
                 if (endBatchID > batchSize) {
                     endBatchID = batchSize;
                 }
-                threadArray[k] = new GenerateNoiseDistanceWithDifferentBudgetRangeThread3(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], startBatchID, endBatchID, isLLData);
+                threadArray[k] = new GenerateNoiseDistanceWithDifferentBudgetRangeThread3(basicDirPath, Constant.innerParentBudgetPathArray[i], Constant.parentBudgetRange[i], startBatchID, endBatchID, isLLData, onlyPositiveNoiseDistance);
                 threadArray[k].start();
                 ++k;
             }
@@ -581,7 +581,7 @@ public class BatchPreprocess {
 //        scaleAndCopyTaskPointToDifferentWorkerScaleParentFile(basicDirPath, factorK, constA);
 //        int basicSize = 1000;
 //        scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
-        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel(basicDirPath, isLLData);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel(basicDirPath, isLLData, false);
     }
 
     public static void main2(String[] args) {
@@ -599,7 +599,7 @@ public class BatchPreprocess {
         int basicSize = 1000;
         scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
 //        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatch(basicDirPath, isLLData);
-        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel2(basicDirPath, isLLData);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel2(basicDirPath, isLLData, false);
     }
 
 
@@ -622,7 +622,7 @@ public class BatchPreprocess {
         Integer[] threadSizePerGroupArray = new Integer[]{
                 0, 0, 3, 4, 4
         };
-        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray, false);
     }
 
     // 用于normal数据集生成
@@ -643,7 +643,7 @@ public class BatchPreprocess {
         Integer[] threadSizePerGroupArray = new Integer[]{
                 1, 2, 2, 3, 3
         };
-        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray, false);
     }
 
     // 用于uniform
@@ -664,7 +664,7 @@ public class BatchPreprocess {
         Integer[] threadSizePerGroupArray = new Integer[]{
                 1, 2, 2, 3, 3
         };
-        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray, false);
     }
 
 
@@ -686,7 +686,7 @@ public class BatchPreprocess {
         Integer[] threadSizePerGroupArray = new Integer[]{
                 0, 0, 2, 3, 4
         };
-        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray,false);
     }
 
     //todo: 用于处理privacy budget变化的部分
@@ -705,7 +705,7 @@ public class BatchPreprocess {
 //                80, 80, 80, 80, 80
 //        };
 //        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel4(basicSourcePath, isLLData, threadSizePerGroupArray, basicBias);
-        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicSourcePath, isLLData, threadSizePerGroupArray);
+        generatePrivacyBudgetAndNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicSourcePath, isLLData, threadSizePerGroupArray,false);
 
     }
 

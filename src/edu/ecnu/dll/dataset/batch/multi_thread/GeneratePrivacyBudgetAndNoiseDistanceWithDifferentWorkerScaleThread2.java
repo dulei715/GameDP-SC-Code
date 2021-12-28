@@ -15,12 +15,14 @@ public class GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread
     private String scaleDir = null;
     private Integer batchArraySize = null;
     private Boolean isLLData = null;
+    private Boolean onlyPositiveNoiseDistance = null;
 
-    public GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread2(String basicPath, String scaleDir, Integer batchArraySize, Boolean isLLData) {
+    public GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread2(String basicPath, String scaleDir, Integer batchArraySize, Boolean isLLData, Boolean onlyPositiveNoiseDistance) {
         this.basicPath = basicPath;
         this.scaleDir = scaleDir;
         this.batchArraySize = batchArraySize;
         this.isLLData = isLLData;
+        this.onlyPositiveNoiseDistance = onlyPositiveNoiseDistance;
     }
 
     /**
@@ -41,7 +43,7 @@ public class GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread
             List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointInputPath);
             MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.defaultPrivacyBudgetBound[0], Constant.defaultPrivacyBudgetBound[1], Constant.precision);
             List<Double[]>[] budgetListArray = TwoDimensionDoubleRead.readDouble(workerBudgetOutputPath, 1);
-            MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, isLLData);
+            MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, isLLData, onlyPositiveNoiseDistance);
         }
     }
 }

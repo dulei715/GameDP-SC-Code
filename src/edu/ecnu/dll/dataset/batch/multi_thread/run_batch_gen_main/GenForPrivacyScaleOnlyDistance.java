@@ -9,9 +9,11 @@ public class GenForPrivacyScaleOnlyDistance {
         Boolean isLLData = Boolean.valueOf(args[1]);
 //        Boolean isLLData = false;
 
+        Boolean onlyPositiveNoiseDistance = Boolean.valueOf(args[2]);
+
         Integer[] threadSizePerGroupArray = new Integer[]{
                 2, 2, 2, 2, 2
         };
-        BatchPreprocess.generateNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        BatchPreprocess.generateNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray, onlyPositiveNoiseDistance);
     }
 }

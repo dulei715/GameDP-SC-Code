@@ -33,7 +33,7 @@ public class MainDatasetGeneratorTest {
         int budgetGroupSize = 7;
         for (int i = 0; i < inputParentPath.length; i++) {
             MainDataSetGenerator.generateTaskValuesWorkerRangesAndPrivacyBudgetFromTaskWorkerPoint(basicPath + inputParentPath[i], valueBound, rangeBound, budgetBound, budgetGroupSize);
-            MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(basicPath + inputParentPath[i], isLongitudeLatitude);
+            MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(basicPath + inputParentPath[i], isLongitudeLatitude, false);
         }
     }
 
@@ -114,7 +114,7 @@ public class MainDatasetGeneratorTest {
 //                MyPrint.showSplitLine("*", 200);
                 // 生成dataset
                 MainDataSetGenerator.generatePrivacyBudgetFromTaskWorkerPoint(tempSourceFile.getAbsolutePath(), privacyRangeArray[j], privacyGroupSize);
-                MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(tempSourceFile.getAbsolutePath(), isLongLatitudeArray[j]);
+                MainDataSetGenerator.generateNoiseDistanceFromTaskWorkerPointAndPrivacyBudget(tempSourceFile.getAbsolutePath(), isLongLatitudeArray[j], false);
             }
 
 
