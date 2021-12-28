@@ -1,6 +1,7 @@
 package edu.ecnu.dll.dataset.batch;
 
 import edu.ecnu.dll.config.Constant;
+import edu.ecnu.dll.dataset.batch.filter.DataFileNameFilter;
 import edu.ecnu.dll.dataset.batch.filter.TaskFileNameFilter;
 import edu.ecnu.dll.dataset.batch.filter.WorkerFileNameFilter;
 import edu.ecnu.dll.dataset.batch.multi_thread.*;
@@ -94,6 +95,29 @@ public class BatchPreprocess {
 //        MyPrint.showArray(fileNameArray);
     }
 
+    public static void scaleAndCopyTaskPointToGivenParentFile(String fromABDirPath, String toABDirPath, double factorK, double constA) {
+        FilenameFilter taskFileNameFilter = new TaskFileNameFilter();
+//        String inputPathDir = basicDirPath + File.separator + fromDataDirName;
+//        String outputBasic = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\";
+//        String outputBasic = "";
+
+//        double factorK = 0.001;
+//        double constA = 0.0;
+        File inputPathDirFile = new File(fromABDirPath);
+        String[] fileNameArray = inputPathDirFile.list(taskFileNameFilter);
+        for (int j = 0; j < fileNameArray.length; j++) {
+            String inputFilePath = fromABDirPath + File.separator + fileNameArray[j];
+            String outputFilePath = toABDirPath + File.separator + fileNameArray[j];
+            Preprocess.multipleDataWithFirstLineUnchanged(inputFilePath, outputFilePath, factorK, constA, " ");
+//                System.out.println(inputPathDir + File.separator + fileNameArray[j]);
+//                System.out.println(basicDirPath + File.separator + outputPath[i] + File.separator + fileNameArray[j]);
+        }
+//        MyPrint.showArray(fileNameArray);
+    }
+
+
+
+
     /**
      * 根据已经分好的worker的batch，将worker的所有batch分别抽取不同的比例到不同的worker scale文件夹下，并完成单位换算
      * @param basicDirPath
@@ -110,10 +134,11 @@ public class BatchPreprocess {
             for (int j = 0; j < fileNameArray.length; j++) {
                 String inputFilePath = inputPathDir + File.separator + fileNameArray[j];
                 String outputFilePath = basicDirPath + File.separator + scaleOutputPath[i] + File.separator + fileNameArray[j];
-                Preprocess.extractRandomPointByGivenSize(inputFilePath, outputFilePath, (int) (basicSize * scale[i]), factorK, constA);
+                Preprocess.extractScalePointByGivenSize(inputFilePath, outputFilePath, (int) (basicSize * scale[i]), factorK, constA);
             }
         }
     }
+
     public static void scaleAndExtractWorkerPointToDifferentWorkerScaleParentFileWithExclusion(String basicDirPath, int basicSize, double factorK, double constA, String exclusionParent) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
         String inputPathDir = basicDirPath + File.separator + "batch_dataset";
@@ -126,10 +151,50 @@ public class BatchPreprocess {
             for (int j = 0; j < fileNameArray.length; j++) {
                 String inputFilePath = inputPathDir + File.separator + fileNameArray[j];
                 String outputFilePath = basicDirPath + File.separator + scaleOutputPath[i] + File.separator + fileNameArray[j];
-                Preprocess.extractRandomPointByGivenSize(inputFilePath, outputFilePath, (int) (basicSize * scale[i]), factorK, constA);
+                Preprocess.extractScalePointByGivenSize(inputFilePath, outputFilePath, (int) (basicSize * scale[i]), factorK, constA);
             }
         }
     }
+
+    public static void scaleAndCopyWorkerPointToGivenParentFile(String fromABDirPath, String toABDirPath, double factorK, double constA) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File inputPathDirFile = new File(fromABDirPath);
+        String[] fileNameArray = inputPathDirFile.list(workerFileNameFilter);
+        for (int j = 0; j < fileNameArray.length; j++) {
+            String inputFilePath = fromABDirPath + File.separator + fileNameArray[j];
+            String outputFilePath = toABDirPath + File.separator + fileNameArray[j];
+            Preprocess.multipleDataWithFirstLineUnchanged(inputFilePath, outputFilePath, factorK, constA, " ");
+        }
+    }
+
+    public static void scaleAndExtractWorkerPointToGivenParentFile(String fromABDirPath, String toABDirPath, double scaleSize, int basicSize, double factorK, double constA) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+//        String inputPathDir = basicDirPath + File.separator + fromDataDirName;
+        File inputPathDirFile = new File(fromABDirPath);
+        String[] fileNameArray = inputPathDirFile.list(workerFileNameFilter);
+        for (int j = 0; j < fileNameArray.length; j++) {
+            String inputFilePath = fromABDirPath + File.separator + fileNameArray[j];
+            String outputFilePath = toABDirPath + File.separator + fileNameArray[j];
+            Preprocess.extractScalePointByGivenSize(inputFilePath, outputFilePath, (int) (basicSize * scaleSize), factorK, constA);
+        }
+    }
+
+    public static void scaleAndExtractWorkerTaskPairDataToGivenParentFile(String fromABDirPath, String toABDirPath, String matchingEndName, double scaleSize, int basicSize) {
+        FilenameFilter fileNameFilter = new DataFileNameFilter(matchingEndName);
+//        String inputPathDir = basicDirPath + File.separator + fromDataDirName;
+        File inputPathDirFile = new File(fromABDirPath);
+        String[] fileNameArray = inputPathDirFile.list(fileNameFilter);
+        for (int j = 0; j < fileNameArray.length; j++) {
+            String inputFilePath = fromABDirPath + File.separator + fileNameArray[j];
+            String outputFilePath = toABDirPath + File.separator + fileNameArray[j];
+//            Preprocess.extractScalePointByGivenSize(inputFilePath, outputFilePath, (int) (basicSize * scaleSize), factorK, constA);
+            Preprocess.extractTwoDimensionalDataByGivenSize(inputFilePath, outputFilePath, (int) (basicSize * scaleSize));
+        }
+    }
+
+
+
+
 
     public static void generatePrivacyBudgetAndNoiseDistanceForEachWorkerBatch(String basicDirPath, boolean isLLData) {
         FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
@@ -160,7 +225,7 @@ public class BatchPreprocess {
 
                 MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputBudgetFilePath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.defaultPrivacyBudgetBound[0], Constant.defaultPrivacyBudgetBound[1], Constant.precision);
                 budgetListArray = TwoDimensionDoubleRead.readDouble(outputBudgetFilePath, 1);
-                MainDataSetGenerator.generateWorkerNonNegativeNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData);
+                MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData);
 //                System.out.println("outputBudgetName: " + outputBudgetName);
 //                System.out.println("outputFilePath: " + outputFilePath);
 //                System.out.println("workerSize: " + workerSize);
@@ -234,6 +299,30 @@ public class BatchPreprocess {
             }
         }
     }
+    public static void generatePrivacyBudgetAndNoiseDistanceForGivenWorkerBatchParallel3(String basicDirPath, String parentPath, boolean isLLData, Integer threadSize) {
+        FilenameFilter workerFileNameFilter = new WorkerFileNameFilter();
+        File basicDirFile = new File(basicDirPath + File.separator + "batch_dataset");
+        int batchSize = basicDirFile.list(workerFileNameFilter).length;
+//        int batchShareSize = (int)Math.ceil(batchSize*1.0 / threadSizePerGroup);
+        Integer batchShareSize = null;
+//        int threadSize = 0;
+        if (threadSize == null || threadSize <= 0) {
+            throw new RuntimeException("The thread size is null or not positive!");
+        }
+        batchShareSize = (int)Math.ceil(batchSize*1.0 / threadSize);
+
+        Thread[] threadArray = new Thread[threadSize];
+
+        for (int j = 0; j < threadSize; j++) {
+            int startBatchID = 1 + batchShareSize*j;
+            int endBatchID = batchShareSize*(j+1);
+            if (endBatchID > batchSize) {
+                endBatchID = batchSize;
+            }
+            threadArray[j] = new GeneratePrivacyBudgetAndNoiseDistanceWithDifferentWorkerScaleThread3(basicDirPath, parentPath, startBatchID, endBatchID, isLLData);
+            threadArray[j].start();
+        }
+    }
     //多线程
 
     @Deprecated
@@ -278,7 +367,7 @@ public class BatchPreprocess {
 //                MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputBudgetFilePath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.defaultPrivacyBudgetBound[0], Constant.defaultPrivacyBudgetBound[1], Constant.precision);
                 MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(outputBudgetFilePath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.parentBudgetRange[i][0], Constant.parentBudgetRange[i][1], Constant.precision);
                 budgetListArray = TwoDimensionDoubleRead.readDouble(outputBudgetFilePath, 1);
-                MainDataSetGenerator.generateWorkerNonNegativeNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData);
+                MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(outputNoiseDistanceFilePath, workerPointList, taskPointList, budgetListArray, isLLData);
 //                System.out.println("outputBudgetName: " + outputBudgetName);
 //                System.out.println("outputFilePath: " + outputFilePath);
 //                System.out.println("workerSize: " + workerSize);

@@ -1,17 +1,14 @@
 package edu.ecnu.dll.dataset.preprocess;
 
 import tools.basic.StringUtil;
-import tools.io.read.CSVRead;
-import tools.io.read.OrderRead;
-import tools.io.read.PointRead;
-import tools.io.read.TaxiRead;
+import tools.io.read.*;
 import tools.io.write.PointWrite;
+import tools.io.write.TwoDimensionDoubleWrite;
 import tools.struct.Order;
 import tools.struct.Point;
 import tools.struct.Taxi;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 
 public class Preprocess {
@@ -229,7 +226,7 @@ public class Preprocess {
     }
 
 
-    public static void extractRandomPointByGivenSize(String inputPath, String outputPath, int size, double factorK, double constA) {
+    public static void extractScalePointByGivenSize(String inputPath, String outputPath, int size, double factorK, double constA) {
         List<Point> points = PointRead.readPointWithFirstLineCount(inputPath);
         int pointSize = points.size();
         int interval = pointSize / size;
@@ -248,6 +245,26 @@ public class Preprocess {
         pointWrite.writePoint(newPoints);
         pointWrite.endWriting();
     }
+
+    public static void extractTwoDimensionalDataByGivenSize(String inputPath, String outputPath, int size) {
+//        List<Point> points = PointRead.readPointWithFirstLineCount(inputPath);
+        List<Double[]>[] rawData = TwoDimensionDoubleRead.readDouble(inputPath, 1);
+
+        int workerSize = rawData.length;
+        int interval = workerSize / size;
+        List<Double[]>[] newData = new List[size];
+        for (int i = 0, k = 0; i < workerSize && k < size; i+=interval, ++k) {
+            newData[k] = rawData[i];
+        }
+        TwoDimensionDoubleWrite twoDimensionDoubleWrite = new TwoDimensionDoubleWrite();
+        twoDimensionDoubleWrite.startWriting(outputPath);
+        twoDimensionDoubleWrite.write(newData);
+        twoDimensionDoubleWrite.endWriting();
+    }
+
+
+
+
 
     public static void extractRemainPointByGivenSet(String totalDataInputPath, String excludedDataInputPath, String outputPath, double factorK, double constA) {
         HashSet<Point> excludedSet = new HashSet<>(PointRead.readPointWithFirstLineCount(excludedDataInputPath));
@@ -297,7 +314,7 @@ public class Preprocess {
         for (int i = 0; i < scales.length; i++) {
             tempScale = scales[i];
             workerSize = (int)(taskSize*tempScale);
-            extractRandomPointByGivenSize(inputPath, outputBasic + outputPath[i], workerSize, factorK, constA);
+            extractScalePointByGivenSize(inputPath, outputBasic + outputPath[i], workerSize, factorK, constA);
         }
 //        System.out.println(workerSize);
     }
@@ -321,7 +338,7 @@ public class Preprocess {
 
     }
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
 //        String inputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original";
 //        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu";
 //        extractChengduDataToDataset(inputParentPath, outputParentPath);
@@ -357,10 +374,16 @@ public class Preprocess {
         for (int i = 0; i < scales.length; i++) {
             tempScale = scales[i];
             workerSize = (int)(taskSize*tempScale);
-            extractRandomPointByGivenSize(inputTaskPointPath, outputBasic + outputPathParentPart[i] + taskPointFileName, taskSize, factorK, constA);
-            extractRandomPointByGivenSize(inputWorkerPointPath, outputBasic + outputPathParentPart[i] + workerPointFileName, workerSize, factorK, constA);
+            extractScalePointByGivenSize(inputTaskPointPath, outputBasic + outputPathParentPart[i] + taskPointFileName, taskSize, factorK, constA);
+            extractScalePointByGivenSize(inputWorkerPointPath, outputBasic + outputPathParentPart[i] + workerPointFileName, workerSize, factorK, constA);
         }
 //        System.out.println(workerSize);
+    }
+
+    public static void main(String[] args) {
+        String inputData = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\task_worker_1_1_0\\batch_002_worker_budget.txt";
+        String outputData = "F:\\test\\budget.txt";
+        Preprocess.extractTwoDimensionalDataByGivenSize(inputData, outputData, 2);
     }
 
 }

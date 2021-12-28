@@ -41,10 +41,10 @@ public class DatasetGenerateTest {
 
 
         int size = 2000;
-        Preprocess.extractRandomPointByGivenSize(uniformPath, uniformTaskOutputPath, size, 1, 0);
+        Preprocess.extractScalePointByGivenSize(uniformPath, uniformTaskOutputPath, size, 1, 0);
         Preprocess.extractRemainPointByGivenSet(uniformPath, uniformTaskOutputPath, uniformWorkerOutputPath, 1, 0);
 
-        Preprocess.extractRandomPointByGivenSize(normalPath, normalTaskOutputPath, size, 1, 0);
+        Preprocess.extractScalePointByGivenSize(normalPath, normalTaskOutputPath, size, 1, 0);
         Preprocess.extractRemainPointByGivenSet(normalPath, normalTaskOutputPath, normalWorkerOutputPath, 1, 0);
 
 

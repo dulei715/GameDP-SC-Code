@@ -5,11 +5,13 @@ import edu.ecnu.dll.dataset.batch.BatchPreprocess;
 public class GenForPrivacyScaleOnlyDistance {
     public static void main(String[] args) {
         String basicDirPath = args[0];
+//        String basicDirPath = "E:\\1.学习\\4.数据集\\dataset\\original\\normal_total_dataset_km\\task_worker_1_2_0";
         Boolean isLLData = Boolean.valueOf(args[1]);
+//        Boolean isLLData = false;
 
         Integer[] threadSizePerGroupArray = new Integer[]{
                 2, 2, 2, 2, 2
         };
-        BatchPreprocess.generateNoiseDistanceForEachWorkerBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
+        BatchPreprocess.generateNoiseDistanceForEachPrivacyBudgetBatchParallel3(basicDirPath, isLLData, threadSizePerGroupArray);
     }
 }

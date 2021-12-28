@@ -50,13 +50,21 @@ public class LaplaceUtils {
         return result;
     }
 
-    public static Double[] getNonNegativeLaplaceNoiseWithOriginalValue(Double originalValue, Double[] privacyBudgets) {
-        Double[] result = new Double[privacyBudgets.length];
-        for (int i = 0; i < privacyBudgets.length; i++) {
-            result[i] = originalValue + getNonNegativeLaplaceNoise(1, privacyBudgets[i]);
-        }
-        return result;
-    }
+//    public static Double[] getNonNegativeLaplaceNoiseWithOriginalValue(Double originalValue, Double[] privacyBudgets) {
+//        Double[] result = new Double[privacyBudgets.length];
+//        for (int i = 0; i < privacyBudgets.length; i++) {
+//            result[i] = originalValue + getNonNegativeLaplaceNoise(1, privacyBudgets[i]);
+//        }
+//        return result;
+//    }
+
+//    public static Double[] getLaplaceNoiseWithOriginalValueNonNegative(Double originalValue, Double[] privacyBudgets) {
+//        Double[] result = new Double[privacyBudgets.length];
+//        for (int i = 0; i < privacyBudgets.length; i++) {
+//            while ((result[i] = originalValue + getLaplaceNoise(1, privacyBudgets[i])) < 0);
+//        }
+//        return result;
+//    }
 
     /**
      * 根据给定的distance和budget获取极大似然估计的值

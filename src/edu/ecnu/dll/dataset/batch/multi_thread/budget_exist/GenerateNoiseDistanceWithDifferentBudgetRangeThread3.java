@@ -44,7 +44,7 @@ public class GenerateNoiseDistanceWithDifferentBudgetRangeThread3 extends Thread
             List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointInputPath);
             List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointInputPath);
             List<Double[]>[] budgetListArray = TwoDimensionDoubleRead.readDouble(workerBudgetInputPath, 1);
-            MainDataSetGenerator.generateWorkerNonNegativeNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, isLLData);
+            MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, isLLData);
         }
     }
 }
