@@ -12,6 +12,8 @@ public class GenerateAllPrivacyScaleBudgetAndNoiseDistanceWithPointCopy {
         Boolean isLLData = Boolean.valueOf(args[1]);
 //        Boolean isLLData = false;
         Boolean onlyPositiveNoiseDistance = Boolean.valueOf(args[2]);
+//        Boolean onlyPositiveNoiseDistance = false;
+
         String parentName = BatchPreprocess.scaleOutputPath[2];
 
         double factorK = 1.0;

@@ -1,14 +1,18 @@
 package dataset;
 
+import edu.ecnu.dll.config.Constant;
 import edu.ecnu.dll.dataset.dataset_generating.MainDataSetGenerator;
 import edu.ecnu.dll.dataset.dataset_generating.sample.SamplingFunction;
 import edu.ecnu.dll.dataset.dataset_generating.sample.impl.MeanSamplingFunction;
 import edu.ecnu.dll.dataset.preprocess.Preprocess;
 import org.junit.Test;
+import tools.io.read.PointRead;
+import tools.struct.Point;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 public class DatasetGenerateTest {
     @Test
@@ -170,9 +174,17 @@ public class DatasetGenerateTest {
     }
 
     @Test
-    public void generateValueAndPrivacyBudgetNoiseDistance() {
+    public void generateOnlyPrivacyBudget() {
+        String basicPath = "F:\\debug\\add";
+        String taskInputPath = basicPath + "\\batch_031_task_point.txt";
+        String workerInputPath = basicPath + "\\batch_031_worker_point.txt";
+        String workerBudgetOutputPath = basicPath + "\\batch_031_worker_budget.txt";
+
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskInputPath);
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerInputPath);
 
 
+        MainDataSetGenerator.generateWorkerPrivacyBudgetDataSet(workerBudgetOutputPath, workerPointList.size(), taskPointList.size(), Constant.defaultBudgetGroupSize, Constant.defaultPrivacyBudgetBound[0], Constant.defaultPrivacyBudgetBound[1], Constant.precision);
     }
 
 
