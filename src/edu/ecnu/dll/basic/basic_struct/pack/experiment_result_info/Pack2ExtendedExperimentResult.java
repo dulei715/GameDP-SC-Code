@@ -95,7 +95,7 @@ public class Pack2ExtendedExperimentResult extends PackExtendedExperimentResult 
 
     @Override
     public String toString() {
-        return  datasetName + "," + dataType + "," + ppcfState + "," + solutionName + "," + extendedExperimentResult.toString();
+        return  datasetName + "," + dataType + "," + ppcfState + "," + solutionName + "," + extendedExperimentResult.toString() + "," + this.lowerPrivacyValue + "," + this.upperPrivacyValue;
     }
 
     public static String getAddingTitle() {
