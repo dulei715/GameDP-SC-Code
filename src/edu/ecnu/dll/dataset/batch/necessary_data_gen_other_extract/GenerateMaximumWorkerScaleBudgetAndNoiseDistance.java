@@ -8,9 +8,12 @@ import java.io.File;
 public class GenerateMaximumWorkerScaleBudgetAndNoiseDistance {
     public static void main(String[] args) {
         String basicDirPath = args[0];
+//        String basicDirPath = "/root/code/2_gtdp/0_dataset/3_chengdu";
         Boolean isLLData = Boolean.valueOf(args[1]);
+//        Boolean isLLData = false;
 
         double factorK = Double.valueOf(args[2]);
+//        double factorK = 0.001;
         double constA = 0;
 
         Boolean onlyPositiveNoiseDistance = Boolean.valueOf(args[3]);
