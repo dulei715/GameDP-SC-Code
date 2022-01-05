@@ -41,6 +41,15 @@ public class Point implements Comparable<Point> {
         return new double[]{this.xIndex, this.yIndex};
     }
 
+    public static Point valueOf(double xIndex, double yIndex) {
+        return new Point(xIndex, yIndex);
+    }
+
+    public void scalePosition(double factorK, double constA) {
+        this.xIndex = this.xIndex * factorK + constA;
+        this.yIndex = this.yIndex * factorK + constA;
+    }
+
     @Override
     public String toString() {
         return "Point{" +

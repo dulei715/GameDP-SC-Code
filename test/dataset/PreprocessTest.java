@@ -50,8 +50,8 @@ public class PreprocessTest {
         for (int i = 0; i < scales.length; i++) {
             tempScale = scales[i];
             workerSize = (int)(taskSize*tempScale);
-            Preprocess.extractScalePointByGivenSize(inputTaskPointPath, outputBasic + outputPathParentPart[i] + taskPointFileName, taskSize, factorK, constA);
-            Preprocess.extractScalePointByGivenSize(inputWorkerPointPath, outputBasic + outputPathParentPart[i] + workerPointFileName, workerSize, factorK, constA);
+            Preprocess.extractScaleFixedPointByGivenSize(inputTaskPointPath, outputBasic + outputPathParentPart[i] + taskPointFileName, taskSize, factorK, constA);
+            Preprocess.extractScaleFixedPointByGivenSize(inputWorkerPointPath, outputBasic + outputPathParentPart[i] + workerPointFileName, workerSize, factorK, constA);
         }
     }
 

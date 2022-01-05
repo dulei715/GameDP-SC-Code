@@ -45,10 +45,10 @@ public class DatasetGenerateTest {
 
 
         int size = 2000;
-        Preprocess.extractScalePointByGivenSize(uniformPath, uniformTaskOutputPath, size, 1, 0);
+        Preprocess.extractScaleFixedPointByGivenSize(uniformPath, uniformTaskOutputPath, size, 1, 0);
         Preprocess.extractRemainPointByGivenSet(uniformPath, uniformTaskOutputPath, uniformWorkerOutputPath, 1, 0);
 
-        Preprocess.extractScalePointByGivenSize(normalPath, normalTaskOutputPath, size, 1, 0);
+        Preprocess.extractScaleFixedPointByGivenSize(normalPath, normalTaskOutputPath, size, 1, 0);
         Preprocess.extractRemainPointByGivenSet(normalPath, normalTaskOutputPath, normalWorkerOutputPath, 1, 0);
 
 

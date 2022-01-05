@@ -5,7 +5,9 @@ import tools.struct.Point;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class PointRead {
 
@@ -161,11 +163,56 @@ public class PointRead {
         return this.pointList.size();
     }
 
+    /**
+     * 规定：数据信息所在行(首行)为第-1行，具体第一条数据所在行为第0行.
+     * @param filePath
+     * @param lineNumberSet
+     * @return
+     */
+    public static List<Point> readPointByDeclaredLines(String filePath, Set<Integer> lineNumberSet) {
+        BasicRead basicRead = new BasicRead(SPLIT_TAG);
+        basicRead.startReading(filePath);
+        String line;
+        Integer size = Integer.valueOf(basicRead.readOneLine());
+        int dataLineNumber = -1;
+        List<Point> pointList = new ArrayList<>(lineNumberSet.size());
+        String[] lineData;
+        while ((line = basicRead.readOneLine()) != null) {
+            ++ dataLineNumber;
+            if (!lineNumberSet.contains(dataLineNumber)) {
+                continue;
+            }
+            lineData = line.split(SPLIT_TAG);
+            pointList.add(Point.valueOf(Double.valueOf(lineData[0]), Double.valueOf(lineData[1])));
+        }
+        basicRead.endReading();
+        return pointList;
+    }
+
+    public static Set<Point> readPointWithoutRepeat(String filePath) {
+        BasicRead basicRead = new BasicRead(SPLIT_TAG);
+        basicRead.startReading(filePath);
+        String line;
+        Integer size = Integer.valueOf(basicRead.readOneLine());
+        Set<Point> pointSet = new HashSet<>();
+        String[] lineData;
+        while ((line = basicRead.readOneLine()) != null) {
+            lineData = line.split(SPLIT_TAG);
+            pointSet.add(Point.valueOf(Double.valueOf(lineData[0]), Double.valueOf(lineData[1])));
+        }
+        basicRead.endReading();
+        return pointSet;
+    }
+
     public static void main(String[] args) {
-        String filePath = "E:\\1.学习\\4.论文\\程鹏\\dataset\\dataset\\Chengdu\\chengdu.node";
-        PointRead pointRead = new PointRead(filePath);
-        pointRead.readPointWithFirstLineCount();
-        List<Point> pointSet = pointRead.getPointList();
-        MyPrint.showList(pointSet);
+//        String filePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\total_dataset\\worker_point.txt";
+//        String filePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\total_dataset\\task_point.txt";
+        String filePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\batch_dataset\\batch_007_worker_point.txt";
+
+        List<Point> allPointList = PointRead.readPointWithFirstLineCount(filePath);
+        System.out.println(allPointList.size());
+
+        Set<Point> allPointSet = PointRead.readPointWithoutRepeat(filePath);
+        System.out.println(allPointSet.size());
     }
 }

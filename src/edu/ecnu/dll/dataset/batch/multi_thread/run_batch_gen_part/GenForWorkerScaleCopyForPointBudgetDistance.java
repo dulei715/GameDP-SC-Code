@@ -1,7 +1,6 @@
 package edu.ecnu.dll.dataset.batch.multi_thread.run_batch_gen_part;
 
 import edu.ecnu.dll.dataset.batch.BatchPreprocess;
-import edu.ecnu.dll.dataset.preprocess.Preprocess;
 
 public class GenForWorkerScaleCopyForPointBudgetDistance {
     public static void main(String[] args) {
@@ -18,7 +17,7 @@ public class GenForWorkerScaleCopyForPointBudgetDistance {
         int basicSize = 1000;
 //        String exclusionParent = BatchPreprocess.scaleOutputPath[2];
 
-        BatchPreprocess.scaleAndExtractWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
+        BatchPreprocess.scaleAndExtractRandomWorkerPointToDifferentWorkerScaleParentFile(basicDirPath, basicSize, factorK, constA);
 
 
         Integer[] threadSizePerGroupArray = new Integer[]{

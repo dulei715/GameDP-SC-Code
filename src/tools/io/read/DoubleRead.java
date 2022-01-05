@@ -5,6 +5,7 @@ import tools.struct.Point;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class DoubleRead {
 
@@ -119,5 +120,8 @@ public class DoubleRead {
     public static Double[] readDouble(String filePath) {
         return readDouble(filePath, 1);
     }
+
+
+
 
 }

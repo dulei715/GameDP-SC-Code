@@ -2,11 +2,10 @@ package tools.basic;
 
 import tools.basic.comparator.TwoDimensionDouComparator;
 import tools.basic.comparator.TwoDimensionDoubleComparator;
+import tools.io.print.MyPrint;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class BasicArray {
     public static void setIntArrayTo(int[] element, int value) {
@@ -131,5 +130,36 @@ public class BasicArray {
         return resultList;
     }
 
+    public static Set<Integer> generateRandomSet(Integer minimalValue, Integer upperBoundValue, int generateSize, Set<Integer> excludedSet) {
+        if (excludedSet == null) {
+            excludedSet = new HashSet<>();
+        }
+        if (upperBoundValue - minimalValue - excludedSet.size() < generateSize) {
+            throw new RuntimeException("The size of generating is too large!");
+        }
+
+        Random random = new Random();
+        int tempInt;
+        Set<Integer> result = new HashSet<>(generateSize);
+        for (int i = 0; i < generateSize; i++) {
+            while ( (tempInt = random.nextInt(upperBoundValue)) < minimalValue || excludedSet.contains(tempInt) || result.contains(tempInt));
+            result.add(tempInt);
+        }
+
+        return result;
+
+    }
+
+    public static void main(String[] args) {
+        int minValue = 1;
+        int upperBoundValue = 100;
+        int generateSize = 10;
+        Set<Integer> excludedSet = new HashSet<>();
+        excludedSet.add(33);
+        excludedSet.add(35);
+
+        Set<Integer> result = BasicArray.generateRandomSet(minValue, upperBoundValue, generateSize, excludedSet);
+        MyPrint.showSet(result);
+    }
 
 }

@@ -1,5 +1,6 @@
 package edu.ecnu.dll.dataset.preprocess;
 
+import tools.basic.BasicArray;
 import tools.basic.StringUtil;
 import tools.io.read.*;
 import tools.io.write.PointWrite;
@@ -226,7 +227,7 @@ public class Preprocess {
     }
 
 
-    public static void extractScalePointByGivenSize(String inputPath, String outputPath, int size, double factorK, double constA) {
+    public static void extractScaleFixedPointByGivenSize(String inputPath, String outputPath, int size, double factorK, double constA) {
         List<Point> points = PointRead.readPointWithFirstLineCount(inputPath);
         int pointSize = points.size();
         int interval = pointSize / size;
@@ -246,7 +247,30 @@ public class Preprocess {
         pointWrite.endWriting();
     }
 
-    public static void extractTwoDimensionalDataByGivenSize(String inputPath, String outputPath, int size) {
+    /**
+     * 提取随机point并返回更新的已经包含的索引
+     * @param inputPointList
+     * @param outputPath
+     * @param size
+     * @param factorK
+     * @param constA
+     * @return
+     */
+    public static Set<Integer> extractScaleRandomPointByGivenSize(List<Point> inputPointList, String outputPath, int size, Set<Integer> containedSet, double factorK, double constA) {
+        Set<Integer> newAddedIndexSet = BasicArray.generateRandomSet(0, inputPointList.size(), size - containedSet.size(), containedSet);
+        Set<Integer> newTotalIndexSet = new HashSet<>(containedSet);
+        newTotalIndexSet.addAll(newAddedIndexSet);
+        PointWrite pointWrite = new PointWrite();
+        pointWrite.startWriting(outputPath);
+        pointWrite.writePoint(inputPointList, newTotalIndexSet, factorK, constA);
+        pointWrite.endWriting();
+        return newTotalIndexSet;
+    }
+
+
+
+
+    public static void extractTwoDimensionalFixedDataByGivenSize(String inputPath, String outputPath, int size) {
 //        List<Point> points = PointRead.readPointWithFirstLineCount(inputPath);
         List<Double[]>[] rawData = TwoDimensionDoubleRead.readDouble(inputPath, 1);
 
@@ -314,7 +338,7 @@ public class Preprocess {
         for (int i = 0; i < scales.length; i++) {
             tempScale = scales[i];
             workerSize = (int)(taskSize*tempScale);
-            extractScalePointByGivenSize(inputPath, outputBasic + outputPath[i], workerSize, factorK, constA);
+            extractScaleFixedPointByGivenSize(inputPath, outputBasic + outputPath[i], workerSize, factorK, constA);
         }
 //        System.out.println(workerSize);
     }
@@ -374,8 +398,8 @@ public class Preprocess {
         for (int i = 0; i < scales.length; i++) {
             tempScale = scales[i];
             workerSize = (int)(taskSize*tempScale);
-            extractScalePointByGivenSize(inputTaskPointPath, outputBasic + outputPathParentPart[i] + taskPointFileName, taskSize, factorK, constA);
-            extractScalePointByGivenSize(inputWorkerPointPath, outputBasic + outputPathParentPart[i] + workerPointFileName, workerSize, factorK, constA);
+            extractScaleFixedPointByGivenSize(inputTaskPointPath, outputBasic + outputPathParentPart[i] + taskPointFileName, taskSize, factorK, constA);
+            extractScaleFixedPointByGivenSize(inputWorkerPointPath, outputBasic + outputPathParentPart[i] + workerPointFileName, workerSize, factorK, constA);
         }
 //        System.out.println(workerSize);
     }
@@ -383,7 +407,7 @@ public class Preprocess {
     public static void main(String[] args) {
         String inputData = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\task_worker_1_1_0\\batch_002_worker_budget.txt";
         String outputData = "F:\\test\\budget.txt";
-        Preprocess.extractTwoDimensionalDataByGivenSize(inputData, outputData, 2);
+        Preprocess.extractTwoDimensionalFixedDataByGivenSize(inputData, outputData, 2);
     }
 
 }

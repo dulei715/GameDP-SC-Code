@@ -1,6 +1,7 @@
 package edu.ecnu.dll.dataset.batch;
 
 import edu.ecnu.dll.config.Constant;
+import tools.basic.BasicArray;
 import tools.io.print.MyPrint;
 import tools.io.read.BasicRead;
 import tools.io.write.BasicWrite;
@@ -9,6 +10,7 @@ import tools.struct.Point;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class BatchSplit {
 
@@ -20,7 +22,7 @@ public class BatchSplit {
     public int splitToSubFileWithFirstLineSize(String inputFilePath, String outputParentFilePath, String outputBasicName, int batchSize, int batchGroupSize) {
         int index = outputBasicName.lastIndexOf(".");
         String outputName = outputBasicName.substring(0, index);
-        String outputFileType = outputBasicName.substring(index, outputBasicName.length());
+        String outputFileType = outputBasicName.substring(index);
 //        System.out.println(outputName);
 //        System.out.println(outputFileType);
         BasicRead basicRead = new BasicRead();
@@ -63,7 +65,33 @@ public class BatchSplit {
 
     }
 
-    public static void main(String[] args) {
+    public void randomExtractSubFileWithFirstLineSize(String inputFilePath, String outputParentFilePath, String outputBasicName, int subFileSize, int subFileBatchNumber) {
+        int index = outputBasicName.lastIndexOf(".");
+        String outputName = outputBasicName.substring(0, index);
+        String outputFileType = outputBasicName.substring(index);
+        BasicRead basicRead = new BasicRead();
+        BasicWrite basicWrite = new BasicWrite();
+
+        basicRead.startReading(inputFilePath);
+        List<String> stringList = basicRead.readAll();
+        int size = stringList.size();
+
+        Set<Integer> indexSet;
+
+
+        for (int i = 0; i < subFileBatchNumber; i++) {
+
+            indexSet = BasicArray.generateRandomSet(0, size, subFileSize, null);
+            String outputPath = outputParentFilePath + File.separator + tagName + "_" + String.format("%0"+ Constant.subNamePositionSize+"d", i+1) + "_" + outputName + outputFileType;
+            basicWrite.startWriting(outputPath);
+            basicWrite.writeSizeAndListDataWithNewLineSplit(stringList, indexSet);
+            basicWrite.endWriting();
+        }
+
+
+    }
+
+    public static void main0(String[] args) {
         BatchSplit batchSplit = new BatchSplit();
         String inputFilePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\total_dataset";
         String inputTaskPointPath = inputFilePath + File.separator + "task_point.txt";
@@ -78,9 +106,25 @@ public class BatchSplit {
         int realBatchGroupSize = batchSplit.splitToSubFileWithFirstLineSize(inputTaskPointPath, outputParentPath, outputBasicTaskName, taskBatchSize, initBatchGroupSize);
         batchSplit.splitToSubFileWithFirstLineSize(inputWorkerPointPath, outputParentPath, outputBasicWorkerName, workerBatchSize, realBatchGroupSize);
         System.out.println(realBatchGroupSize);
+    }
 
+    public static void main(String[] args) {
+        BatchSplit batchSplit = new BatchSplit();
+        String inputFilePath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\total_dataset";
+        String inputTaskPointPath = inputFilePath + File.separator + "task_point.txt";
+        String inputWorkerPointPath = inputFilePath + File.separator + "worker_point.txt";
 
+        String outputParentPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\batch_dataset";
+        String outputBasicTaskName = "task_point.txt";
+        String outputBasicWorkerName = "worker_point.txt";
+        int taskBatchSize = 1000;
+        int workerBatchSize = 3000;
+        int initBatchGroupSize = -1;
+        int realBatchGroupSize = batchSplit.splitToSubFileWithFirstLineSize(inputTaskPointPath, outputParentPath, outputBasicTaskName, taskBatchSize, initBatchGroupSize);
+        batchSplit.randomExtractSubFileWithFirstLineSize(inputWorkerPointPath, outputParentPath, outputBasicWorkerName, workerBatchSize, realBatchGroupSize);
 
     }
+
+
 
 }

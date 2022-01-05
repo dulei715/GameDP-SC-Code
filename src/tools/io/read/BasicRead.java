@@ -1,6 +1,9 @@
 package tools.io.read;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class BasicRead {
     public String INPUT_SPLIT_SYMBOL = " ";
@@ -30,6 +33,42 @@ public class BasicRead {
             e.printStackTrace();
         }
         return line;
+    }
+
+    public List<String> readDeclaredLines(Set<Integer> indexSet) {
+        List<String> result = new ArrayList<>(indexSet.size());
+        String line;
+        int lineNum = -1;
+        try {
+            line = this.bufferedReader.readLine();
+            while ((line = this.bufferedReader.readLine()) != null) {
+                ++ lineNum;
+                if (!indexSet.contains(lineNum)) {
+                    continue;
+                }
+                result.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public List<String> readAll() {
+        List<String> result = null;
+        String line;
+        try {
+            line = this.bufferedReader.readLine();
+            result = new ArrayList<>(Integer.valueOf(line));
+            while ((line = this.bufferedReader.readLine()) != null) {
+                result.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+
     }
 
     public void mark(int size) {

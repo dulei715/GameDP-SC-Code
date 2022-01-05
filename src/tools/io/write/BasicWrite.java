@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public class BasicWrite {
     public String OUTPUT_SPLIT_SYMBOL = " ";
@@ -110,6 +111,24 @@ public class BasicWrite {
             this.bufferedWriter.write(String.valueOf(dataList.size()));
             this.bufferedWriter.newLine();
             for (; i < dataList.size(); i++) {
+                obj = dataList.get(i);
+                this.bufferedWriter.write(obj.toString());
+                this.bufferedWriter.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void writeSizeAndListDataWithNewLineSplit(List dataList, Set<Integer> includedIndexSet) {
+        int i = 0;
+        Object obj;
+        try {
+            this.bufferedWriter.write(String.valueOf(includedIndexSet.size()));
+            this.bufferedWriter.newLine();
+            for (; i < dataList.size(); i++) {
+                if (!includedIndexSet.contains(i)) {
+                    continue;
+                }
                 obj = dataList.get(i);
                 this.bufferedWriter.write(obj.toString());
                 this.bufferedWriter.newLine();
