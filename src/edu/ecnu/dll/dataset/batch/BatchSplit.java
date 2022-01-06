@@ -2,10 +2,8 @@ package edu.ecnu.dll.dataset.batch;
 
 import edu.ecnu.dll.config.Constant;
 import tools.basic.BasicArray;
-import tools.io.print.MyPrint;
 import tools.io.read.BasicRead;
 import tools.io.write.BasicWrite;
-import tools.struct.Point;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -55,7 +53,7 @@ public class BatchSplit {
             }
             String outputPath = outputParentFilePath + File.separator + tagName + "_" + String.format("%0"+ Constant.subNamePositionSize+"d", i+1) + "_" + outputName + outputFileType;
             basicWrite.startWriting(outputPath);
-            basicWrite.writeSizeAndListDataWithNewLineSplit(stringList);
+            basicWrite.writeSizeAndCollectionDataWithNewLineSplit(stringList);
             basicWrite.endWriting();
 //            System.out.println(outputPath);
 //            MyPrint.showList(stringList, "\r\n");
@@ -84,7 +82,7 @@ public class BatchSplit {
             indexSet = BasicArray.generateRandomSet(0, size, subFileSize, null);
             String outputPath = outputParentFilePath + File.separator + tagName + "_" + String.format("%0"+ Constant.subNamePositionSize+"d", i+1) + "_" + outputName + outputFileType;
             basicWrite.startWriting(outputPath);
-            basicWrite.writeSizeAndListDataWithNewLineSplit(stringList, indexSet);
+            basicWrite.writeSizeAndCollectionDataWithNewLineSplit(stringList, indexSet);
             basicWrite.endWriting();
         }
 

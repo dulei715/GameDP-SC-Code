@@ -96,6 +96,7 @@ public class PointRead {
                 pointList.add(new Point(Double.valueOf(dataElement[0]), Double.valueOf(dataElement[1])));
             }
             if (dataSize != pointList.size()) {
+                System.out.println(filePath + " error!");
                 throw new RuntimeException("The size of dataset is not inconsistent!");
             }
 

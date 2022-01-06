@@ -10,9 +10,9 @@ public class ResultOutput {
     public static void outputData(String outputPath, List<Double> targetList, List<Double> ... dataResult) {
         BasicWrite basicWrite = new BasicWrite();
         basicWrite.startWriting(outputPath);
-        basicWrite.writeData(targetList);
+        basicWrite.writeOneLineListData(targetList);
         for (int i = 0; i < dataResult.length; i++) {
-            basicWrite.writeData(dataResult[i]);
+            basicWrite.writeOneLineListData(dataResult[i]);
         }
         basicWrite.endWriting();
     }

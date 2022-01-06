@@ -7,73 +7,94 @@ import tools.basic.StringUtil;
 import tools.differential_privacy.noise.LaplaceUtils;
 import tools.io.read.PointRead;
 import tools.io.read.TwoDimensionDoubleRead;
+import tools.io.write.BasicWrite;
 import tools.struct.Point;
 
 import java.io.*;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class MainDataSetGenerator {
 
     public static final String WRITING_SPLIT_TAG_IN_LINE = " ";
 
     public static void generateUniformPlaneDataPoint(int dimensionLength, int pointSize, String outputPath) {
-        BufferedWriter bufferedWriter = null;
         double x, y;
         DecimalFormat decimalFormat = new DecimalFormat("0.000000");
         decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(new File(outputPath)));
-            bufferedWriter.write(String.valueOf(pointSize));
-            bufferedWriter.newLine();
-            for (int i = 0; i < pointSize; i++) {
-                x = Math.random() * dimensionLength;
-                y = Math.random() * dimensionLength;
-                bufferedWriter.write(decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y));
-                bufferedWriter.newLine();
-            }
-            bufferedWriter.flush();
+        BasicWrite basicWrite = new BasicWrite();
+        basicWrite.startWriting(outputPath);
+        basicWrite.writeOneLine(String.valueOf(pointSize));
+        for (int i = 0; i < pointSize; i++) {
+            x = Math.random() * dimensionLength;
+            y = Math.random() * dimensionLength;
+            basicWrite.writeOneLine(decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y));
+        }
+        basicWrite.endWriting();
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void generateUniformPlaneDataPointWithoutDuplication(int dimensionLength, int pointSize, String outputPath) {
+        BasicWrite basicWrite = new BasicWrite();
+        Set<String> lineSet = new HashSet<>();
+        double x, y;
+        String line;
+        DecimalFormat decimalFormat = new DecimalFormat("0.000000");
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+
+        while (lineSet.size() < pointSize) {
+            x = Math.random() * dimensionLength;
+            y = Math.random() * dimensionLength;
+            line = decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y);
+            if (!lineSet.contains(line)) {
+                lineSet.add(line);
             }
         }
+
+        basicWrite.startWriting(outputPath);
+
+        basicWrite.writeSizeAndCollectionDataWithNewLineSplit(new ArrayList(lineSet));
+        basicWrite.endWriting();
     }
 
     public static void generateNormalPlaneDataPoint(int pointSize, double mean, double variance, String outputPath) {
         Random random = new Random();
-        BufferedWriter bufferedWriter = null;
         double x, y;
         DecimalFormat decimalFormat = new DecimalFormat("0.000000");
         decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
-        try {
-            bufferedWriter = new BufferedWriter(new FileWriter(new File(outputPath)));
-            bufferedWriter.write(String.valueOf(pointSize));
-            bufferedWriter.newLine();
-            for (int i = 0; i < pointSize; i++) {
-                x = Math.sqrt(variance)*random.nextGaussian() + mean;
-                y = Math.sqrt(variance)*random.nextGaussian() + mean;
-                bufferedWriter.write(decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y));
-                bufferedWriter.newLine();
-            }
-            bufferedWriter.flush();
+        BasicWrite basicWrite = new BasicWrite();
+        basicWrite.startWriting(outputPath);
+        basicWrite.writeOneLine(String.valueOf(pointSize));
+        for (int i = 0; i < pointSize; i++) {
+            x = Math.sqrt(variance)*random.nextGaussian() + mean;
+            y = Math.sqrt(variance)*random.nextGaussian() + mean;
+            basicWrite.writeOneLine(decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y));
+        }
+        basicWrite.endWriting();
+    }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                bufferedWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void generateNormalPlaneDataPointWithoutDuplication(int pointSize, double mean, double variance, String outputPath) {
+        Random random = new Random();
+        BasicWrite basicWrite = new BasicWrite();
+        Set<String> lineSet = new HashSet<>();
+        double x, y;
+        String line;
+        DecimalFormat decimalFormat = new DecimalFormat("0.000000");
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+
+        while (lineSet.size() < pointSize) {
+            x = Math.sqrt(variance)*random.nextGaussian() + mean;
+            y = Math.sqrt(variance)*random.nextGaussian() + mean;
+            line = decimalFormat.format(x) + WRITING_SPLIT_TAG_IN_LINE + decimalFormat.format(y);
+            if (!lineSet.contains(line)) {
+                lineSet.add(line);
             }
         }
+
+        basicWrite.startWriting(outputPath);
+        basicWrite.writeSizeAndCollectionDataWithNewLineSplit(new ArrayList(lineSet));
+        basicWrite.endWriting();
+
     }
 
     public static int generateDataSet(String dataPointInputPath, String samplingOutputPath, SamplingFunction samplingFunction) {
@@ -272,53 +293,6 @@ public class MainDataSetGenerator {
         }
 
     }
-
-//    public static void generateWorkerNonNegativeNoiseDistanceDataSet(String outputPath, List<Point> workerPointList, List<Point> taskPointList, List<Double[]>[] workerPrivacyBudgetList, boolean isLongitudeLatitude) {
-//        BufferedWriter bufferedWriter = null;
-//        int workerSize = workerPointList.size();
-//        int taskSize = taskPointList.size();
-//        int budgetGroupSize = workerPrivacyBudgetList[0].get(0).length;
-//        Double tempRealDistance = null;
-//        Double[] tempBudget = null;
-//        Double[] tempNoiseDistance = null;
-//        try {
-//            File outputFile = new File(outputPath);
-//            File parentDir = outputFile.getParentFile();
-//            if (!parentDir.exists()) {
-//                parentDir.mkdirs();
-//            }
-//            bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
-//            bufferedWriter.write(String.valueOf(workerSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(taskSize) + WRITING_SPLIT_TAG_IN_LINE + String.valueOf(budgetGroupSize));
-//            bufferedWriter.newLine();
-//            for (int i = 0, j, k; i < workerSize; i++) {
-//                for (j = 0; j < taskSize; j++) {
-//                    if (!isLongitudeLatitude) {
-//                        tempRealDistance = BasicCalculation.get2Norm(workerPointList.get(i).getIndex(), taskPointList.get(j).getIndex());
-//                    } else {
-//                        tempRealDistance = BasicCalculation.getDistanceFrom2LngLat(workerPointList.get(i).getyIndex(), workerPointList.get(i).getxIndex(), taskPointList.get(j).getyIndex(), taskPointList.get(j).getxIndex());
-//                    }
-//                    tempBudget = workerPrivacyBudgetList[i].get(j);
-//                    tempNoiseDistance = LaplaceUtils.getLaplaceNoiseWithOriginalValueNonNegative(tempRealDistance, tempBudget);
-//
-//                    for (k = 0; k < tempNoiseDistance.length - 1; k++) {
-//                        bufferedWriter.write(String.valueOf(tempNoiseDistance[k]));
-//                        bufferedWriter.write(WRITING_SPLIT_TAG_IN_LINE);
-//                    }
-//                    bufferedWriter.write(String.valueOf(tempNoiseDistance[k]));
-//                    bufferedWriter.newLine();
-//                }
-//            }
-//        }  catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                bufferedWriter.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
 
 
 
@@ -574,6 +548,7 @@ public class MainDataSetGenerator {
         List<Double[]>[] budgetListArray = TwoDimensionDoubleRead.readDouble(workerBudgetPath, 1);
         MainDataSetGenerator.generateWorkerNoiseDistanceDataSet(workerNoiseDistanceOutputPath, workerPointList, taskPointList, budgetListArray, false, false);
     }
+
 
 
 }

@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -35,7 +37,8 @@ public class BasicWrite {
         }
     }
 
-    public void writeData(List dataList) {
+    public void writeOneLineListData(List dataList) {
+        // 把整个List写在一行
         int i = 0;
         Object obj;
         try {
@@ -104,7 +107,7 @@ public class BasicWrite {
         }
     }
 
-    public void writeSizeAndListDataWithNewLineSplit(List dataList) {
+    public void writeSizeAndCollectionDataWithNewLineSplit(List dataList) {
         int i = 0;
         Object obj;
         try {
@@ -119,9 +122,10 @@ public class BasicWrite {
             e.printStackTrace();
         }
     }
-    public void writeSizeAndListDataWithNewLineSplit(List dataList, Set<Integer> includedIndexSet) {
+    public void writeSizeAndCollectionDataWithNewLineSplit(List dataList, Set<Integer> includedIndexSet) {
         int i = 0;
         Object obj;
+        Iterator iterator;
         try {
             this.bufferedWriter.write(String.valueOf(includedIndexSet.size()));
             this.bufferedWriter.newLine();
