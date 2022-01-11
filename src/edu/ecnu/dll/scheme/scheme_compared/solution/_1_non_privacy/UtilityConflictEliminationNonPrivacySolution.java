@@ -7,6 +7,7 @@ import edu.ecnu.dll.basic.basic_struct.comparator.TargetInfoComparator;
 import edu.ecnu.dll.basic.basic_struct.data_structure.PreferenceTable;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.WorkerIDNoDistanceUtilityDistancePair;
 import edu.ecnu.dll.basic.basic_struct.pack.single_agent_info.sub_class.sub_class.TaskTargetInfo;
+import edu.ecnu.dll.config.Constant;
 import edu.ecnu.dll.run.result_tools.CommonFunction;
 import edu.ecnu.dll.run.result_tools.TargetTool;
 import edu.ecnu.dll.scheme.scheme_compared.struct.agent.worker.MultiTaskNonPrivacyWorker;
@@ -442,30 +443,88 @@ public class UtilityConflictEliminationNonPrivacySolution extends NonPrivacySolu
 
     }
 
-    public static void main(String[] args) {
-        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+    public static void main0(String[] args) {
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\batch_dataset";
 
-        String workerPointPath = basicDatasetPath + "\\worker_point.txt";
-        String taskPointPath = basicDatasetPath + "\\task_point.txt";
-        String taskValuePath = basicDatasetPath + "\\task_value.txt";
-        String workerRangePath = basicDatasetPath + "\\worker_range.txt";
+//        String workerPointPath = basicDatasetPath + "\\worker_point.txt";
+//        String taskPointPath = basicDatasetPath + "\\task_point.txt";
+//        String taskValuePath = basicDatasetPath + "\\task_value.txt";
+//        String workerRangePath = basicDatasetPath + "\\worker_range.txt";
+        String workerPointPath = basicDatasetPath + "\\batch_001_worker_point.txt";
+        String taskPointPath = basicDatasetPath + "\\batch_001_task_point.txt";
+
+
+
 //        String workerPrivacyBudgetPath = basicDatasetPath + "\\worker_budget.txt";
 //        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
 
         List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
-        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
+//        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
 
         List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
-        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
+//        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
 //        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
 //        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
 
 
         // 初始化 task 和 workers
-        Double taskValue = 20.0, workerRange = 2.0;
+//        Double taskValue = 20.0, workerRange = 2.0;
+        Double taskValue = Constant.taskValueDefault, workerRange = Constant.workerRangeDefault;
+
         UtilityConflictEliminationNonPrivacySolution competitionSolution = new UtilityConflictEliminationNonPrivacySolution();
-        competitionSolution.initializeBasicInformation(taskPointList, taskValueList, workerPointList, workerRangeList);
-        competitionSolution.proposalSize = 20;
+        competitionSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+//        competitionSolution.proposalSize = 20;
+        competitionSolution.proposalSize = Constant.defaultProposalSize;
+
+
+        //todo: 根据不同的数据集选用不同的初始化
+//        multiTaskMultiCompetitionSolution.initializeAgents();
+//        Integer dataTypeValue = Integer.valueOf(dataType);
+        competitionSolution.initializeAgentsWithLatitudeLongitude();
+
+        long startCompetingTime = System.currentTimeMillis();
+        WorkerIDNoDistanceUtilityDistancePair[] winner = competitionSolution.compete();
+        long endCompetingTime = System.currentTimeMillis();
+        Long runningTime = TargetTool.getRunningTime(startCompetingTime, endCompetingTime);
+
+        System.out.println(runningTime);
+
+        CommonFunction.showResultB(winner);
+    }
+    public static void main(String[] args) {
+//        String basicDatasetPath = "E:\\1.学习\\4.数据集\\1.FourSquare-NYCandTokyoCheck-ins\\output\\SYN";
+        String basicDatasetPath = "E:\\1.学习\\4.数据集\\dataset\\original\\chengdu_total_dataset_km\\batch_dataset";
+
+//        String workerPointPath = basicDatasetPath + "\\worker_point.txt";
+//        String taskPointPath = basicDatasetPath + "\\task_point.txt";
+//        String taskValuePath = basicDatasetPath + "\\task_value.txt";
+//        String workerRangePath = basicDatasetPath + "\\worker_range.txt";
+        String workerPointPath = basicDatasetPath + "\\batch_001_worker_point.txt";
+        String taskPointPath = basicDatasetPath + "\\batch_001_task_point.txt";
+
+
+
+//        String workerPrivacyBudgetPath = basicDatasetPath + "\\worker_budget.txt";
+//        String workerNoiseDistancePath = basicDatasetPath + "\\worker_noise_distance.txt";
+
+        List<Point> taskPointList = PointRead.readPointWithFirstLineCount(taskPointPath);
+//        List<Double> taskValueList = DoubleRead.readDoubleWithFirstSizeLineToList(taskValuePath);
+
+        List<Point> workerPointList = PointRead.readPointWithFirstLineCount(workerPointPath);
+//        List<Double> workerRangeList = DoubleRead.readDoubleWithFirstSizeLineToList(workerRangePath);
+//        List<Double[]>[] workerPrivacyBudgetList = TwoDimensionDoubleRead.readDouble(workerPrivacyBudgetPath);
+//        List<Double[]>[] workerNoiseDistanceList = TwoDimensionDoubleRead.readDouble(workerNoiseDistancePath);
+
+
+        // 初始化 task 和 workers
+//        Double taskValue = 20.0, workerRange = 2.0;
+        Double taskValue = Constant.taskValueDefault, workerRange = Constant.workerRangeDefault;
+
+        UtilityConflictEliminationNonPrivacySolution competitionSolution = new UtilityConflictEliminationNonPrivacySolution();
+        competitionSolution.initializeBasicInformation(taskPointList, taskValue, workerPointList, workerRange);
+//        competitionSolution.proposalSize = 20;
+        competitionSolution.proposalSize = Constant.defaultProposalSize;
 
 
         //todo: 根据不同的数据集选用不同的初始化
