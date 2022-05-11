@@ -41,12 +41,19 @@ public class Constant {
             "privacy_change" + FILE_PATH_SPLIT + "privacy_5"
     };
 
+//    public static final double[][] parentBudgetRange = new double[][] {
+//            {0.5, 0.74},
+//            {0.74, 0.98},
+//            {0.98, 1.22},
+//            {1.22, 1.46},
+//            {1.46, 1.7}
+//    };
     public static final double[][] parentBudgetRange = new double[][] {
-            {0.5, 0.74},
-            {0.74, 0.98},
-            {0.98, 1.22},
-            {1.22, 1.46},
-            {1.46, 1.7}
+            {0.5, 0.75},
+            {0.75, 1.00},
+            {1.00, 1.25},
+            {1.25, 1.50},
+            {1.50, 1.75}
     };
 //    public static final double[][] parentBudgetRange = new double[][] {
 //            {1.0, 1.5},
@@ -94,7 +101,8 @@ public class Constant {
 //
 //    public static final Double privacyBudgetDefault = 5.0;
 
-    public static final double[] defaultPrivacyBudgetBound = new double[]{0.5,1.7};
+//    public static final double[] defaultPrivacyBudgetBound = new double[]{0.5,1.7};
+    public static final double[] defaultPrivacyBudgetBound = new double[]{0.5,1.75};
 
     public static final int defaultBudgetGroupSize = 7;
 
