@@ -114,6 +114,18 @@ public class PackExtendedExperimentResult {
         this.extendedExperimentResult.realTravelDistance += dataB.extendedExperimentResult.realTravelDistance;
     }
 
+    public void shrink(int times) {
+        this.extendedExperimentResult.competingTime /= times;
+        this.extendedExperimentResult.totalTaskSize /= times;
+        this.extendedExperimentResult.totalWorkerSize /= times;
+        this.extendedExperimentResult.totalUnServedTaskSize /= times;
+        this.extendedExperimentResult.totalAllocatedWorkerSize /= times;
+        this.extendedExperimentResult.totalUtility /= times;
+        this.extendedExperimentResult.totalWinnerUtility /= times;
+        this.extendedExperimentResult.totalFailureUtility /= times;
+        this.extendedExperimentResult.realTravelDistance /= times;
+    }
+
     @Override
     public String toString() {
 //        return  datasetName + "," + dataType + "," + ppcfState + "," + eceaState + "," + workerChosenState + "," + normalExperimentResult.toString();

@@ -258,6 +258,14 @@ public class MyPrint {
         }
     }
 
+    public static <T> void showMapWithListValue(Map<String, List<T>> resultMap) {
+        List tempList;
+        for (Map.Entry<String, List<T>> entry : resultMap.entrySet()) {
+            System.out.print(entry.getKey() + ": ");
+            MyPrint.showList(entry.getValue());
+        }
+    }
+
     public static void showSet(Set set) {
         Iterator iterator = set.iterator();
         while (iterator.hasNext()) {

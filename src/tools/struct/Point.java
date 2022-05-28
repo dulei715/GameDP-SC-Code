@@ -21,6 +21,12 @@ public class Point implements Comparable<Point> {
         this.yIndex = indexes[1];
     }
 
+    public static double getDistance(Point pointA, Point pointB) {
+        double xDiff = pointA.xIndex - pointB.xIndex;
+        double yDiff = pointA.yIndex - pointB.yIndex;
+        return Math.sqrt(xDiff*xDiff+yDiff*yDiff);
+    }
+
     public double getxIndex() {
         return xIndex;
     }

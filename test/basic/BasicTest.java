@@ -161,9 +161,45 @@ public class BasicTest {
 //            System.out.println(line.getBytes().length);
             System.out.println(line);
         }
+
+
     }
 
 
+    @Test
+    public void fun10(){
+        int taskSize = 3;
+        int workerSize = 3;
+        Point[] taskPointArray = new Point[] {
+                new Point(15,20),
+                new Point(23, 30),
+                new Point(27, 10)
+        };
+        Point[] workerPointArray = new Point[]{
+                new Point(25,27),
+                new Point(20, 20),
+                new Point(20, 12)
+        };
+
+        double[][] distanceMatrix = new double[taskPointArray.length][workerPointArray.length];
+
+        for (int i = 0; i < taskPointArray.length; i++) {
+            for (int j = 0; j < workerPointArray.length; j++) {
+                distanceMatrix[i][j] = Point.getDistance(taskPointArray[i], workerPointArray[j]);
+            }
+        }
+
+        MyPrint.show2DimensionDoubleArray(distanceMatrix);
+
+    }
+
+    @Test
+    public void fun11() {
+        Point pointA = new Point(3,10);
+        Point pointB = new Point(0,0);
+        double distance = Point.getDistance(pointA, pointB);
+        System.out.println(distance);
+    }
 
 
 

@@ -13,16 +13,16 @@ end
 yfactor = 1;
 totalAllocatedWorker = matrix.data(:,5);
 
-uConfNPSolution = matrix.data(6:9:end,yCol).*yfactor;
-dConfNPSolution = matrix.data(7:9:end,yCol).*yfactor;
-gNPSolution = matrix.data(8:9:end,yCol).*yfactor;
+uConfNPSolution = matrix.data(6:9:end,yCol).*yfactor./totalAllocatedWorker(6:9:end,1);
+dConfNPSolution = matrix.data(7:9:end,yCol).*yfactor./totalAllocatedWorker(7:9:end,1);
+gNPSolution = matrix.data(8:9:end,yCol).*yfactor./totalAllocatedWorker(8:9:end,1);
 %greedyNPSolution = matrix.data(9:9:end,yCol).*yfactor;
 
-uConfPSolution_ppcfFalse = matrix.data(1:9:end,yCol).*yfactor;
-uConfPSolution_ppcfTrue = matrix.data(2:9:end,yCol).*yfactor;
-dConfPSolution_ppcfFalse = matrix.data(3:9:end,yCol).*yfactor;
-dConfPSolution_ppcfTrue = matrix.data(4:9:end,yCol).*yfactor;
-gPSolution = matrix.data(5:9:end,yCol).*yfactor;
+uConfPSolution_ppcfFalse = matrix.data(1:9:end,yCol).*yfactor./totalAllocatedWorker(1:9:end,1);
+uConfPSolution_ppcfTrue = matrix.data(2:9:end,yCol).*yfactor./totalAllocatedWorker(2:9:end,1);
+dConfPSolution_ppcfFalse = matrix.data(3:9:end,yCol).*yfactor./totalAllocatedWorker(3:9:end,1);
+dConfPSolution_ppcfTrue = matrix.data(4:9:end,yCol).*yfactor./totalAllocatedWorker(4:9:end,1);
+gPSolution = matrix.data(5:9:end,yCol).*yfactor./totalAllocatedWorker(5:9:end,1);
 
 ucps_pf = (uConfNPSolution - uConfPSolution_ppcfFalse) ./ uConfNPSolution;
 ucps_pt = (uConfNPSolution - uConfPSolution_ppcfTrue) ./ uConfNPSolution;
