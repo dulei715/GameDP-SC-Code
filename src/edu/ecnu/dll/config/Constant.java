@@ -87,7 +87,8 @@ public class Constant {
             0.8, 1.1, 1.4, 1.7, 2.0
     };
 //    public static final Double workerRangeDefault = 20.0;
-    public static final Double workerRangeDefault = 1.4;
+    public static final Double workerRangeDefaulteDefault = 1.4;
+    public static final Double workerRangeDefault = 2.0;
 //    public static final Double workerRangeDefault = 40.0;
 //    public static final Double[] workerRangeArray = new Double[] {
 //            0.8, 1.1, 1.4, 1.7, 2.0
