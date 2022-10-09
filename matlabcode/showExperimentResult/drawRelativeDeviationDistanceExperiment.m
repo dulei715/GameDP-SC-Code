@@ -52,12 +52,13 @@ fig = figure;
 hold on;
 %plot(x,uConfPSolution_ppcfFalse, x,uConfPSolution_ppcfTrue, x, dConfPSolution_ppcfFalse, x, dConfPSolution_ppcfTrue, x, gPSolution);
 %plot(x,uConfPSolution_ppcfTrue, 'ro-','LineWidth',4, x, dConfPSolution_ppcfTrue, 'g*-','LineWidth',4, x, gPSolution, 'b+-','LineWidth',4);
-plot(x,ucps_pt, 'ro-','LineWidth',2);
-plot(x, dcps_pt, 'g*-','LineWidth',2);
-plot(x, gps_pf, 'b+-','LineWidth',2);
+figure_MarkerSize = 10;
+plot(x,ucps_pt, 'ro-','LineWidth',2,'MarkerSize',figure_MarkerSize);
+plot(x, dcps_pt, 'g*-','LineWidth',2, 'MarkerSize',figure_MarkerSize);
+plot(x, gps_pf, 'b+-','LineWidth',2, 'MarkerSize',figure_MarkerSize);
 
 
-figure_FontSize = 18;
+figure_FontSize = 22;
 set(get(gca,'XLabel'),'FontSize',figure_FontSize,'FontName','Times New Roman');
 set(get(gca,'YLabel'),'FontSize',figure_FontSize,'FontName','Times New Roman');
 set(gca,'FontName','Times New Roman' ,'FontSize',figure_FontSize);
@@ -65,8 +66,11 @@ set(findobj('FontSize',10),'FontSize',figure_FontSize);
 
 xlabel(xLabelName);
 ylabel(yLabelName);
-h = legend('ucs-p', 'dcs-p','gts-p','Location','Best');
-set(h,'FontName','Times New Roman','FontSize',14,'FontWeight','normal');
+
+legend_FontSize = 20;
+%h = legend('ucs-p', 'dcs-p','gts-p','Location','Best');
+h = legend('PUCE', 'PDCE','PGT','Location','Best');
+set(h,'FontName','Times New Roman','FontSize',legend_FontSize,'FontWeight','normal');
 
 %frame = getframe(fig);
 %img = frame2im(frame);
