@@ -8,7 +8,7 @@ Run: `edu.ecnu.dll.dataset.run.GenerateBatch.main($DatasetPath)` to generate bat
 
 ## Batch Run (results are recorded in $BasicOutputPath/)
 Run the command:
-`nohup bash gen_run_batch_total.sh $` 5 times for each data set to get the results (5 results for each kind of data sets).
+`nohup bash script/gen_run_batch_total.sh $` 5 times for each data set to get the results (5 results for each kind of data sets).
 (Notice that you need set the different parameters in the script for different kinds of data sets).
 
 
