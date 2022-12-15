@@ -44,8 +44,9 @@ set(findobj('FontSize',10),'FontSize',figure_FontSize);
 xlabel(xLabelName);
 ylabel(yLabelName);
 legend_FontSize = 20;
+locationType = 'BestOutside';
 %h = legend('ucs-ppcf', 'dcs-ppcf','ucs-nppcf','dcs-nppcf','Location','Best');
-h = legend('PUCE', 'PDCE','PUCE-nppcf','PDCE-nppcf','Location','Best');
+h = legend('PUCE', 'PDCE','PUCE-nppcf','PDCE-nppcf','Location',locationType);
 set(h,'FontName','Times New Roman','FontSize',legend_FontSize,'FontWeight','normal');
 
 %frame = getframe(fig);

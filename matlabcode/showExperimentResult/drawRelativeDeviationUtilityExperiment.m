@@ -51,8 +51,9 @@ xlabel(xLabelName);
 ylabel(yLabelName);
 
 legend_FontSize = 20;
+locationType = 'BestOutside';
 %h = legend('ucs-p', 'dcs-p','gts-p','Location','Best');
-h = legend('PUCE', 'PDCE','PGT','Location','Best');
+h = legend('PUCE', 'PDCE','PGT','Location',locationType);
 set(h,'FontName','Times New Roman','FontSize',legend_FontSize,'FontWeight','normal');
 
 %frame = getframe(fig);

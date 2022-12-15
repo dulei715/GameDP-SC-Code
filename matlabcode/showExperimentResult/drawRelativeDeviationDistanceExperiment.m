@@ -66,10 +66,10 @@ set(findobj('FontSize',10),'FontSize',figure_FontSize);
 
 xlabel(xLabelName);
 ylabel(yLabelName);
-
+locationType = 'BestOutside';
 legend_FontSize = 20;
 %h = legend('ucs-p', 'dcs-p','gts-p','Location','Best');
-h = legend('PUCE', 'PDCE','PGT','Location','Best');
+h = legend('PUCE', 'PDCE','PGT','Location',locationType);
 set(h,'FontName','Times New Roman','FontSize',legend_FontSize,'FontWeight','normal');
 
 %frame = getframe(fig);
