@@ -36,6 +36,8 @@ plot(x, dConfNPSolution, 'gx:', 'LineWidth', 2, 'MarkerSize',figure_MarkerSize);
 plot(x, gNPSolution, 'bd:', 'LineWidth',2, 'MarkerSize',figure_MarkerSize);
 plot(x, greedyNPSolution, 'm^:','LineWidth',2, 'MarkerSize',figure_MarkerSize);
 
+xlim([x(1) x(length(x))]);
+
 figure_FontSize = 22;
 set(get(gca,'XLabel'),'FontSize',figure_FontSize,'FontName','Times New Roman');
 set(get(gca,'YLabel'),'FontSize',figure_FontSize,'FontName','Times New Roman');
@@ -56,6 +58,7 @@ set(h,'FontName','Times New Roman','FontSize',legend_FontSize,'FontWeight','norm
 %    imwrite(img,[output_basic_dir, filename]);
 %end
 
+legend('off');
 saveas(fig,outputFileName,'fig');
 %saveas(fig,[outputFileName,'.eps'],'psc2');
 %saveas(fig,outputFileName,'eps');
