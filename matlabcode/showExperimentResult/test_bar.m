@@ -17,6 +17,7 @@ b = plot(x, dConfPSolution_ppcfTrue, 'g*-','LineWidth',2, 'MarkerSize',figure_Ma
 c = plot(x, gPSolution, 'b+-','LineWidth',2, 'MarkerSize',figure_MarkerSize);
 
 xlim([x(1) x(length(x))]);
+set(gca,'XTick',x);
 
 
 %a.EraseMode='none';

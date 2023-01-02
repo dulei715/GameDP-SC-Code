@@ -1,4 +1,4 @@
-function y = drawAverageUtilityWithPrivacyBudgetRangeChangePPCFExperiment(filename, xLabelName, yLabelName,outputFileName)
+function y = drawAverageUtilityWithPrivacyBudgetRangeChangePPCFExperiment(filename, xLabelName, yLabelName,outputFileName, figure_MarkerSize, figure_FontSize_X, figure_FontSize_Y, figure_FontSize)
 %function y = drawExperiment(filename, xCol, yCol, xLabelName, yLabelName, output_basic_dir, output_filenames)
 lineStart = 2;
 lineEnd = 4;
@@ -27,24 +27,27 @@ fig = figure;
 hold on;
 %plot(x,uConfPSolution_ppcfFalse, x,uConfPSolution_ppcfTrue, x, dConfPSolution_ppcfFalse, x, dConfPSolution_ppcfTrue, x, gPSolution);
 %plot(x,uConfPSolution_ppcfTrue, 'ro-','LineWidth',4, x, dConfPSolution_ppcfTrue, 'g*-','LineWidth',4, x, gPSolution, 'b+-','LineWidth',4);
-figure_MarkerSize = 10;
+
+%figure_MarkerSize = 10;
 plot(x,uConfPSolution_ppcfTrue, 'ro-','LineWidth',2, 'MarkerSize',figure_MarkerSize);
 plot(x, dConfPSolution_ppcfTrue, 'g*-','LineWidth',2, 'MarkerSize',figure_MarkerSize);
 
 plot(x, uConfPSolution_ppcfFalse, 'rs:','LineWidth',2, 'MarkerSize',figure_MarkerSize);
 plot(x, dConfPSolution_ppcfFalse, 'gx:', 'LineWidth', 2, 'MarkerSize',figure_MarkerSize);
 
-xlim([x(1) x(length(x))]);
+%xlim([x(1) x(length(x))]);
+xlim([roundn(x(1),-1) x(length(x))]);
+set(gca,'XTick',roundn(x,-1));
 
-figure_FontSize = 22;
-set(get(gca,'XLabel'),'FontSize',figure_FontSize,'FontName','Times New Roman');
-set(get(gca,'YLabel'),'FontSize',figure_FontSize,'FontName','Times New Roman');
-
+%figure_FontSize = 22;
 set(gca,'FontName','Times New Roman' ,'FontSize',figure_FontSize);
-set(findobj('FontSize',10),'FontSize',figure_FontSize);
-
+%set(findobj('FontSize',figure_MarkerSize),'FontSize',figure_FontSize);
 xlabel(xLabelName);
 ylabel(yLabelName);
+set(get(gca,'XLabel'),'FontSize',figure_FontSize_X,'FontName','Times New Roman');
+set(get(gca,'YLabel'),'FontSize',figure_FontSize_Y,'FontName','Times New Roman');
+
+
 legend_FontSize = 20;
 locationType = 'BestOutside';
 %h = legend('ucs-ppcf', 'dcs-ppcf','ucs-nppcf','dcs-nppcf','Location','Best');
