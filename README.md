@@ -1,5 +1,5 @@
 # GameDP-SC-Code
-## Data set generation (just for synthetic data sets)
+## Data set generation (only for synthetic data sets)
 Run: `edu.ecnu.dll.dataset.run.GenerateBasicUniformDataset.main($UniformOutputPath)` to generate uniform data sets;
 Run: `edu.ecnu.dll.dataset.run.GenerateBasicNormalDataset.main($NormalOutputPath)` to generate normal data sets.
  
