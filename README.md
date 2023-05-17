@@ -1,4 +1,4 @@
-# GameDP-SC-Code
+# GameDP-SC-Code (Code for "Dynamic Private Task Assignment under Differential Privacy" published in ICDE 2023)
 ## Data set generation (only for synthetic data sets)
 Run: `edu.ecnu.dll.dataset.run.GenerateBasicUniformDataset.main($UniformOutputPath)` to generate uniform data sets;
 Run: `edu.ecnu.dll.dataset.run.GenerateBasicNormalDataset.main($NormalOutputPath)` to generate normal data sets.
